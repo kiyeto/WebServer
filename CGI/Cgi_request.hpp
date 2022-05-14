@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 class Cgi_request {
-	
+	std::string 
 	public:
 		void execute(std::string &Path);
 };

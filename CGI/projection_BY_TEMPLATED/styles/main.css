@@ -1,0 +1,233 @@
+body{
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-image: url("../images/banner.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.container {
+    width: 1080px;
+    margin: auto;
+}
+
+/* Header CSS */
+.header {
+    height: 700px;
+    color: #ffffff;
+    background-color: #47475fe0;
+    /* backdrop-filter: blur(2px); */
+}
+
+.header .fhead{
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    padding: 2em;
+}
+.header .fhead .logo h3{
+    text-transform: uppercase;
+    font-size: medium;
+}
+.header .fhead .logo span{
+    font-weight: bolder;
+    text-transform: lowercase;
+}
+
+.header hr{
+    border: 1px solid #c4c4c4;
+}
+
+.header .fhead .list ul{
+    display: flex;
+}
+
+.header .fhead .list ul li {
+    list-style: none;
+    margin: auto 10px;
+}
+.header .fhead .list ul li a{
+    text-decoration: none;
+    padding: 5px;
+    color: white;
+}
+
+.header .fhead .list ul li a:hover{
+    border-bottom: solid 2px white;
+}
+.header .shead{
+    margin-top: 10em;
+    text-align: center;
+}
+.header .shead h1{
+    font-size: 3em;
+    margin-bottom: 1em;
+}
+
+.shead .cards {
+    display: flex;
+    justify-content: space-around;
+}
+.shead .cards .card{
+    width: 100%;
+}
+.shead .cards .card i{
+    color: #6dc091;
+}
+.shead .cards .card p{
+    color: #a6a6ac;
+}
+.shead button{
+    margin-top: 3em;
+}
+/* skills CSS */
+
+.skills {
+    background-color: white;
+    padding: 5em 0;
+}
+
+.skills .details{
+    display: flex;
+}
+
+.skills .details .skill{
+    text-align: center;
+    padding: 0 6em;
+}
+
+.skills .details .skill img{
+    border-radius: 50%;
+}
+.skills .details .skill h2{
+    color: #555555;
+    padding: 0 2em;
+}
+
+.skills .details .skill p{
+    font-size: 0.9em;
+    line-height: 1.5em;
+    color: #a7a7a7;
+}
+
+.skills .details .skill button{
+    margin-top: 2em;
+}
+
+/* Footer form CSS */
+.footerform {
+    overflow: hidden;
+    width: 100%;
+    padding: 5em 0;
+    background-color: #6bc091;
+    color: white;
+}
+.footerform h2{
+    text-align: center;
+}
+.footerform .getintouch .org{
+    display: flex;
+}
+.footerform .getintouch .org .inputlabel{
+    width: 100%;
+    margin: 2em;
+}
+
+.footerform .getintouch .org .inputlabel label{
+    display: block;
+}
+.footerform .getintouch .org .inputlabel input{
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: none;
+    border: 2px solid #8dcca9;
+    border-radius: 10px;
+    color: white;
+}
+.footerform .getintouch .org .inputlabel input:focus{
+    border: 3px solid #4bad77;
+    outline: none;
+}
+.footerform .getintouch .org .inputlabel input::placeholder{
+    color: #c4e5d3;
+}
+.footerform .getintouch .erea{
+    margin: 0 2em;
+}
+.footerform .getintouch .erea label{
+    display: block;
+}
+
+.footerform .getintouch .erea textarea{
+    width: 100%;
+    
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: none;
+    border: 2px solid #8dcca9;
+    border-radius: 10px;
+    color: white;
+}
+.footerform .getintouch .erea textarea:focus{
+    border: 3px solid #4bad77;
+    outline: none;
+}
+.footerform .getintouch .erea textarea::placeholder{
+    color: #c4e5d3;
+}
+.footerform .getintouch button{
+    display: block;
+    margin: 2em auto;
+    border: solid 2px white;
+    border-radius: 20px;
+    background: none;
+    color: white;
+    padding: 10px 40px;
+    text-transform: uppercase;
+}
+
+.footerform .getintouch button:hover{
+    background-color: rgba(255, 255, 255, 0.233);
+}
+.footerform .getintouch button:focus{
+    outline: none;
+}
+
+.footerform .copyrights{
+    text-align: center;
+    color: #c4e5d3;
+    font-size: small;
+}
+
+/* Customized Things CSS */
+
+.mid-outline{
+    border-left: 2px solid #6e6e7a;
+    border-right: 2px solid #6e6e7a;
+}
+
+.cus-btn {
+    border: solid 2px #6dc091;
+    border-radius: 20px;
+    background: none;
+    color: #6dc091;
+    padding: 10px 40px;
+    text-transform: uppercase;
+}
+.cus-btn:hover{
+    background-color: #6dc09133;
+}
+.cus-btn:focus{
+    outline: none;
+}
+.inputSelected {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: none;
+    border: 2px solid #4bad77;
+    border-radius: 10px;
+    color: white;
+}
