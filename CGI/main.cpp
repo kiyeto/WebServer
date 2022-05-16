@@ -31,8 +31,16 @@ std::string	recv_all(int sock){
 	return ret;
 }
 
-std::string	read_file(char* filename){
-	std::ifstream fd(filename);
+std::string	read_file(const char* filename){
+	std::string root("projection_BY_TEMPLATED");
+	std::ifstream fd;
+	if (strcmp(filename, "/") == 0)
+	{
+		fd.open(root + "/index.html");
+		std::cout << "Slaaaaaaaash" << std::endl;
+	}
+	else
+		fd.open(root + filename);
 	if (!fd.is_open())
 		std::cout << "Failed" << std::endl;
 	std::string ret( (std::istreambuf_iterator<char>(fd) ),
@@ -49,6 +57,7 @@ int main()
 	if ((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
 		return -1;
 	// fcntl(sock, F_SETFL, O_NONBLOCK);
+	setsockopt(sock, SO_REUSEADDR, SO_REUSEADDR, NULL, 0);
 	int opt = sizeof(addr);
 	// if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
 	// 	std::cout << "setsockopt error" << std::endl;
@@ -57,17 +66,16 @@ int main()
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(def.port);
 	if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)))
-		std::cout << "bind failed" << std::endl;
+		perror("bind");
 	if (listen(sock, 10) < 0)
 	{
 		std::cout << "Listen failed" << std::endl;
 		return 0;
 	}
-	int new_sock, msg_len, kq;
+	int new_sock, msg_len;
 	std::string msg;
 	struct kevent changelist, eventlist;
-	kq = kqueue();
-	std::string respo = "HTTP/1.1 200 \"OK\"\nContent_Type: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n\n";
+	std::string respo = "HTTP/1.1 200 \"OK\"\nContent_Type: text/html,text/css,image/avif,image/webp,image/apng,image/svg+xml,image/*,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n\n";
 	while (1)
 	{
 		std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
@@ -84,7 +92,7 @@ int main()
 		request req(msg);
 
 		std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-		respo += read_file("projection_BY_TEMPLATED/index.html");
+		respo += read_file(req.getUri().c_str());
 		send(new_sock, respo.c_str(), respo.length(), 0);
 	}
 	

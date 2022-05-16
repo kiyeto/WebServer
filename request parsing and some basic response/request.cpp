@@ -48,3 +48,13 @@ request::request(std::string raw)
 
 	std::cout << "********* END REQUEST ********" << std::endl;
 }
+
+std::string	request::getMethod() const {
+	return method;
+}
+std::string	request::getUri() const {
+	return URI;
+}
+std::string	request::getVersion() const {
+	return version;
+}

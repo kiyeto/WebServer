@@ -22,4 +22,7 @@ public:
     request():method(), URI(), version(), body() {};
 
     request(std::string raw);
+	std::string	getMethod() const;
+	std::string	getUri() const;
+	std::string	getVersion() const;
 };
