@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 class Cgi_request {
-	std::string 
+	std::vector<std::string> meta_vars;
 	public:
 		void execute(std::string &Path);
 };
