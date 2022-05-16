@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include "config.hpp"
+#include "../request parsing and some basic response/request.hpp"
 
 #include "Cgi_request.hpp"
 
@@ -32,6 +33,8 @@ std::string	recv_all(int sock){
 
 std::string	read_file(char* filename){
 	std::ifstream fd(filename);
+	if (!fd.is_open())
+		std::cout << "Failed" << std::endl;
 	std::string ret( (std::istreambuf_iterator<char>(fd) ),
                        (std::istreambuf_iterator<char>()    ) );
 	return ret;
@@ -40,6 +43,7 @@ std::string	read_file(char* filename){
 int main()
 {
 	server def;
+	request req;
 	struct sockaddr_in addr;
 	int sock;
 	if ((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
@@ -77,7 +81,7 @@ int main()
 		// std::cout << msg << std::endl;
 		std::cout << ">>>>>> The request is <<<<<<" << std::endl;
 		std::cout << msg << std::endl;
-
+		request req(msg);
 
 		std::cout << ">>>>>> The response is <<<<<<" << std::endl;
 		respo += read_file("projection_BY_TEMPLATED/index.html");
