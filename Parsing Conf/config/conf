@@ -1,0 +1,36 @@
+server {
+  listen = 1337
+  server_name = test1
+  root = root/path
+  index = index.html
+  body_size_limit = 100
+  error_page = error/page
+
+
+  location = [
+    root = root/path
+    path = /
+    method = GET POST DELETE
+    upload = /upload/path/
+    cgi = cgi/path
+    autoindex = off
+  ]
+  
+  location = [
+    root = root/other/path
+    path = /another
+    method = GET POST DELETE
+    upload = /upload/path/
+    autoindex = off
+  ]
+  
+  location = [
+    root = root/path
+    path = /anotherone
+    method = GET POST DELETE
+    upload = /upload/path/
+    autoindex = off
+    redirect = https://www.9anime.to
+  ]
+
+}
