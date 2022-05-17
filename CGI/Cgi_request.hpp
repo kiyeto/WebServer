@@ -21,14 +21,18 @@
 
 class Cgi_request {
 	std::vector<std::string> meta_vars;
+	char **envp;
 
 	void	meta(std::string method, int redirect_status){
 		std::stringstream conv(redirect_status);
 		std::string redirect;
 		conv >> redirect;
 		meta_vars.push_back("REQUEST_METHOD=" + method);
-		meta_vars.push_back("REDIRECT_STATUS=" + redirect);
+		meta_vars.push_back("REDIRECT_STATUS=200"); //Need To Be Dynamic
+		setenv("REQUEST_METHOD", method.c_str(), 1);
+		setenv("REDIRECT_STATUS", "200", 1);
 	}
 	public:
-		void execute(std::string &Path);
+		Cgi_request(char **envp): envp(envp){}
+		std::string execute(std::string Path);
 };
