@@ -7,7 +7,6 @@
 #include <sys/time.h>
 #include <sstream>
 #include <sys/select.h>
-#include <iostream>
 #include <fstream>
 #include "config.hpp"
 #include "../request parsing and some basic response/request.hpp"
@@ -50,55 +49,55 @@ std::string	read_file(const char* filename){
 
 int main()
 {
-	server def;
-	request req;
-	struct sockaddr_in addr;
-	int sock;
-	if ((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
-		return -1;
-	// fcntl(sock, F_SETFL, O_NONBLOCK);
-	setsockopt(sock, SO_REUSEADDR, SO_REUSEADDR, NULL, 0);
-	int opt = sizeof(addr);
-	// if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-	// 	std::cout << "setsockopt error" << std::endl;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	addr.sin_port = htons(def.port);
-	if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)))
-		perror("bind");
-	if (listen(sock, 10) < 0)
-	{
-		std::cout << "Listen failed" << std::endl;
-		return 0;
-	}
-	int new_sock, msg_len;
-	std::string msg;
-	struct kevent changelist, eventlist;
-	std::string respo = "HTTP/1.1 200 \"OK\"\nContent_Type: text/html,text/css,image/avif,image/webp,image/apng,image/svg+xml,image/*,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n\n";
-	while (1)
-	{
-		std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
-		if (( new_sock = accept(sock, (struct sockaddr *)&addr, (socklen_t*)&opt)) < 0)
-		{
-			std::cout << "Accept failed " << new_sock << std::endl;
-			return 1;
-		}
-		std::cout << ">>>>>> connection established <<<<<<<<" << std::endl;
-		msg = recv_all(new_sock);
-		// std::cout << msg << std::endl;
-		std::cout << ">>>>>> The request is <<<<<<" << std::endl;
-		std::cout << msg << std::endl;
-		request req(msg);
+	// server def;
+	// request req;
+	// struct sockaddr_in addr;
+	// int sock;
+	// if ((sock = socket(PF_INET, SOCK_STREAM, 0)) < 0)
+	// 	return -1;
+	// // fcntl(sock, F_SETFL, O_NONBLOCK);
+	// setsockopt(sock, SO_REUSEADDR, SO_REUSEADDR, NULL, 0);
+	// int opt = sizeof(addr);
+	// // if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+	// // 	std::cout << "setsockopt error" << std::endl;
+	// memset(&addr, 0, sizeof(addr));
+	// addr.sin_family = AF_INET;
+	// addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	// addr.sin_port = htons(def.port);
+	// if (bind(sock, (struct sockaddr*)&addr, sizeof(addr)))
+	// 	perror("bind");
+	// if (listen(sock, 10) < 0)
+	// {
+	// 	std::cout << "Listen failed" << std::endl;
+	// 	return 0;
+	// }
+	// int new_sock, msg_len;
+	// std::string msg;
+	// struct kevent changelist, eventlist;
+	// std::string respo = "HTTP/1.1 200 \"OK\"\nContent_Type: text/html,text/css,image/avif,image/webp,image/apng,image/svg+xml,image/*,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n\n";
+	// while (1)
+	// {
+	// 	std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
+	// 	if (( new_sock = accept(sock, (struct sockaddr *)&addr, (socklen_t*)&opt)) < 0)
+	// 	{
+	// 		std::cout << "Accept failed " << new_sock << std::endl;
+	// 		return 1;
+	// 	}
+	// 	std::cout << ">>>>>> connection established <<<<<<<<" << std::endl;
+	// 	msg = recv_all(new_sock);
+	// 	// std::cout << msg << std::endl;
+	// 	std::cout << ">>>>>> The request is <<<<<<" << std::endl;
+	// 	std::cout << msg << std::endl;
+	// 	request req(msg);
 
-		std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-		respo += read_file(req.getUri().c_str());
-		send(new_sock, respo.c_str(), respo.length(), 0);
-	}
+	// 	std::cout << ">>>>>> The response is <<<<<<" << std::endl;
+	// 	respo += read_file(req.getUri().c_str());
+	// 	send(new_sock, respo.c_str(), respo.length(), 0);
+	// }
 	
-	// Cgi_request cgi;
+	Cgi_request cgi;
 
-	// std::string path = "wordpress/index.php";
-	// cgi.execute(path);
+	std::string path = "wordpress/index.php";
+	cgi.execute(path);
 	
 }
