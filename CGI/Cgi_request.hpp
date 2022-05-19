@@ -20,19 +20,10 @@
 
 
 class Cgi_request {
-	std::vector<std::string> meta_vars;
-	char **envp;
+	std::string path, query_str, path_info, root;
 
-	void	meta(std::string method, int redirect_status){
-		std::stringstream conv(redirect_status);
-		std::string redirect;
-		conv >> redirect;
-		meta_vars.push_back("REQUEST_METHOD=" + method);
-		meta_vars.push_back("REDIRECT_STATUS=200"); //Need To Be Dynamic
-		setenv("REQUEST_METHOD", method.c_str(), 1);
-		setenv("REDIRECT_STATUS", "200", 1);
-	}
+	
 	public:
-		Cgi_request(char **envp): envp(envp){}
+		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")){}
 		std::string execute(std::string Path);
 };

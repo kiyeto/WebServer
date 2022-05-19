@@ -7,9 +7,9 @@ server {
   error_page = error/page
 
 
-  location = [
+  location .php [
     root = root/path
-    path = /
+    path = /goinfre/bamghoug/.brew/opt/php@7.4/bin/php-cgi
     method = GET POST DELETE
     upload = /upload/path/
     cgi = cgi/path
