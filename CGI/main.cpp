@@ -10,6 +10,7 @@
 #include <fstream>
 #include "config.hpp"
 #include "../request parsing and some basic response/request.hpp"
+#include "Uriparser.hpp"
 
 #include "Cgi_request.hpp"
 
@@ -51,7 +52,7 @@ int main(int ac, char **av, char **envp)
 {
 	if (ac == 2)
 	{
-		Cgi_request cgi();
+		Cgi_request cgi;
 		server def;
 		request req;
 		struct sockaddr_in addr;
@@ -93,7 +94,7 @@ int main(int ac, char **av, char **envp)
 			std::cout << ">>>>>> The request is <<<<<<" << std::endl;
 			std::cout << msg << std::endl;
 			request req(msg);
-
+			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
 			respo += cgi.execute(req.getUri());
 			send(new_sock, respo.c_str(), respo.length(), 0);

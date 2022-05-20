@@ -20,9 +20,9 @@
 
 
 class Cgi_request {
-	std::string path, query_str, path_info, root;
-
-	
+	private:
+		std::string path, query_str, path_info, root;
+		std::string child_proce(const char **cmd);
 	public:
 		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")){}
 		std::string execute(std::string Path);
