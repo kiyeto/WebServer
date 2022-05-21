@@ -7,4 +7,4 @@ SRC= Cgi_request.cpp ../request\ parsing\ and\ some\ basic\ response/request.cpp
 all: $(NAME)
 
 $(NAME): $(SRC)
-	clang++ $(FLAGS) $(SRC) -o $(NAME)
+	clang++ -fsanitize=address $(FLAGS) $(SRC) -o $(NAME)

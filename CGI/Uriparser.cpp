@@ -1,9 +1,13 @@
 #include "Uriparser.hpp"
 
-Uriparser::Uriparser(std::string p) : path(p), script_name(), path_info(), query_string() {
-	size_t i = path.find('?');
+Uriparser::Uriparser(std::string p) : path(), script_name(), path_info(), query_string() {
+	size_t i = p.find('?');
 	if (i != std::string::npos)
-		query_string = path.begin().base() + i + 1;
-	
-	std::cout << query_string << std::endl;	
+	{
+		query_string = p.begin().base() + i + 1;
+		p.erase(p.begin() + i + 1, p.end());
+		path = p;
+	} else {
+		path = p;
+	}
 }

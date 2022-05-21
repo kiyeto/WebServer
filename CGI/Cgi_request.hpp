@@ -3,6 +3,7 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <map>
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
@@ -21,9 +22,13 @@
 
 class Cgi_request {
 	private:
-		std::string path, query_str, path_info, root;
-		std::string child_proce(const char **cmd);
+		std::string path, query_str, path_info, root, body;
+		std::map<std::string, std::string> headers;
+
+		std::string child_proce(const char **cmd, const char **envp);
+		std::vector<std::string> set_envp();
+		int	parse_cgiResponse(std::string respo);
 	public:
-		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")){}
+		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")), body(), headers(){}
 		std::string execute(std::string Path);
 };

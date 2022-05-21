@@ -61,7 +61,6 @@ int main(int ac, char **av, char **envp)
 			return -1;
 		// fcntl(sock, F_SETFL, O_NONBLOCK);
 		int flag = 1;  
-		setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &flag, sizeof(flag));
 		int opt = sizeof(addr);
 		// if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
 		// 	std::cout << "setsockopt error" << std::endl;
@@ -79,7 +78,8 @@ int main(int ac, char **av, char **envp)
 		int new_sock, msg_len;
 		std::string msg;
 		struct kevent changelist, eventlist;
-		std::string respo = "HTTP/1.1 200 \"OK\"\n";
+		setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &flag, sizeof(flag));
+		std::string respo = "HTTP/1.1 302 \"Found\"\n";
 		while (1)
 		{
 			std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
@@ -97,6 +97,7 @@ int main(int ac, char **av, char **envp)
 			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
 			respo += cgi.execute(req.getUri());
+			std::cout << respo << std::endl;
 			send(new_sock, respo.c_str(), respo.length(), 0);
 		}
 	}
