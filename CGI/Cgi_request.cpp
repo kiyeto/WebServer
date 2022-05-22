@@ -5,6 +5,7 @@ std::string	Cgi_request::execute(std::string path){
 	std::string cmd("/Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi");
 	std::string response;
 	std::vector<std::string> meta_vars;
+	std::string start_line("HTTP/1.1");
 
 	args.push_back(cmd); // Need To Be replaced With CMD
 	args.push_back(root + path);
@@ -14,14 +15,21 @@ std::string	Cgi_request::execute(std::string path){
 	p[args.size()] = NULL;
 	meta_vars = set_envp();
 	const char **penv = (const char**)meta_vars.begin().base();
-	// int i = -1;
-	// while (penv[++i])
-	// 	std::cout << "fffffff = " << penv[i] << std::endl;
-	// while (1) {
-		response = child_proce(p, (const char**)meta_vars.begin().base());
-		parse_cgiResponse(response);
-	// }
-	return response;
+
+	response = child_proce(p, (const char**)meta_vars.begin().base());
+	parse_cgiResponse(response);
+	std::map<std::string, std::string>::iterator it = headers.find("Status");
+	if (it != headers.end())
+	{
+		start_line += it->second + "\n";
+		start_line += response;
+		headers.clear();
+		return start_line;
+	}
+	start_line += " 200 OK\n";
+	start_line += response;
+	headers.clear();
+	return start_line;
 }
 
 std::string Cgi_request::child_proce(const char **cmd, const char **envp){
@@ -61,7 +69,7 @@ std::vector<std::string> Cgi_request::set_envp(){
 	return ret;
 }
 
-int Cgi_request::parse_cgiResponse(std::string respo) {
+void	 Cgi_request::parse_cgiResponse(std::string respo) {
 	size_t i = 0, j = 0;
 
 	if ((i = respo.find("\r\n\r\n")) != std::string::npos)
@@ -77,5 +85,4 @@ int Cgi_request::parse_cgiResponse(std::string respo) {
 			headers.insert(std::make_pair(std::string(tmp.begin(), tmp.begin() + j), std::string(tmp.begin() + j + 1, tmp.end())));
 		respo.erase(respo.begin(), respo.begin() + i + 1);
 	}
-	return 0;
 }

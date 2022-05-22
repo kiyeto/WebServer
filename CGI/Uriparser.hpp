@@ -3,7 +3,7 @@
 #include <iostream>
 
 class Uriparser {
-	std::string path, script_name, path_info, query_string;
 	public:
+		std::string path, script_name, path_info, query_string;
 		Uriparser(std::string path);
 };

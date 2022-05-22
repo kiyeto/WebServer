@@ -5,7 +5,7 @@ Uriparser::Uriparser(std::string p) : path(), script_name(), path_info(), query_
 	if (i != std::string::npos)
 	{
 		query_string = p.begin().base() + i + 1;
-		p.erase(p.begin() + i + 1, p.end());
+		p.erase(p.begin() + i, p.end());
 		path = p;
 	} else {
 		path = p;

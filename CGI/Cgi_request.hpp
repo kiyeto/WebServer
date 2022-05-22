@@ -27,7 +27,7 @@ class Cgi_request {
 
 		std::string child_proce(const char **cmd, const char **envp);
 		std::vector<std::string> set_envp();
-		int	parse_cgiResponse(std::string respo);
+		void	parse_cgiResponse(std::string respo);
 	public:
 		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")), body(), headers(){}
 		std::string execute(std::string Path);

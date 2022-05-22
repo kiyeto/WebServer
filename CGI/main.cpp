@@ -31,13 +31,10 @@ std::string	recv_all(int sock){
 	return ret;
 }
 
-std::string	read_file(const char* filename){
-	std::string root("");
+std::string	read_file(std::string root, const char* filename){
 	std::ifstream fd;
 	if (strcmp(filename, "/") == 0)
-	{
 		fd.open(root + "/index.html");
-	}
 	else
 		fd.open(root + filename);
 	std::cout << root + filename << std::endl;
@@ -79,7 +76,7 @@ int main(int ac, char **av, char **envp)
 		std::string msg;
 		struct kevent changelist, eventlist;
 		setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &flag, sizeof(flag));
-		std::string respo = "HTTP/1.1 302 \"Found\"\n";
+		std::string respo;
 		while (1)
 		{
 			std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
@@ -96,9 +93,15 @@ int main(int ac, char **av, char **envp)
 			request req(msg);
 			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-			respo += cgi.execute(req.getUri());
+			if (pr.path.find(".php") != std::string::npos)
+				respo = cgi.execute(req.getUri());
+			else {
+				respo = "HTTP/1.1 200 OK\n";
+				respo += read_file(getenv("PWD"), pr.path.c_str());
+			}
 			std::cout << respo << std::endl;
 			send(new_sock, respo.c_str(), respo.length(), 0);
+			respo.clear();
 		}
 	}
 	std::cerr << "Config file Needed!" << std::endl;
