@@ -1,4 +1,4 @@
-
+#pragma once
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -25,4 +25,6 @@ public:
 	std::string	getMethod() const;
 	std::string	getUri() const;
 	std::string	getVersion() const;
+	std::map<std::string, std::string> getHeaders() const;
+	long	getBodySize() const;
 };

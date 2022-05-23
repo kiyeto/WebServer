@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
+#include "../request parsing and some basic response/request.hpp"
+#include "Uriparser.hpp"
 
 
 /*
@@ -23,12 +25,12 @@
 class Cgi_request {
 	private:
 		std::string path, query_str, path_info, root, body;
-		std::map<std::string, std::string> headers;
+		std::map<std::string, std::string> headers, meta;
+		Uriparser pr;
 
 		std::string child_proce(const char **cmd, const char **envp);
-		std::vector<std::string> set_envp();
 		void	parse_cgiResponse(std::string respo);
 	public:
-		Cgi_request(): path(), query_str(), path_info(), root(getenv("PWD")), body(), headers(){}
-		std::string execute(std::string Path);
+		Cgi_request(request &req);
+		std::string execute();
 };

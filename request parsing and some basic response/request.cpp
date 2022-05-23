@@ -58,3 +58,9 @@ std::string	request::getUri() const {
 std::string	request::getVersion() const {
 	return version;
 }
+std::map<std::string, std::string> request::getHeaders() const {
+	return headers;
+}
+long	request::getBodySize() const{
+	return body_size;
+}

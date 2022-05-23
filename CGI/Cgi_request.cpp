@@ -1,24 +1,55 @@
 #include "Cgi_request.hpp"
 
-std::string	Cgi_request::execute(std::string path){
+Cgi_request::Cgi_request(request &req): path(), query_str(), path_info(), root(getenv("PWD")), body(), headers(), pr(req.getUri()) 
+{
+	meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
+	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(root + req.getUri())));
+	meta.insert(std::make_pair(std::string("QUERY_STRING="), std::string(pr.query_string)));
+	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
+	if (pr.path == "/")
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(root + "/index.php")));
+	else
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(root + pr.path)));
+	meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
+	meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
+	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
+	if (req.getBodySize())
+	{
+		meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
+		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
+	}
+	// meta.insert(std::make_pair(std::string(""), std::string()));
+
+}
+
+std::string	Cgi_request::execute(){
 	std::vector<std::string> args;
 	std::string cmd("/Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi");
 	std::string response;
-	std::vector<std::string> meta_vars;
+	const char *meta_vars[meta.size() + 1];
 	std::string start_line("HTTP/1.1");
 
 	args.push_back(cmd); // Need To Be replaced With CMD
-	args.push_back(root + path);
+	args.push_back(meta.find("SCRIPT_NAME=")->second);
+
 	const char *p[args.size() + 1];
 	for(int i = 0; i < args.size(); i++)
 		p[i] = args[i].c_str();
 	p[args.size()] = NULL;
-	meta_vars = set_envp();
-	const char **penv = (const char**)meta_vars.begin().base();
 
-	response = child_proce(p, (const char**)meta_vars.begin().base());
+	std::string tmp[meta.size() + 1];
+	std::map<std::string, std::string>::iterator it = meta.begin();
+	for(int i = 0; i < meta.size(); i++)
+	{
+		tmp[i] = it->first + it->second;
+		meta_vars[i] = tmp[i].c_str();
+		it++;
+	}
+	meta_vars[meta.size()] = NULL;
+
+	response = child_proce(p, (const char**)meta_vars);
 	parse_cgiResponse(response);
-	std::map<std::string, std::string>::iterator it = headers.find("Status");
+	it = headers.find("Status");
 	if (it != headers.end())
 	{
 		start_line += it->second + "\n";
@@ -33,6 +64,9 @@ std::string	Cgi_request::execute(std::string path){
 }
 
 std::string Cgi_request::child_proce(const char **cmd, const char **envp){
+	int i = -1;
+	while(envp[++i])
+		std::cout << envp[i] << std::endl;
 	int fds[2];
 	pipe(fds);
 	int child = fork();
@@ -54,19 +88,6 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 		memset(buf, 0, 1025);
 	}
 	return content;
-}
-
-std::vector<std::string> Cgi_request::set_envp(){
-	std::vector<std::string> ret;
-
-	ret.push_back("REQUEST_METHOD=GET");
-	ret.push_back("SERVER_PORT=8080");
-	ret.push_back("SCRIPT_NAME=" + path);
-	ret.push_back("SERVER_NAME=127.0.0.1");
-	ret.push_back("PATH_INFO=wordpress");
-	ret.push_back(std::string());
-
-	return ret;
 }
 
 void	 Cgi_request::parse_cgiResponse(std::string respo) {

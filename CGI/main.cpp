@@ -11,8 +11,8 @@
 #include "config.hpp"
 #include "../request parsing and some basic response/request.hpp"
 #include "Uriparser.hpp"
-
 #include "Cgi_request.hpp"
+#include <stdlib.h>
 
 std::string	recv_all(int sock){
 	char buffer[1024];
@@ -34,7 +34,7 @@ std::string	recv_all(int sock){
 std::string	read_file(std::string root, const char* filename){
 	std::ifstream fd;
 	if (strcmp(filename, "/") == 0)
-		fd.open(root + "/index.html");
+		fd.open(root + "/index.php");
 	else
 		fd.open(root + filename);
 	std::cout << root + filename << std::endl;
@@ -49,7 +49,6 @@ int main(int ac, char **av, char **envp)
 {
 	if (ac == 2)
 	{
-		Cgi_request cgi;
 		server def;
 		request req;
 		struct sockaddr_in addr;
@@ -93,15 +92,19 @@ int main(int ac, char **av, char **envp)
 			request req(msg);
 			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-			if (pr.path.find(".php") != std::string::npos)
-				respo = cgi.execute(req.getUri());
+			if (pr.path.find(".php") != std::string::npos) {
+				Cgi_request cgi(req);
+				respo = cgi.execute();
+			}
 			else {
-				respo = "HTTP/1.1 200 OK\n";
+				respo = "HTTP/1.1 200 OK\r\n\r\n";
+				std::string tmp (req.getHeaders().find("Accept")->second);
 				respo += read_file(getenv("PWD"), pr.path.c_str());
 			}
 			std::cout << respo << std::endl;
-			send(new_sock, respo.c_str(), respo.length(), 0);
+			send(new_sock, respo.c_str(), respo.length(), MSG_OOB);
 			respo.clear();
+			close(new_sock);
 		}
 	}
 	std::cerr << "Config file Needed!" << std::endl;

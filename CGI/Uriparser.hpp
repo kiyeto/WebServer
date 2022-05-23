@@ -1,4 +1,4 @@
-#pragma Uriparser
+#pragma once
 #include <cstring>
 #include <iostream>
 

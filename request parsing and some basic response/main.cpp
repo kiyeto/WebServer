@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
 			token = strtok(NULL, " \n");
 			if (current == 0)
 			{
-				path = std::string("/Users/abenouda/Desktop/WebServ") + std::string(token);
+				path = std::string("/Users/bamghoug/Desktop/WebServer/CGI") + std::string(token);
 				// path = token;
 				// std::cout << path << std::endl;
 				break;
@@ -121,9 +121,9 @@ int main(int argc, char const *argv[])
 				s << ifs.rdbuf();
 
 			std::string response = header + s.str();
-			// std::cout << "*********** RESPONSE **********" << std::endl;
-			// std::cout << response << std::endl;
-			// std::cout << "********* END RESPONSE ********" << std::endl;
+			std::cout << "*********** RESPONSE **********" << std::endl;
+			std::cout << response << std::endl;
+			std::cout << "********* END RESPONSE ********" << std::endl;
 			write(new_socket , response.c_str() , response.size());
 			}
 		}
