@@ -14,6 +14,10 @@
 #include "Cgi_request.hpp"
 #include <stdlib.h>
 
+#include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
+#include "../Parsing Conf/configfile_src/LocationConfig.hpp"
+#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
+
 std::string	recv_all(int sock){
 	char buffer[1024];
 	std::string ret;
@@ -49,6 +53,22 @@ int main(int ac, char **av, char **envp)
 {
 	if (ac == 2)
 	{
+		std::string arg(av[1]);
+		ConfigfileClass config(arg);
+		try {
+			config.configfileparser();
+		} catch (const std::exception &e) {
+			std::cerr << e.what() << std::endl;
+		}
+
+		std::vector<ServerConfig> servers = config.getServerConfig();
+
+
+
+
+
+
+		
 		server def;
 		request req;
 		struct sockaddr_in addr;

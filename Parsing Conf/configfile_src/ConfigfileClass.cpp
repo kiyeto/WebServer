@@ -155,7 +155,7 @@ void ConfigfileClass::configfileparser()
                 /*now how to make this shit work*/
                 if (buf[0] == 'l')
                 {
-                    if (is_port = false && std::strncmp("listen = ", buf.c_str(), 9) == 0)
+                    if (is_port == false && std::strncmp("listen = ", buf.c_str(), 9) == 0)
                     {
                         this->serverConf[n_servers].port = std::stoi(buf.substr(buf.find("listen = " + strlen("listen = "))));
                         is_port = true;
