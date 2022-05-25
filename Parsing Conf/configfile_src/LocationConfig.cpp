@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:43:25 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 13:06:01 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ void LocationConfig::locationParser(std::string buf)
            }
            else if(buf[0] == 'n')
            {
-               if (this->name.empty() && std::strncmp("name = ", buf.c_str(), 9) == 0)
+               if (this->name.empty() && std::strncmp("name = ", buf.c_str(), 7) == 0)
                {
                     this->name = buf.substr(buf.find("name = ") + strlen("name = "));
                }
