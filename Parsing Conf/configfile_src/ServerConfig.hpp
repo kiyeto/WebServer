@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:22 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:50:06 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 14:16:24 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ private:
 public:
     ServerConfig(/* args */);
     ServerConfig(ServerConfig const &p);
-    ServerConfig &operator=(ServerConfig const &p);
-    ~ServerConfig();
 
+    ServerConfig &operator=(ServerConfig const &p);
+
+    ServerConfig & operator=(ServerConfig const &p);
     //getters 
-    size_t get_port();
     std::string get_name();
     std::string get_root();
     std::string get_redirect();

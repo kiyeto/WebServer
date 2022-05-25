@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:56:48 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 14:16:11 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ private:
 public:
     LocationConfig(/* args */);
     LocationConfig(LocationConfig const & p);
+	
     LocationConfig &operator= (LocationConfig const &p);
-    ~LocationConfig();
 
+    LocationConfig & operator= (LocationConfig const &p);
     //getters
-    std::string get_name();
     std::string get_path();
     std::string get_root();
     std::string get_redirect();

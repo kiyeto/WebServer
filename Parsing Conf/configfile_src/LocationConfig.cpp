@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:57:03 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 14:16:03 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@ LocationConfig::LocationConfig(LocationConfig const & p)
 }
 
 LocationConfig &LocationConfig::operator= (LocationConfig const &p)
-{
-    if (this != &p)
+
+LocationConfig & LocationConfig::operator= (LocationConfig const &p)
     {
-        this->auto_index = p.auto_index;
         this->cgi = p.cgi;
         this->methods = p.methods;
         this->path = p.path;
@@ -131,7 +130,7 @@ void LocationConfig::locationParser(std::string buf)
            }
            else if(buf[0] == 'n')
            {
-               if (this->name.empty() && std::strncmp("name = ", buf.c_str(), 9) == 0)
+               if (this->name.empty() && std::strncmp("name = ", buf.c_str(), 7) == 0)
                {
                     this->name = buf.substr(buf.find("name = ") + strlen("name = "));
                }
