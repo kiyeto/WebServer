@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 16:07:25 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 16:17:29 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ LocationConfig::LocationConfig(LocationConfig const & p)
 
 LocationConfig & LocationConfig::operator= (LocationConfig const &p)
 {
-    if (this != &p)
     {
-        this->auto_index = p.auto_index;
         this->cgi = p.cgi;
         this->methods = p.methods;
         this->path = p.path;

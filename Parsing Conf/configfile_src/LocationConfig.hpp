@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 13:07:39 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 16:22:20 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ private:
     
 public:
     LocationConfig(/* args */);
-    LocationConfig(LocationConfig const & p);
-    LocationConfig & operator= (LocationConfig const &p);
+    LocationConfig(LocationConfig const & p);	
     ~LocationConfig();
-
+    LocationConfig & operator= (LocationConfig const &p);
     //getters
     std::string get_name();
     std::string get_path();

@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 14:56:24 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 16:19:14 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ ServerConfig & ServerConfig::operator=(ServerConfig const &p)
 ServerConfig::~ServerConfig()
 {
 }
-
 
 size_t ServerConfig::get_port()
 {

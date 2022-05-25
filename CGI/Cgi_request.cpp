@@ -1,15 +1,15 @@
 #include "Cgi_request.hpp"
 
-Cgi_request::Cgi_request(request &req): path(), query_str(), path_info(), root(getenv("PWD")), body(), headers(), pr(req.getUri()) 
+Cgi_request::Cgi_request(request &req, ServerConfig &server): path(), query_str(), path_info(), body(), headers(), pr(req.getUri()), server(server)
 {
 	meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
-	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(root + req.getUri())));
+	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), std::string(pr.query_string)));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
 	if (pr.path == "/")
-		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(root + "/index.php")));
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + "/index.php")));
 	else
-		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(root + pr.path)));
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + pr.path)));
 	meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));

@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:22 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 13:07:48 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 16:21:57 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ public:
     ServerConfig(ServerConfig const &p);
     ServerConfig & operator=(ServerConfig const &p);
     ~ServerConfig();
-
+    
     //getters 
-    size_t get_port();
     std::string get_name();
+    size_t get_port();
     std::string get_root();
     std::string get_redirect();
     std::string get_index();
