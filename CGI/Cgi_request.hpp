@@ -10,6 +10,10 @@
 #include "../request parsing and some basic response/request.hpp"
 #include "Uriparser.hpp"
 
+#include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
+#include "../Parsing Conf/configfile_src/LocationConfig.hpp"
+#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
+
 
 /*
 	REDIRECT_STATUS=200
@@ -24,13 +28,14 @@
 
 class Cgi_request {
 	private:
-		std::string path, query_str, path_info, root, body;
+		std::string path, query_str, path_info, body;
 		std::map<std::string, std::string> headers, meta;
 		Uriparser pr;
+		ServerConfig &server;
 
 		std::string child_proce(const char **cmd, const char **envp);
 		void	parse_cgiResponse(std::string respo);
 	public:
-		Cgi_request(request &req);
+		Cgi_request(request &req, ServerConfig &server);
 		std::string execute();
 };

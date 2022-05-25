@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/03 18:01:51 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 12:29:06 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ void LocationConfig::locationParser(std::string buf)
             {
                 if (processed == false && std::strncmp("autoindex = ", buf.c_str(), 12) == 0)
                 {
-                    if (std::strncmp("autoindex = on", buf.c_str(), 14 == 0))
+                    if (std::strncmp("autoindex = on", buf.c_str(), 14) == 0)
                         this->auto_index = 1;
-                    else if (std::strncmp("autoindex = off", buf.c_str(), 15 == 0))
+                    else if (std::strncmp("autoindex = off", buf.c_str(), 15) == 0)
                         this->auto_index = 0;
                 }
                 else
