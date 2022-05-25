@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:43:58 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 13:07:12 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ ServerConfig::ServerConfig(ServerConfig const &p)
     *this = p;
 }
 
-ServerConfig ServerConfig::operator=(ServerConfig const &p)
+ServerConfig & ServerConfig::operator=(ServerConfig const &p)
 {
     if(this != &p)
     {

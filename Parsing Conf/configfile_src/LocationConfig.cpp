@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 13:06:01 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 13:07:21 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ LocationConfig::LocationConfig(LocationConfig const & p)
     *this = p;
 }
 
-LocationConfig LocationConfig::operator= (LocationConfig const &p)
+LocationConfig & LocationConfig::operator= (LocationConfig const &p)
 {
     if (this != &p)
     {

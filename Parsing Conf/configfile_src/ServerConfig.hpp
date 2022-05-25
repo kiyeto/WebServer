@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:22 by mbrija            #+#    #+#             */
-/*   Updated: 2022/04/22 12:26:09 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 13:07:48 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ private:
 public:
     ServerConfig(/* args */);
     ServerConfig(ServerConfig const &p);
-    ServerConfig operator=(ServerConfig const &p);
+    ServerConfig & operator=(ServerConfig const &p);
     ~ServerConfig();
 
     //getters 

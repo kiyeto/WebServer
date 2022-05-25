@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:35:57 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 13:07:39 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ private:
 public:
     LocationConfig(/* args */);
     LocationConfig(LocationConfig const & p);
-    LocationConfig operator= (LocationConfig const &p);
+    LocationConfig & operator= (LocationConfig const &p);
     ~LocationConfig();
 
     //getters
