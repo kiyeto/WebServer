@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:35:57 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 12:56:48 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ private:
 public:
     LocationConfig(/* args */);
     LocationConfig(LocationConfig const & p);
-    LocationConfig operator= (LocationConfig const &p);
+    LocationConfig &operator= (LocationConfig const &p);
     ~LocationConfig();
 
     //getters

@@ -90,8 +90,8 @@ void ConfigfileClass::setLocation()
     /*to do*/
     std::ifstream file(this->configFile);
     std::string buf;
-    size_t n_servers;
-    size_t n_locations;
+    size_t n_servers = 0;
+    size_t n_locations = 0;
 
     while (getline(file, buf))
     {

@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:48:03 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:57:03 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ LocationConfig::LocationConfig(LocationConfig const & p)
     *this = p;
 }
 
-LocationConfig LocationConfig::operator= (LocationConfig const &p)
+LocationConfig &LocationConfig::operator= (LocationConfig const &p)
 {
     if (this != &p)
     {
