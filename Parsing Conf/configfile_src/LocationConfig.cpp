@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:29:06 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:48:03 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 LocationConfig::LocationConfig(/* args */) : 
     path(""), root(""), auto_index(0), cgi(),
-    upload(""), redirect(""), methods()
+    upload(""), redirect(""), methods(), name("")
 {
 }
 
@@ -26,7 +26,7 @@ LocationConfig::LocationConfig(LocationConfig const & p)
 
 LocationConfig LocationConfig::operator= (LocationConfig const &p)
 {
-    if (!this)
+    if (this != &p)
     {
         this->auto_index = p.auto_index;
         this->cgi = p.cgi;
@@ -41,6 +41,11 @@ LocationConfig LocationConfig::operator= (LocationConfig const &p)
 
 LocationConfig::~LocationConfig()
 {
+}
+
+std::string LocationConfig::get_name()
+{
+    return this->name;
 }
 
 std::string LocationConfig::get_path()
@@ -117,12 +122,21 @@ void LocationConfig::locationParser(std::string buf)
            {
                if (this->upload.empty() && std::strncmp("upload = ", buf.c_str(), 9) == 0)
                {
-                    this->upload = buf.substr(buf.find("upload = " + strlen("upload = ")));
+                    this->upload = buf.substr(buf.find("upload = ") + strlen("upload = "));
                     if (this->upload[this->upload.size() - 1] == '/')
                         this->upload.resize(this->upload.size() -1);
                }
                else
                  throw Error_exc("syntax err : invalid upload");
+           }
+           else if(buf[0] == 'n')
+           {
+               if (this->name.empty() && std::strncmp("name = ", buf.c_str(), 9) == 0)
+               {
+                    this->name = buf.substr(buf.find("name = ") + strlen("name = "));
+               }
+               else
+                 throw Error_exc("syntax err : invalid name");
            }
            else if(buf[0] == 'c')
            {

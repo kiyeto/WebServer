@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 12:27:00 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:48:14 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ ServerConfig::ServerConfig(ServerConfig const &p)
 
 ServerConfig ServerConfig::operator=(ServerConfig const &p)
 {
-    if(!this)
+    if(this != &p)
     {
         this->body_size = p.body_size;
         this->error = p.error;
@@ -40,6 +40,7 @@ ServerConfig ServerConfig::operator=(ServerConfig const &p)
         this->redirect = p.redirect;
         this->root = p.root;
     }
+    return *this;
 }
 
 ServerConfig::~ServerConfig()
