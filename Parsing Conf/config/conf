@@ -7,7 +7,8 @@ server {
   error_page = error/page
 
 
-  location .php [
+  location = [
+    name = .php
     root = root/path
     path = /goinfre/bamghoug/.brew/opt/php@7.4/bin/php-cgi
     method = GET POST DELETE

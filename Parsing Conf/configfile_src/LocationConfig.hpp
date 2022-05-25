@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/04/27 11:13:30 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 12:35:57 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 class LocationConfig
 {
 private:
+    std::string name;
     std::string path;
     std::string root;
     std::string redirect;
@@ -31,6 +32,7 @@ public:
     ~LocationConfig();
 
     //getters
+    std::string get_name();
     std::string get_path();
     std::string get_root();
     std::string get_redirect();
