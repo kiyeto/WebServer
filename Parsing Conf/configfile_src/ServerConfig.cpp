@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 13:07:12 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/25 14:56:24 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 
 ServerConfig::ServerConfig(/* args */) :
-    port(-1), name(""), root(""),
-    index(""), redirect(""), body_size(100000000000),
-    location(0), location_count(0), log(""), error("")
+    port(-1), name(""), root(""), redirect(""),
+    index(""), log(""), error(""), body_size(100000000000),
+    location_count(0), location(0)
 {
 }
 

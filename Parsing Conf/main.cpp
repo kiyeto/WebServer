@@ -29,6 +29,7 @@ int main(int ac, char **av)
     try
     {
         configFile.configfileparser();
+        std::cout << "read successfully \n";
     }
     catch (const std::exception &e)
     {
