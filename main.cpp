@@ -8,15 +8,16 @@
 #include <sstream>
 #include <sys/select.h>
 #include <fstream>
-#include "config.hpp"
-#include "../request parsing and some basic response/request.hpp"
-#include "Uriparser.hpp"
-#include "Cgi_request.hpp"
+#include "request parsing and some basic response/request.hpp"
+#include "CGI/Uriparser.hpp"
+#include "CGI/Cgi_request.hpp"
 #include <stdlib.h>
 
-#include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
-#include "../Parsing Conf/configfile_src/LocationConfig.hpp"
-#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
+#include "Parsing Conf/configfile_src/ConfigfileClass.hpp"
+#include "Parsing Conf/configfile_src/LocationConfig.hpp"
+#include "Parsing Conf/configfile_src/ServerConfig.hpp"
+
+#include "Response/Response.hpp"
 
 std::string	recv_all(int sock){
 	char buffer[1024];
@@ -62,9 +63,7 @@ int main(int ac, char **av, char **envp)
 		}
 
 		std::vector<ServerConfig> servers = config.getServerConfig();
-
-
-
+		Response response(servers);
 		request req;
 		struct sockaddr_in addr;
 		int sock;
@@ -107,7 +106,7 @@ int main(int ac, char **av, char **envp)
 			request req(msg);
 			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-			if (pr.path.find(".php") != std::string::npos) {
+			if (pr.path.find(".php") != std::string::npos) { 
 				Cgi_request cgi(req, servers[0]);
 				respo = cgi.execute();
 			}

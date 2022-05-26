@@ -64,9 +64,6 @@ std::string	Cgi_request::execute(){
 }
 
 std::string Cgi_request::child_proce(const char **cmd, const char **envp){
-	int i = -1;
-	while(envp[++i])
-		std::cout << envp[i] << std::endl;
 	int fds[2];
 	pipe(fds);
 	int child = fork();
