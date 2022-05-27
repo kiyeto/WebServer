@@ -3,7 +3,7 @@
 request::request(std::string raw)
 {
 
-	std::cout << "*********** REQUEST **********" << std::endl;
+	// std::cout << "*********** REQUEST **********" << std::endl;
 	long header_end = raw.find("\r\n\r\n") + 4;
 
 	this->body = raw.substr(header_end);
@@ -37,16 +37,16 @@ request::request(std::string raw)
 			break;
 	}
 
-	std::map<std::string, std::string>::iterator b = headers.begin();
-	std::map<std::string, std::string>::iterator e = headers.end();
+	// std::map<std::string, std::string>::iterator b = headers.begin();
+	// std::map<std::string, std::string>::iterator e = headers.end();
 
-	while (b != e)
-	{
-		std::cout << b->first << "	|	" << b->second << std::endl;
-		b++;
-	}
+	// while (b != e)
+	// {
+	// 	std::cout << b->first << "	|	" << b->second << std::endl;
+	// 	b++;
+	// }
 
-	std::cout << "********* END REQUEST ********" << std::endl;
+	// std::cout << "********* END REQUEST ********" << std::endl;
 }
 
 std::string	request::getMethod() const {

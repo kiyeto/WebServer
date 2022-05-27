@@ -36,20 +36,6 @@ std::string	recv_all(int sock){
 	return ret;
 }
 
-std::string	read_file(std::string root, const char* filename){
-	std::ifstream fd;
-	if (strcmp(filename, "/") == 0)
-		fd.open(root + "/index.php");
-	else
-		fd.open(root + filename);
-	std::cout << root + filename << std::endl;
-	if (!fd.is_open())
-		std::cout << "Failed" << std::endl;
-	std::string ret( (std::istreambuf_iterator<char>(fd) ),
-                       (std::istreambuf_iterator<char>()    ) );
-	return ret;
-}
-
 int main(int ac, char **av, char **envp)
 {
 	if (ac == 2)
@@ -106,15 +92,16 @@ int main(int ac, char **av, char **envp)
 			request req(msg);
 			Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-			if (pr.path.find(".php") != std::string::npos) { 
-				Cgi_request cgi(req, servers[0]);
-				respo = cgi.execute();
-			}
-			else {
-				respo = "HTTP/1.1 200 OK\r\n\r\n";
-				std::string tmp (req.getHeaders().find("Accept")->second);
-				respo += read_file(getenv("PWD"), pr.path.c_str());
-			}
+			respo = response.get_response(req);
+			// if (pr.path.find(".php") != std::string::npos) { 
+			// 	Cgi_request cgi(req, servers[0]);
+			// 	respo = cgi.execute();
+			// }
+			// else {
+			// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
+			// 	std::string tmp (req.getHeaders().find("Accept")->second);
+			// 	respo += read_file(getenv("PWD"), pr.path.c_str());
+			// }
 			std::cout << respo << std::endl;
 			send(new_sock, respo.c_str(), respo.length(), MSG_OOB);
 			respo.clear();
