@@ -17,7 +17,10 @@ class	Response {
 	std::vector<ServerConfig>	&servers;
 
 	int	select_server(request &req);
-	std::string	make_response(Uriparser &pr, ServerConfig &server, bool	regular_file);
+
+	std::string	MIME_response(Uriparser &pr, ServerConfig &server, std::map<std::string, std::string>::iterator &it);
+	std::string	CGI_response(request &req, ServerConfig &server);
+	std::string	Dir_response(Uriparser &pr, ServerConfig &server);
 	public :
 		Response(std::vector<ServerConfig> &servers);
 		std::string	get_response(request &req);

@@ -24,11 +24,26 @@ Cgi_request::Cgi_request(request &req, ServerConfig &server): path(), query_str(
 
 std::string	Cgi_request::execute(){
 	std::vector<std::string> args;
-	std::string cmd("/Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi");
+
+	std::cout << "Extension = " << pr.extens << std::endl;
+	std::string cmd(find_location(pr.extens));
 	std::string response;
 	const char *meta_vars[meta.size() + 1];
 	std::string start_line("HTTP/1.1");
 
+	if (cmd.empty()) // there is no Location for this File Extension
+	{
+		std::ifstream file(meta.find("SCRIPT_NAME=")->second);
+		std::cout << "Filename = " << file << std::endl;
+		if (file.is_open()) {
+			start_line += " 200 OK\r\n";
+			start_line += "\r\n";
+			std::string ret( (std::istreambuf_iterator<char>(file) ),
+                       (std::istreambuf_iterator<char>()    ) );
+			start_line += ret;
+			return start_line;
+		}
+	}
 	args.push_back(cmd); // Need To Be replaced With CMD
 	args.push_back(meta.find("SCRIPT_NAME=")->second);
 
@@ -103,4 +118,14 @@ void	 Cgi_request::parse_cgiResponse(std::string respo) {
 			headers.insert(std::make_pair(std::string(tmp.begin(), tmp.begin() + j), std::string(tmp.begin() + j + 1, tmp.end())));
 		respo.erase(respo.begin(), respo.begin() + i + 1);
 	}
+}
+
+std::string	Cgi_request::find_location(std::string &extension){
+	std::vector<LocationConfig> locations = server.getLocation();
+	std::vector<LocationConfig>::iterator it = locations.begin();
+	for ( ; it < locations.end(); it++) {
+		if (it->get_name() == extension)
+			return it->get_path();
+	}
+	return std::string();
 }

@@ -31,25 +31,27 @@ std::string Response::get_response(request	&req) {
 	Uriparser pr(req.getUri());
 	int i = select_server(req);
 
-	if (!pr.extens.empty()){
+
+	if (!pr.extens.empty()){ // request with file
 		std::map<std::string, std::string>::iterator it = MIME_types.find(pr.extens);
 		if (it != MIME_types.end()) { // Regular file
-			respo = make
+			respo = MIME_response(pr, servers[i], it);
 		} else { // it's CGI
-
+			respo = CGI_response(req, servers[i]);
 		}
+	} else { // request with Directory
+		respo = Dir_response(pr, servers[i]);
 	}
 
-
-	if (pr.path.find(".php") != std::string::npos) { 
-		Cgi_request cgi(req, servers[0]);
-		respo = cgi.execute();
-	}
-	else {
-		respo = "HTTP/1.1 200 OK\r\n\r\n";
-		std::string tmp (req.getHeaders().find("Accept")->second);
-		respo += read_file(getenv("PWD"), pr.path.c_str());
-	}
+	// if (pr.path.find(".php") != std::string::npos) { 
+	// 	Cgi_request cgi(req, servers[0]);
+	// 	respo = cgi.execute();
+	// }
+	// else {
+	// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
+	// 	std::string tmp (req.getHeaders().find("Accept")->second);
+	// 	respo += read_file(getenv("PWD"), pr.path.c_str());
+	// }
 	return respo;
 }
 
@@ -81,6 +83,29 @@ int	Response::select_server(request &req){
 	return list_servers_p[0];
 }
 
-std::string	Response::make_response(Uriparser &pr, ServerConfig &server, bool	regular_file){
+std::string	Response::MIME_response(Uriparser &pr, ServerConfig &server, std::map<std::string, std::string>::iterator &it) {
+	std::string respo;
+	std::string filename(server.get_root() + pr.path);
 
+	// std::cout << "MIME Filename = " << filename << std::endl;
+	return std::string();
+}
+
+std::string	Response::CGI_response(request &req, ServerConfig &server){
+	std::string respo;
+	Uriparser pr(req.getUri());
+	std::string filename(server.get_root() + pr.path);
+
+	std::cout << "CGI Filename = " << filename << std::endl;
+	Cgi_request cgi(req, server);
+	return cgi.execute();
+}
+
+std::string	Response::Dir_response(Uriparser &pr, ServerConfig &server){
+	std::string respo;
+	std::string filename(server.get_root() + pr.path);
+
+	std::cout << "Dir Filename = " << filename << std::endl;
+
+	return std::string();
 }
