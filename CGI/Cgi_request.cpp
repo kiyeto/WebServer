@@ -71,7 +71,6 @@ std::string	Cgi_request::execute(){
 		it++;
 	}
 	meta_vars[meta.size()] = NULL;
-
 	response = child_proce(p, (const char**)meta_vars);
 	parse_cgiResponse(response);
 	it = headers.find("Status");
@@ -82,6 +81,7 @@ std::string	Cgi_request::execute(){
 		headers.clear();
 		return start_line;
 	}
+	std::cout << "Here = " << cmd << " " << response << std::endl;
 	start_line += " 200 OK\n";
 	start_line += response;
 	headers.clear();
@@ -134,6 +134,7 @@ std::string	Cgi_request::find_location(std::string &extension){
 	std::vector<LocationConfig> locations = server.getLocation();
 	std::vector<LocationConfig>::iterator it = locations.begin();
 	for ( ; it < locations.end(); it++) {
+		std::cout << it->get_path() << std::endl;
 		if (it->get_name() == extension)
 			return it->get_path();
 	}

@@ -1,0 +1,16 @@
+Waiting for a connection 
+server: new connexion on socket (4)
+Waiting for a connection 
+server: new connexion on socket (5)
+Waiting for a connection 
+valread  : 732
+CGI Filename = /Users/bamghoug/Desktop/WebServer/V2/index.php
+Extension = .php
+/another/
+/anotherone/
+/Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi/
+Here = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi/ 
+-----------Response--------
+HTTP/1.1 200 OK
+
+Waiting for a connection 

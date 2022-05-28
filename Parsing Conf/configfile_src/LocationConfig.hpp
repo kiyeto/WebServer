@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/28 12:47:11 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/28 23:29:24 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@ public:
     std::vector<std::string> getCgi();
     
        
-friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
-{ 
-        output << "name : " << D.get_name() << std::endl;
-        output << "path : " << D.get_path() << std::endl;
-        output << "root : " << D.get_root() << std::endl;
-        output << "redirect : " << D.get_redirect() << std::endl;
-        output << "upload : " << D.get_upload() << std::endl;
-        for (auto i: D.getMethods())
-            std::cout << "Mathods " << i << ' ' << std::endl;
-        for (auto i: D.getCgi())
-            std::cout << "Cgi " << i << ' ' << std::endl;
-        return output;
-}
+// friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
+// { 
+//         output << "name : " << D.get_name() << std::endl;
+//         output << "path : " << D.get_path() << std::endl;
+//         output << "root : " << D.get_root() << std::endl;
+//         output << "redirect : " << D.get_redirect() << std::endl;
+//         output << "upload : " << D.get_upload() << std::endl;
+//         for (auto i: D.getMethods())
+//             std::cout << "Mathods " << i << ' ' << std::endl;
+//         for (auto i: D.getCgi())
+//             std::cout << "Cgi " << i << ' ' << std::endl;
+//         return output;
+// }
 
     //parse here
     void locationParser(std::string buf);

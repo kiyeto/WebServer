@@ -8,7 +8,6 @@ Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_typ
 	// 	std::cout << "[\"" << it->first << "\", \"" << it->second << "\"]" << std::endl;
 	// 	it++;
 	// }
-	
 }
 
 

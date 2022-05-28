@@ -16,6 +16,14 @@
 #include <poll.h>
 #include <fcntl.h>
 #include "request.hpp"
+
+/* Includes Added by Brahim*/
+#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
+#include "../Parsing Conf/configfile_src/LocationConfig.hpp"
+#include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
+#include "../Response/Response.hpp"
+
+
 #define PORT 8080
 
 void	add_pfd(struct pollfd **pfds, int fd, int *numfds, int *maxfds)
@@ -38,10 +46,25 @@ void	delete_pfd(struct pollfd **pfds, int i, int *numfds)
 
 int main(int argc, char const *argv[])
 {
+	if (argc != 2)
+	{
+		std::cout << "Config file Needed!" << std::endl;
+		return 1;
+	}
 	int					server_fd;
 	int					valread;
 	struct sockaddr_in	address;
 	socklen_t			addrlen = sizeof(address);
+
+	std::string arg(argv[1]);
+	ConfigfileClass config(arg);
+	try {
+		config.configfileparser();
+	} catch (const std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+	std::vector<ServerConfig> servers = config.getServerConfig();
+
 	// Only this line has been changed. Everything is same.
 	std::string header = "HTTP/1.1 200 OK\r\n\r\n"; // = "HTTP/1.1 200 OK\n\n\nHello world!";    
 	// Creating socket file descriptor
@@ -54,7 +77,7 @@ int main(int argc, char const *argv[])
 
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons( PORT );
+	address.sin_port = htons( servers[0].get_port() );
 	
 	memset(address.sin_zero, '\0', sizeof address.sin_zero);
 	int yes = 1;
@@ -89,6 +112,7 @@ int main(int argc, char const *argv[])
 	// std::string request;
 	std::string response;
 	request		req;
+	Response	resp(servers);
 	
 	int j = 0;
 	while (1)
@@ -139,6 +163,10 @@ int main(int argc, char const *argv[])
 					ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					std::string part = std::string(buffer, valread);
 					req.assemble_request(part);
+					response = resp.get_response(req);
+
+					std::cout << "-----------Response--------" << std::endl;
+					std::cout << response << std::endl;
 					// ofs << "/////// chunk " << ++j << " /////////" << std::endl;
 					// ofs << "**************** read *******************" << std::endl;
 					ofs.write(buffer, valread);
