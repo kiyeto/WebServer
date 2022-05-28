@@ -38,7 +38,6 @@ std::string trim(const std::string &str, const std::string set)
 std::vector<std::string> split(std::string str, char sep)
 {
     std::vector<std::string> splitted;
-    std::string subed  = "";
     size_t start = 0;
     size_t end = 0;
     size_t i = 0;
@@ -47,6 +46,7 @@ std::vector<std::string> split(std::string str, char sep)
     {
         if (str[i] == sep || i == str.length())
         {
+            std::string subed  = ""; //THIS SHOULD BE HERE TO RESET UPON INSERTION
             end = i;
             subed.append(str, start, end - start);
             splitted.push_back(subed);

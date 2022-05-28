@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 16:17:29 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/28 13:01:56 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ LocationConfig::LocationConfig(LocationConfig const & p)
 LocationConfig & LocationConfig::operator= (LocationConfig const &p)
 {
     {
+        this->name = p.name;
         this->cgi = p.cgi;
         this->methods = p.methods;
         this->path = p.path;
@@ -106,7 +107,7 @@ void LocationConfig::locationParser(std::string buf)
             if(this->root.empty() && std::strncmp("root = ", buf.c_str(), 7) == 0)
             {
                 this->root = buf.substr(buf.find("root = ") + strlen("root = "));
-                if (this->root[this->root.size() - 1] != '/')
+                if (this->root[this->root.size() - 1] == '/')
                     this->root.resize(this->root.size() - 1);
                 break;
             }

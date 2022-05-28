@@ -29,6 +29,10 @@ int main(int ac, char **av)
     try
     {
         configFile.configfileparser();
+        std::vector<ServerConfig> vc ;
+        vc = configFile.getServerConfig();
+        for (auto i: vc)
+            std::cout << i << ' ';
         std::cout << "read successfully \n";
     }
     catch (const std::exception &e)
