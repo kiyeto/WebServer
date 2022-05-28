@@ -16,13 +16,6 @@
 
 #define PORT 8080
 
-class Request
-{
-	private:
-		std::string	;
-
-};
-
 int main(int argc, char const *argv[])
 {
 	int server_fd, new_socket;
@@ -69,7 +62,6 @@ int main(int argc, char const *argv[])
 			exit(EXIT_FAILURE);
 		}
 
-		sd::vector<std::string> request;
 		//	request info are in the buffer	
 		char buffer[30000] = {0};
 
@@ -78,7 +70,6 @@ int main(int argc, char const *argv[])
 		while (valread)
 		{
 			std::cout << "YOOOOOO!!!!" << std::endl;
-			request.push_back(std::string(buffer));
 			valread = read(new_socket, buffer, 30000);
 			std::cout << buffer << std::endl;
 		}
@@ -118,7 +109,6 @@ int main(int argc, char const *argv[])
 		else
 			std::cout << "file not found !" << std::endl;
 		
-		std::cout << "------------------Hello message sent-------------------" << std::endl;
 		close(new_socket);
 	}
 	return 0;
