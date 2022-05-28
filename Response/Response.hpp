@@ -21,6 +21,8 @@ class	Response {
 	std::string	MIME_response(Uriparser &pr, ServerConfig &server, std::map<std::string, std::string>::iterator &it);
 	std::string	CGI_response(request &req, ServerConfig &server);
 	std::string	Dir_response(Uriparser &pr, ServerConfig &server);
+
+	std::string	make_response(std::string &Status, std::vector<std::string> &headers, std::string &body);
 	public :
 		Response(std::vector<ServerConfig> &servers);
 		std::string	get_response(request &req);

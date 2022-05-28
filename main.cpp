@@ -49,11 +49,11 @@ int main(int ac, char **av, char **envp)
 		}
 
 		std::vector<ServerConfig> servers = config.getServerConfig();
-		std::vector<LocationConfig> locations = servers[0].getLocation();
-		std::vector<LocationConfig>::iterator it = locations.begin();
-		for ( ; it < locations.end(); it++) {
-			std::cout << "root == " << it->get_upload() << std::endl;
-		}
+		// std::vector<LocationConfig> locations = servers[0].getLocation();
+		// std::vector<LocationConfig>::iterator it = locations.begin(); 
+		// for ( ; it < locations.end(); it++) {
+		// 	std::cout << "root == " << it->get_upload() << std::endl;
+		// }
 		Response response(servers);
 		request req;
 		struct sockaddr_in addr;

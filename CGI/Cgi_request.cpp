@@ -28,6 +28,7 @@ std::string	Cgi_request::execute(){
 	std::cout << "Extension = " << pr.extens << std::endl;
 	std::string cmd(find_location(pr.extens));
 	std::string response;
+	std::stringstream ss;
 	const char *meta_vars[meta.size() + 1];
 	std::string start_line("HTTP/1.1");
 
@@ -36,11 +37,20 @@ std::string	Cgi_request::execute(){
 		std::ifstream file(meta.find("SCRIPT_NAME=")->second);
 		std::cout << "Filename = " << file << std::endl;
 		if (file.is_open()) {
-			start_line += " 200 OK\r\n";
-			start_line += "\r\n";
-			std::string ret( (std::istreambuf_iterator<char>(file) ),
+			std::string body( (std::istreambuf_iterator<char>(file) ),
                        (std::istreambuf_iterator<char>()    ) );
-			start_line += ret;
+			ss << body.length();
+			std::string size;
+			ss >> size;
+			start_line += " 200 OK\r\n";
+			start_line += "Server: WebServ/bamghoug\r\n";
+			start_line += "Content-Type: application/octet-stream\r\n";
+			start_line += "Content-Length: ";
+			start_line += size + "\r\n";
+			start_line += "Accept-Ranges: bytes\r\n";
+			start_line += "ETag: 5e3bb327-195\r\n";
+			start_line += "Connection: keep-alive\r\n\r\n";
+			start_line += body;
 			return start_line;
 		}
 	}
