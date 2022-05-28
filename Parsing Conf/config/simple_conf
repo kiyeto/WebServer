@@ -1,0 +1,18 @@
+server {
+  listen = 1337
+  server_name = test1
+  root = root/path
+  index = index.html
+  body_size_limit = 100
+  error_page = error/page
+
+  location = [
+    name = .php
+    root = root/path
+    path = /goinfre/bamghoug/.brew/opt/php@7.4/bin/php-cgi
+    method = GET POST DELETE
+    upload = /upload/path/
+    cgi = cgi/path
+    autoindex = off
+  ]
+}
