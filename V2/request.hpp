@@ -48,6 +48,7 @@ public:
 	request(std::string raw);
 	std::string	getMethod() const;
 	std::string	getUri() const;
+	std::string	getExtension() const;
 	std::string	getVersion() const;
 	std::map<std::string, std::string> getHeaders() const;
 	long		getBodySize() const;

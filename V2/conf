@@ -1,7 +1,7 @@
 server {
   listen = 8080
   server_name = test1
-  root = /Users/bamghoug/Desktop/WebServer/V2
+  root = /Users/bamghoug/Desktop/web3/V2
   index = index.php
   body_size_limit = 100
   error_page = error/page

@@ -163,6 +163,8 @@ int main(int argc, char const *argv[])
 					ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					std::string part = std::string(buffer, valread);
 					req.assemble_request(part);
+
+					/* Added By Brahim */
 					response = resp.get_response(req);
 
 					std::cout << "-----------Response--------" << std::endl;

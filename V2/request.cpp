@@ -251,6 +251,10 @@ std::string	request::getUri() const {
 	return URI;
 }
 
+std::string	request::getExtension() const{
+	return extension;
+}
+
 std::string	request::getVersion() const {
 	return version;
 }

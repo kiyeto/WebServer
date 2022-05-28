@@ -4,13 +4,23 @@ Waiting for a connection
 server: new connexion on socket (5)
 Waiting for a connection 
 valread  : 732
-CGI Filename = /Users/bamghoug/Desktop/WebServer/V2/index.php
+CGI Filename = /Users/bamghoug/Desktop/web3/V2/index.php
 Extension = .php
-/another/
-/anotherone/
-/Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi/
-Here = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi/ 
+File = /Users/bamghoug/Desktop/web3/V2/index.php
 -----------Response--------
 HTTP/1.1 200 OK
+X-Powered-By: PHP/7.4.29
+Content-type: text/html; charset=UTF-8
 
+<html>
+ <head>
+  <title>PHP Test</title>
+ </head>
+ <body>
+ <p>Hello World</p> 
+ </body>
+</html>
+Waiting for a connection 
+valread  : 0
+server: socket 4 hung up
 Waiting for a connection 
