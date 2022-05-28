@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/28 13:01:56 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/05/29 00:22:16 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,6 @@ void LocationConfig::locationParser(std::string buf)
             if(this->path.empty() && std::strncmp("path = ", buf.c_str(), 7) == 0)
             {
                 this->path = buf.substr(buf.find("path = ") + strlen("path = "));
-                if (this->path[this->path.size() - 1] != '/')
-                    this->path += '/';
                 break;
             }
             throw Error_exc("syntax err : invalid path");
@@ -107,8 +105,6 @@ void LocationConfig::locationParser(std::string buf)
             if(this->root.empty() && std::strncmp("root = ", buf.c_str(), 7) == 0)
             {
                 this->root = buf.substr(buf.find("root = ") + strlen("root = "));
-                if (this->root[this->root.size() - 1] == '/')
-                    this->root.resize(this->root.size() - 1);
                 break;
             }
             else if (this->redirect.empty() && std::strncmp("redirect = ", buf.c_str(), 11) == 0)
@@ -122,8 +118,6 @@ void LocationConfig::locationParser(std::string buf)
             if (this->upload.empty() && std::strncmp("upload = ", buf.c_str(), 9) == 0)
             {
                 this->upload = buf.substr(buf.find("upload = ") + strlen("upload = "));
-                if (this->upload[this->upload.size() - 1] == '/')
-                    this->upload.resize(this->upload.size() -1);
                 break;
             }
             throw Error_exc("syntax err : invalid upload");
