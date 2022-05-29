@@ -21,6 +21,7 @@ private:
 	bool			chunk_not_cmplt;
 	int				chunk_len;
 	int				sent;
+	int				fd;
 	bool			req_cmplt;
 	std::string		filename;
 	std::ofstream	file;
@@ -35,13 +36,13 @@ private:
 
 	void			check_URI();
 	std::string		gen_random(const int len);
-	void			parse_unchunked(std::string & part);
-	void			parse_chunked(std::string& raw);
-	void			parse_body(std::string & part);
+	bool			parse_unchunked(std::string & part);
+	bool			parse_chunked(std::string& raw);
+	bool			parse_body(std::string & part);
 public:
 	request():method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename() {};
 
-	void	assemble_request(std::string& part);
+	bool	assemble_request(std::string& part);
 	void	parse_headers(std::string& raw);
 	void	clear();
 

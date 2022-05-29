@@ -53,7 +53,7 @@ void	request::clear()
 	total_size = 0;
 }
 
-void	request::parse_unchunked(std::string & part)
+bool	request::parse_unchunked(std::string & part)
 {
 	if (!chunk_not_cmplt)
 	{
@@ -69,7 +69,7 @@ void	request::parse_unchunked(std::string & part)
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
 		this->clear();
-		return ;
+		return 1;
 	}
 
 	if (chunk_len > 0) 
@@ -79,10 +79,10 @@ void	request::parse_unchunked(std::string & part)
 		file.close();
 		chunk_len -= part.length();
 	}
-	return ;
+	return 0;
 }
 
-void	request::parse_chunked(std::string & part)
+bool	request::parse_chunked(std::string & part)
 {
 	while (part.length())
 	{
@@ -101,7 +101,7 @@ void	request::parse_chunked(std::string & part)
 				std::cout << "End of chunked request !!! " << std::endl;
 				req_cmplt = 1;
 				this->clear();
-				return ;
+				return 1;
 			}
 
 			if (chunk_len >= part.length())
@@ -143,23 +143,23 @@ void	request::parse_chunked(std::string & part)
 			}
 		}
 	}
-	return ;
+	return 0;
 }
 
-void	request::parse_body(std::string & part)
+bool	request::parse_body(std::string & part)
 {
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
 
 	if (!filename.length())
 		filename = gen_random(16);
 	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != -1))
-		parse_chunked(part);
+		return parse_chunked(part);
 	else
-		parse_unchunked(part);
+		return parse_unchunked(part);
 }
 
 
-void	request::assemble_request(std::string & part)
+bool	request::assemble_request(std::string & part)
 {
 	int header_end;
 
@@ -174,14 +174,17 @@ void	request::assemble_request(std::string & part)
 			if (method == "POST")
 			{
 				std::string sub = part.substr(header_end + 4);
-				parse_body(sub);
+				return parse_body(sub);
 			}
+			return 1;
 		}
 		else if (header_end == -1)
+		{
 			header_raw += std::string(part.c_str(), part.length());
+			return 0;
+		}
 	}
-	else
-		parse_body(part);
+	return parse_body(part);
 }
 
 void	request::parse_headers(std::string& raw)
