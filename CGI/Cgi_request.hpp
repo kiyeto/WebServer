@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
+#include <fcntl.h>
 #include "../V2/request.hpp"
 #include "Uriparser.hpp"
 
@@ -28,14 +29,13 @@
 
 class Cgi_request {
 	private:
-		std::string path, query_str, path_info, body;
+		request &req;
 		std::map<std::string, std::string> headers, meta;
-		Uriparser pr;
 		ServerConfig &server;
 
 		std::string child_proce(const char **cmd, const char **envp);
 		void	parse_cgiResponse(std::string respo);
-		std::string	find_location(std::string &extension);
+		std::string	find_location(std::string extension);
 	public:
 		Cgi_request(request &req, ServerConfig &server);
 		std::string execute();

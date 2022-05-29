@@ -14,15 +14,17 @@
 
 class	Response {
 	std::map<std::string, std::string> MIME_types;
+	std::map<int, std::string> status_defin;
 	std::vector<ServerConfig>	&servers;
 
 	int	select_server(request &req);
 
-	std::string	MIME_response(Uriparser &pr, ServerConfig &server, std::map<std::string, std::string>::iterator &it);
+	std::string	MIME_response(request &req, ServerConfig &server, std::map<std::string, std::string>::iterator &it);
 	std::string	CGI_response(request &req, ServerConfig &server);
-	std::string	Dir_response(Uriparser &pr, ServerConfig &server);
+	std::string	Dir_response(request &req, ServerConfig &server);
 
-	std::string	make_response(std::string &Status, std::vector<std::string> &headers, std::string &body);
+	std::string	make_response(int status, std::vector<std::string> &headers, std::string &body);
+	std::string	status_code(int status);
 	public :
 		Response(std::vector<ServerConfig> &servers);
 		std::string	get_response(request &req);
