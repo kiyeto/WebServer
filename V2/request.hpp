@@ -52,5 +52,7 @@ public:
 	std::string	getVersion() const;
 	std::map<std::string, std::string> getHeaders() const;
 	long		getBodySize() const;
+	std::string	getFilename() const;
+	std::string	getQuery() const;
 
 };

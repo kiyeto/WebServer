@@ -266,3 +266,11 @@ std::map<std::string, std::string> request::getHeaders() const{
 long		request::getBodySize() const{
 	return body_size;
 }
+
+std::string	request::getFilename() const {
+	return	filename;
+}
+
+std::string	request::getQuery() const {
+	return query;
+}
