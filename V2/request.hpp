@@ -40,7 +40,10 @@ private:
 	bool			parse_chunked(std::string& raw);
 	bool			parse_body(std::string & part);
 public:
-	request():method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename() {};
+	request();
+	request(const request &req);
+
+	request& operator=(const request &req);
 
 	bool	assemble_request(std::string& part);
 	void	parse_headers(std::string& raw);

@@ -1,6 +1,32 @@
 #include "request.hpp"
 
+request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename() {}
 
+request::request(const request &req){
+	(*this) = req;
+}
+
+request&		request::operator=(const request &req) {
+	method = 			req.method;
+	URI = 				req.URI;
+	extension = 		req.extension;
+	query = 			req.query;
+	version = 			req.version;
+	header_raw = 		req.header_raw;
+	hdr_cmplt = 		req.hdr_cmplt;
+	chunk_not_cmplt = 	req.chunk_not_cmplt;
+	chunk_len = 		req.chunk_len;
+	sent = 				req.sent;
+	fd = 				req.fd;
+	req_cmplt = 		req.req_cmplt;
+	filename = 			req.filename;
+	headers =			req.headers;
+	body = 				req.body;
+	body_size = 		req.body_size;
+	header_size = 		req.header_size;
+	total_size = 		req.total_size;
+	return (*this);
+}
 
 std::string request::gen_random(const int len)
 {
@@ -68,7 +94,7 @@ bool	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
-		this->clear();
+		// this->clear();
 		return 1;
 	}
 
@@ -100,7 +126,7 @@ bool	request::parse_chunked(std::string & part)
 			{
 				std::cout << "End of chunked request !!! " << std::endl;
 				req_cmplt = 1;
-				this->clear();
+				// this->clear();
 				return 1;
 			}
 
