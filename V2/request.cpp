@@ -1,6 +1,6 @@
 #include "request.hpp"
 
-request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename() {}
+request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename(), file() {}
 
 request::request(const request &req){
 	(*this) = req;
