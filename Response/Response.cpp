@@ -35,19 +35,24 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
+	std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
+	while(it != req.getHeaders().end()){
+		std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
+		it++;
+	}
 	std::string respo;
-	Uriparser pr(req.getUri());
-	int i = select_server(req);
+	int i;
+	i = select_server(req);
 
-	if (!pr.extens.empty()){ // request with file
+	if (!req.getExtension().empty()){ // request with file
 		std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
 		if (it != MIME_types.end()) { // Regular file
-			respo = MIME_response(req, servers[i], it);
+			respo = MIME_response(req, i, it);
 		} else { // it's CGI
-			respo = CGI_response(req, servers[i]);
+			respo = CGI_response(req, i);
 		}
 	} else { // request with Directory
-		respo = Dir_response(req, servers[i]);
+		respo = Dir_response(req, i);
 	}
 
 	// if (pr.path.find(".php") != std::string::npos) { 
@@ -72,7 +77,13 @@ int	Response::select_server(request &req){
 	ss << Host.begin().base() + i + 1;
 	int port;
 	ss >> port;
-	std::string server_name(Host.begin(), Host.begin() + i);
+	std::string server_name;
+	std::cout << "HOST = " << Host << " i = " << i << std::endl;
+	try {
+		server_name.assign(Host.begin(), Host.begin() + i);
+	} catch (std::exception &e) {
+		std::cout << "Exception Here = " << e.what() << std::endl;
+	}
 
 	for (size_t j = 0; j < servers.size(); j++)  // Looking in servers by Port if there is more than one
 	{
@@ -90,10 +101,10 @@ int	Response::select_server(request &req){
 	return list_servers_p[0];
 }
 
-std::string	Response::MIME_response(request &req, ServerConfig &server, std::map<std::string, std::string>::iterator &it) {
+std::string	Response::MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it) {
 	std::string respo;
 	std::vector<std::string> headers;
-	std::string filename(server.get_root() + req.getUri()), length;
+	std::string filename(servers[i].get_root() + req.getUri()), length;
 	std::stringstream ss;
 	std::ifstream file(filename);
 
@@ -110,19 +121,20 @@ std::string	Response::MIME_response(request &req, ServerConfig &server, std::map
 	return std::string();
 }
 
-std::string	Response::CGI_response(request &req, ServerConfig &server){
+std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
-	Uriparser pr(req.getUri());
-	std::string filename(server.get_root() + pr.path);
+	std::cout << "ROOT = " << servers[i].get_root() << std::endl;
+	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;
-	Cgi_request cgi(req, server);
-	return cgi.execute();
+	Cgi_request cgi(req, servers[i]);
+	respo = cgi.execute();
+	return respo;
 }
 
-std::string	Response::Dir_response(request &req, ServerConfig &server){
+std::string	Response::Dir_response(request &req, int i){
 	std::string respo;
-	std::string filename(server.get_root() + req.getUri());
+	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "Dir Filename = " << filename << std::endl;
 

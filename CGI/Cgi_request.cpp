@@ -25,7 +25,6 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 std::string	Cgi_request::execute(){
 	std::vector<std::string> args;
 
-	std::cout << "Extension = " << req.getExtension() << std::endl;
 	std::string cmd(find_location(req.getExtension()));
 	std::string response;
 	std::stringstream ss;
@@ -68,6 +67,7 @@ std::string	Cgi_request::execute(){
 		it++;
 	}
 	meta_vars[meta.size()] = NULL;
+	std::cout << "Size = " << start_line.size() << " Respo = " << response.size() << std::endl;
 	response = child_proce(p, (const char**)meta_vars);
 	parse_cgiResponse(response);
 	it = headers.find("Status");
@@ -88,6 +88,7 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	int fds[2];
 	pipe(fds);
 	int child = fork();
+
 	if (child == 0) //child Process
 	{
 		int input;
@@ -95,8 +96,8 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 			dup2(0, input);
 		dup2(fds[1], 1);
 		close(fds[0]);
-		execve(cmd[0], (char *const *)cmd, (char *const *)NULL);
-		exit(1);
+		if (execve(cmd[0], (char *const *)cmd, (char *const *)NULL) < 0)
+			exit(1);
 	}
 	wait(NULL);
 	close(fds[1]);
@@ -105,6 +106,7 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	std::string content;
 	while(read(fds[0], buf, 1024) > 0)
 	{
+		std::cout << "content = " << content << std::endl;
 		content += buf;
 		memset(buf, 0, 1025);
 	}

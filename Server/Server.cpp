@@ -59,9 +59,9 @@ void	Server::run() {
 	socklen_t			addrlen = sizeof(address);
 	std::string response;
 	request		req;
-	Response	resp(servers);
 	char buffer[4096] = {0};
 	std::fstream ofs;
+	Response	resp(servers);
 
 	while (1)
 	{
@@ -92,6 +92,9 @@ void	Server::run() {
 							exit(EXIT_FAILURE);
 						}
 						add_pfd(new_socket);
+						request r;
+						requests[pfds[i].fd] = request();
+						// responses[pfds[i].fd] = Response();
 						std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
 						new_cnx = 1;
 						break ;
@@ -115,17 +118,16 @@ void	Server::run() {
 					buffer[valread] = 0;
 					ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					std::string part = std::string(buffer, valread);
-					if (req.assemble_request(part))
+					std::cout << "IN = " << pfds[i].fd << std::endl;
+					if (requests[pfds[i].fd].assemble_request(part))
 						pfds[i].events = POLLOUT;
 					/* Added By Brahim */
-					try {
-					response = resp.get_response(req);
+					// try {
+					// 	response = resp.get_response(req);
 
-					} catch (std::exception &e) {
-						std::cout << e.what() << std::endl;
-					}
-					std::cout << "-----------Response--------" << std::endl;
-					std::cout << response << std::endl;
+					// } catch (std::exception &e) {
+					// 	std::cout << e.what() << std::endl;
+					// }
 					// ofs << "/////// chunk " << ++j << " /////////" << std::endl;
 					// ofs << "**************** read *******************" << std::endl;
 					ofs.write(buffer, valread);
@@ -159,9 +161,11 @@ void	Server::run() {
 			} //must check for writing here
 			else if ((pfds[i].revents & POLLOUT))
 			{
+				std::cout << "OUT = " << pfds[i].fd << std::endl;
+				response = resp.get_response(requests[pfds[i].fd]);
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
-				// pfds[i].fd = -5;
+				// delete_pfd(i);
 				pfds[i].events = POLLIN;
 				std::cout << "Socket == " << pfds[i].fd << std::endl;
 			}

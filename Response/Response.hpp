@@ -19,9 +19,9 @@ class	Response {
 
 	int	select_server(request &req);
 
-	std::string	MIME_response(request &req, ServerConfig &server, std::map<std::string, std::string>::iterator &it);
-	std::string	CGI_response(request &req, ServerConfig &server);
-	std::string	Dir_response(request &req, ServerConfig &server);
+	std::string	MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it);
+	std::string	CGI_response(request &req, int i);
+	std::string	Dir_response(request &req, int i);
 
 	std::string	make_response(int status, std::vector<std::string> &headers, std::string &body);
 	std::string	status_code(int status);

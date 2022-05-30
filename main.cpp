@@ -8,7 +8,6 @@
 #include <sstream>
 #include <sys/select.h>
 #include <fstream>
-#include "request parsing and some basic response/request.hpp"
 #include "CGI/Uriparser.hpp"
 #include "CGI/Cgi_request.hpp"
 #include <stdlib.h>
@@ -77,12 +76,12 @@ int main(int ac, char **av, char **envp)
 			return 0;
 		}
 		int new_sock, msg_len;
-		std::string msg;
 		struct kevent changelist, eventlist;
 		setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &flag, sizeof(flag));
-		std::string respo;
 		while (1)
 		{
+			std::string msg;
+			std::string respo;
 			std::cout << ">>>>>> Waiting for connection <<<<<<<<" << std::endl;
 			if (( new_sock = accept(sock, (struct sockaddr *)&addr, (socklen_t*)&opt)) < 0)
 			{
@@ -94,10 +93,20 @@ int main(int ac, char **av, char **envp)
 			// std::cout << msg << std::endl;
 			std::cout << ">>>>>> The request is <<<<<<" << std::endl;
 			std::cout << msg << std::endl;
-			request req(msg);
-			Uriparser pr(req.getUri());
+			req.assemble_request(msg);
+			
+			std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
+			while(it != req.getHeaders().end()){
+				std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
+				it++;
+			}
+			// Uriparser pr(req.getUri());
 			std::cout << ">>>>>> The response is <<<<<<" << std::endl;
-			respo = response.get_response(req);
+			// try {
+				respo = response.get_response(req);
+			// } catch (std::exception &e) {
+				// std::cout << "Exception Here = " << e.what() << std::endl;
+			// }
 			// if (pr.path.find(".php") != std::string::npos) { 
 			// 	Cgi_request cgi(req, servers[0]);
 			// 	respo = cgi.execute();
@@ -109,8 +118,7 @@ int main(int ac, char **av, char **envp)
 			// }
 			std::cout << respo << std::endl;
 			send(new_sock, respo.c_str(), respo.length(), MSG_OOB);
-			respo.clear();
-			close(new_sock);
+			// close(new_sock);
 		}
 	}
 	std::cerr << "Config file Needed!" << std::endl;

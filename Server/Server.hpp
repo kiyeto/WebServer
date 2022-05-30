@@ -28,6 +28,8 @@ class Server {
 	struct pollfd *pfds;
 	int numfds, maxfds;
 	std::vector<int> ports, sockets_created;
+	std::map<int, request> requests;
+	std::map<int, Response> respones;
 
 	int	checkTheport(int port);
 	void	add_pfd(int fd);
