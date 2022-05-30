@@ -71,7 +71,7 @@ void	request::clear()
 	req_cmplt = 0;
 
 	headers.clear();
-	file.clear();
+	file.
 
 	body.clear();
 	body_size = 0;
@@ -94,7 +94,6 @@ bool	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
-		// this->clear();
 		return 1;
 	}
 
@@ -119,14 +118,13 @@ bool	request::parse_chunked(std::string & part)
 
 			std::stringstream	str(part.substr(0, pos));
 			str >> std::hex >> chunk_len;
-			std::cout << "hex to dec : " << chunk_len << std::endl;
+			// std::cout << "hex to dec : " << chunk_len << std::endl;
 
 			part = part.erase(0, pos + 2);
 			if (chunk_len == 0)
 			{
 				std::cout << "End of chunked request !!! " << std::endl;
 				req_cmplt = 1;
-				// this->clear();
 				return 1;
 			}
 

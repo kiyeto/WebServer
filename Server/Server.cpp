@@ -1,11 +1,13 @@
 #include "Server.hpp"
 
-Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), numfds(), maxfds(), ports(), sockets_created() {
+Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), maxfds(), ports(), sockets_created()
+{
 	int 				server_fd;
 	struct sockaddr_in	address;
 	socklen_t			addrlen = sizeof(address);
 
-	for(int i = 0; i < servers.size(); i++) {
+	for(int i = 0; i < servers.size(); i++)
+	{
 		if (checkTheport(servers[i].get_port()) == 1) // Check if the port is Already binded == 1, if not == 0
 			continue;
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -36,12 +38,10 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), n
 	}
 	/* END OF CREATON AND BINDING THE SOCKETS */
 	pfds = (struct pollfd*)malloc(sizeof(*pfds) * sockets_created.size());
-	numfds = sockets_created.size();
-	maxfds = numfds;
-	for (int i = 0; i < sockets_created.size(); i++){
-		pfds[i].fd = sockets_created[i];
-    	pfds[i].events = POLLIN;
-	}
+	maxfds = sockets_created.size();
+	numfds = 0;
+	for (int i = 0; i < sockets_created.size(); i++)
+		add_pfd(sockets_created[i]);
 }
 
 int	Server::checkTheport(int port) {
@@ -54,7 +54,7 @@ int	Server::checkTheport(int port) {
 }
 
 void	Server::run() {
-	int			valread;
+	int					valread;
 	struct sockaddr_in	address;
 	socklen_t			addrlen = sizeof(address);
 	std::string response;
@@ -77,7 +77,8 @@ void	Server::run() {
 
 		for (int i = 0; i < numfds; i++)
 		{
-			if ((pfds[i].revents & POLLIN)) // checking for reading
+			std::cout  << "i = " << i << std::endl;
+			if (pfds[i].revents == POLLIN) // checking for reading
 			{
 				// poll_count--;
 				int new_socket;
@@ -104,7 +105,7 @@ void	Server::run() {
 				if (!new_cnx)
 				{
 					valread = read(pfds[i].fd , buffer, 4095);
-					std::cout << "valread "  << " : " << valread << std::endl;
+					// std::cout << "valread "  << " : " << valread << std::endl;
 					if (valread <= 0)
 					{
 						if (valread == 0)
@@ -116,7 +117,6 @@ void	Server::run() {
 						continue;
 					}
 					buffer[valread] = 0;
-					ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					std::string part = std::string(buffer, valread);
 					std::cout << "IN = " << pfds[i].fd << std::endl;
 					if (requests[pfds[i].fd].assemble_request(part))
@@ -128,10 +128,11 @@ void	Server::run() {
 					// } catch (std::exception &e) {
 					// 	std::cout << e.what() << std::endl;
 					// }
+					// ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					// ofs << "/////// chunk " << ++j << " /////////" << std::endl;
 					// ofs << "**************** read *******************" << std::endl;
-					ofs.write(buffer, valread);
-					ofs.close();
+					// ofs.write(buffer, valread);
+					// ofs.close();
 				}
 				// request.append(std::string(buffer));
 				// request.push_back(std::string(buffer));
@@ -159,7 +160,7 @@ void	Server::run() {
 				// close(pfds[i].fd);
 				// delete_pfd(&pfds, i, &numfds);
 			} //must check for writing here
-			else if ((pfds[i].revents & POLLOUT))
+			else if (pfds[i].revents == POLLOUT)
 			{
 				std::cout << "OUT = " << pfds[i].fd << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
@@ -168,6 +169,7 @@ void	Server::run() {
 				// delete_pfd(i);
 				pfds[i].events = POLLIN;
 				std::cout << "Socket == " << pfds[i].fd << std::endl;
+				requests[(pfds[i].fd)].clear();
 			}
 		}
 	}

@@ -35,35 +35,36 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
-	std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
-	while(it != req.getHeaders().end()){
-		std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
-		it++;
-	}
+	std::cout << req.getHeaders()["Host"] << std::endl;
+	// std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
+	// while(it != req.getHeaders().end()){
+	// 	std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
+	// 	it++;
+	// }
 	std::string respo;
-	int i;
-	i = select_server(req);
+	// int i;
+	// i = select_server(req);
 
-	if (!req.getExtension().empty()){ // request with file
-		std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
-		if (it != MIME_types.end()) { // Regular file
-			respo = MIME_response(req, i, it);
-		} else { // it's CGI
-			respo = CGI_response(req, i);
-		}
-	} else { // request with Directory
-		respo = Dir_response(req, i);
-	}
+	// if (!req.getExtension().empty()){ // request with file
+	// 	std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
+	// 	if (it != MIME_types.end()) { // Regular file
+	// 		respo = MIME_response(req, i, it);
+	// 	} else { // it's CGI
+	// 		respo = CGI_response(req, i);
+	// 	}
+	// } else { // request with Directory
+	// 	respo = Dir_response(req, i);
+	// }
 
-	// if (pr.path.find(".php") != std::string::npos) { 
-	// 	Cgi_request cgi(req, servers[0]);
-	// 	respo = cgi.execute();
-	// }
-	// else {
-	// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
-	// 	std::string tmp (req.getHeaders().find("Accept")->second);
-	// 	respo += read_file(getenv("PWD"), pr.path.c_str());
-	// }
+	// // if (pr.path.find(".php") != std::string::npos) { 
+	// // 	Cgi_request cgi(req, servers[0]);
+	// // 	respo = cgi.execute();
+	// // }
+	// // else {
+	// // 	respo = "HTTP/1.1 200 OK\r\n\r\n";
+	// // 	std::string tmp (req.getHeaders().find("Accept")->second);
+	// // 	respo += read_file(getenv("PWD"), pr.path.c_str());
+	// // }
 	return respo;
 }
 
