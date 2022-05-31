@@ -118,8 +118,12 @@ void	Server::run() {
 					buffer[valread] = 0;
 					std::string part = std::string(buffer, valread);
 					std::cout << "IN = " << pfds[i].fd << std::endl;
-					if (requests[pfds[i].fd].assemble_request(part))
+					bool res;
+					if ((res = requests[pfds[i].fd].assemble_request(part)))
+					{
 						pfds[i].events = POLLOUT;
+						std::cout << "HERE : " << res << std::endl;
+					}
 					/* Added By Brahim */
 					// try {
 					// 	response = resp.get_response(req);

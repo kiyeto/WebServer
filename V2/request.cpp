@@ -95,6 +95,7 @@ bool	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
+		chunk_not_cmplt = 0;
 		return 1;
 	}
 
