@@ -35,13 +35,8 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
-	// std::cout << req.getHeaders()["Host"] << std::endl;
-	headers = req.getHeaders();
-	std::map<std::string, std::string>::iterator it = headers.begin();
-	while(it != headers.end()){
-		std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
-		it++;
-	}
+	std::cout << "-----------------Request--------------" << std::endl;
+	std::cout << "-----------------" << req.getMethod() << "----------------" << std::endl;
 	std::string respo;
 	int i;
 	i = select_server(req);
@@ -80,7 +75,7 @@ int	Response::select_server(request &req){
 	int port;
 	ss >> port;
 	std::string server_name;
-	std::cout << "HOST = " << Host << " i = " << i << std::endl;
+	// std::cout << "HOST = " << Host << " i = " << i << std::endl;
 	try {
 		server_name.assign(Host.begin(), Host.begin() + i);
 	} catch (std::exception &e) {
@@ -139,7 +134,6 @@ std::string	Response::Dir_response(request &req, int i){
 	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "Dir Filename = " << filename << std::endl;
-
 	return std::string();
 }
 

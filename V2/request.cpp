@@ -71,7 +71,7 @@ void	request::clear()
 	req_cmplt = 0;
 
 	headers.clear();
-	// file.
+	
 
 	body.clear();
 	body_size = 0;

@@ -52,7 +52,6 @@ std::string	Cgi_request::execute(){
 	}
 	args.push_back(cmd); // Need To Be replaced With CMD
 	args.push_back(meta.find("SCRIPT_NAME=")->second);
-
 	const char *p[args.size() + 1];
 	for(int i = 0; i < args.size(); i++)
 		p[i] = args[i].c_str();
@@ -73,12 +72,27 @@ std::string	Cgi_request::execute(){
 	it = headers.find("Status");
 	if (it != headers.end())
 	{
-		start_line += it->second + "\n";
+		start_line += it->second;
+		int len = response.length() - (response.find("\r\n\r\n") + 4);
+		std::cout << "LENGTH = " << len << std::endl;
+		std::string length;
+		ss << len;
+		ss >> length;
+		length += "\r\n";
+		start_line += "Content-Length: ";
+		start_line += length;
 		start_line += response;
 		headers.clear();
 		return start_line;
 	}
 	start_line += " 200 OK\r\n";
+	int len = response.length() - (response.find("\r\n\r\n") + 4);
+	ss << len;
+	std::string length;
+	ss >> length;
+	length += "\r\n";
+	start_line += "Content-Length: ";
+	start_line += length;
 	start_line += response;
 	headers.clear();
 	return start_line;
@@ -96,7 +110,7 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 			dup2(0, input);
 		dup2(fds[1], 1);
 		close(fds[0]);
-		if (execve(cmd[0], (char *const *)cmd, (char *const *)NULL) < 0)
+		if (execve(cmd[0], (char *const *)cmd, (char *const *)NULL) == -1)
 			exit(1);
 	}
 	wait(NULL);
@@ -106,7 +120,6 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	std::string content;
 	while(read(fds[0], buf, 1024) > 0)
 	{
-		std::cout << "content = " << content << std::endl;
 		content += buf;
 		memset(buf, 0, 1025);
 	}
@@ -121,7 +134,7 @@ void	 Cgi_request::parse_cgiResponse(std::string respo) {
 	// 	body = respo.begin().base() + i + 4;
 	// 	respo.erase(respo.begin() + i, respo.end());
 	// }
-	while ((i = respo.find("\n")) != std::string::npos)
+	while ((i = respo.find("\r\n")) != std::string::npos)
 	{
 		std::string tmp(respo.begin(), respo.begin() + i);
 		j = tmp.find(":");

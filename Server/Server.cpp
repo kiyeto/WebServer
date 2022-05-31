@@ -65,7 +65,7 @@ void	Server::run() {
 
 	while (1)
 	{
-		std::cout << "Waiting for a connection " << std::endl;
+		// std::cout << "Waiting for a connection " << std::endl;
 
 		int poll_count = poll(pfds, numfds, -1);
 
@@ -161,6 +161,8 @@ void	Server::run() {
 			} //must check for writing here
 			else if (pfds[i].revents == POLLOUT)
 			{
+				std::cout << "-------------request-----------" << std::endl;
+				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				std::cout << "OUT = " << pfds[i].fd << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
 				std::cout << "-----------Response-------------" << std::endl;
