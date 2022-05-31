@@ -95,6 +95,7 @@ bool	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
+		chunk_not_cmplt = 0;
 		return 1;
 	}
 
@@ -104,6 +105,13 @@ bool	request::parse_unchunked(std::string & part)
 		file.write(part.c_str(), part.length());
 		file.close();
 		chunk_len -= part.length();
+		if (chunk_len == 0)
+		{
+			std::cout << "End of normal request !!! " << std::endl;
+			req_cmplt = 1;
+			chunk_not_cmplt = 0;
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -196,12 +204,13 @@ bool	request::assemble_request(std::string & part)
 			this->hdr_cmplt = 1;
 			header_raw += std::string(part.c_str(), header_end + 4);
 			parse_headers(header_raw);
-			if (method == "POST")
-			{
+			// if (method == "POST")
+			// {
 				std::string sub = part.substr(header_end + 4);
 				return parse_body(sub);
-			}
-			return 1;
+			// }
+			// else
+			// 	return 1;
 		}
 		else if (header_end == -1)
 		{
@@ -209,6 +218,8 @@ bool	request::assemble_request(std::string & part)
 			return 0;
 		}
 	}
+	bool res=parse_body(part);
+	std::cout << res<< std::endl;
 	return parse_body(part);
 }
 
