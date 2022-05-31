@@ -1,6 +1,32 @@
 #include "request.hpp"
 
+request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename(), file() {}
 
+request::request(const request &req){
+	(*this) = req;
+}
+
+request&		request::operator=(const request &req) {
+	method = 			req.method;
+	URI = 				req.URI;
+	extension = 		req.extension;
+	query = 			req.query;
+	version = 			req.version;
+	header_raw = 		req.header_raw;
+	hdr_cmplt = 		req.hdr_cmplt;
+	chunk_not_cmplt = 	req.chunk_not_cmplt;
+	chunk_len = 		req.chunk_len;
+	sent = 				req.sent;
+	fd = 				req.fd;
+	req_cmplt = 		req.req_cmplt;
+	filename = 			req.filename;
+	headers =			req.headers;
+	body = 				req.body;
+	body_size = 		req.body_size;
+	header_size = 		req.header_size;
+	total_size = 		req.total_size;
+	return (*this);
+}
 
 std::string request::gen_random(const int len)
 {
@@ -45,7 +71,7 @@ void	request::clear()
 	req_cmplt = 0;
 
 	headers.clear();
-	file.clear();
+	file.
 
 	body.clear();
 	body_size = 0;
@@ -53,7 +79,7 @@ void	request::clear()
 	total_size = 0;
 }
 
-void	request::parse_unchunked(std::string & part)
+bool	request::parse_unchunked(std::string & part)
 {
 	if (!chunk_not_cmplt)
 	{
@@ -68,8 +94,7 @@ void	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
-		this->clear();
-		return ;
+		return 1;
 	}
 
 	if (chunk_len > 0) 
@@ -79,10 +104,10 @@ void	request::parse_unchunked(std::string & part)
 		file.close();
 		chunk_len -= part.length();
 	}
-	return ;
+	return 0;
 }
 
-void	request::parse_chunked(std::string & part)
+bool	request::parse_chunked(std::string & part)
 {
 	while (part.length())
 	{
@@ -93,15 +118,14 @@ void	request::parse_chunked(std::string & part)
 
 			std::stringstream	str(part.substr(0, pos));
 			str >> std::hex >> chunk_len;
-			std::cout << "hex to dec : " << chunk_len << std::endl;
+			// std::cout << "hex to dec : " << chunk_len << std::endl;
 
 			part = part.erase(0, pos + 2);
 			if (chunk_len == 0)
 			{
 				std::cout << "End of chunked request !!! " << std::endl;
 				req_cmplt = 1;
-				this->clear();
-				return ;
+				return 1;
 			}
 
 			if (chunk_len >= part.length())
@@ -143,23 +167,23 @@ void	request::parse_chunked(std::string & part)
 			}
 		}
 	}
-	return ;
+	return 0;
 }
 
-void	request::parse_body(std::string & part)
+bool	request::parse_body(std::string & part)
 {
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
 
 	if (!filename.length())
 		filename = gen_random(16);
 	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != -1))
-		parse_chunked(part);
+		return parse_chunked(part);
 	else
-		parse_unchunked(part);
+		return parse_unchunked(part);
 }
 
 
-void	request::assemble_request(std::string & part)
+bool	request::assemble_request(std::string & part)
 {
 	int header_end;
 
@@ -174,14 +198,17 @@ void	request::assemble_request(std::string & part)
 			if (method == "POST")
 			{
 				std::string sub = part.substr(header_end + 4);
-				parse_body(sub);
+				return parse_body(sub);
 			}
+			return 1;
 		}
 		else if (header_end == -1)
+		{
 			header_raw += std::string(part.c_str(), part.length());
+			return 0;
+		}
 	}
-	else
-		parse_body(part);
+	return parse_body(part);
 }
 
 void	request::parse_headers(std::string& raw)
@@ -251,6 +278,26 @@ std::string	request::getUri() const {
 	return URI;
 }
 
+std::string	request::getExtension() const{
+	return extension;
+}
+
 std::string	request::getVersion() const {
 	return version;
+}
+
+std::map<std::string, std::string> request::getHeaders() const{
+	return headers;
+}
+
+long		request::getBodySize() const{
+	return body_size;
+}
+
+std::string	request::getFilename() const {
+	return	filename;
+}
+
+std::string	request::getQuery() const {
+	return query;
 }

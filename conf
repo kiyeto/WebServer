@@ -1,21 +1,12 @@
 server {
   listen = 8080
   server_name = test1
-  root = /Users/bamghoug/Desktop/WebServer/CGI/wordpress
+  root = /Users/bamghoug/Desktop/web3/wordpress
   index = index.php
   body_size_limit = 100
   error_page = error/page
 
 
-  location = [
-    name = .php
-    root = root/path
-    path = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
-    method = GET POST DELETE
-    upload = /upload/path/
-    cgi = cgi/path
-    autoindex = off
-  ]
   
   location = [
     root = root/other/path
@@ -34,4 +25,13 @@ server {
     redirect = https://www.9anime.to
   ]
 
+  location = [
+    name = .php
+    root = root/path
+    path = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
+    method = GET POST DELETE
+    upload = /upload/path/
+    cgi = cgi/path
+    autoindex = off
+  ]
 }

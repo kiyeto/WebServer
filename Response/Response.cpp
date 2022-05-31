@@ -1,14 +1,22 @@
 #include "Response.hpp"
 
 
-Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), servers(servers) {
+Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers) {
+	status_defin[400] = " Bad Request\r\n";
+	status_defin[200] = " OK\r\n";
+	status_defin[201] = " Created\r\n";
+	status_defin[202] = " Accepted\r\n";
+	status_defin[204] = " No Content\r\n";
+	status_defin[401] = " Unauthorized\r\n";
+	status_defin[403] = " Forbidden\r\n";
+	status_defin[404] = " Not Found\r\n";
+	status_defin[405] = " Method Not Allowed\r\n";
 	// std::map<std::string, std::string>::iterator it = MIME_types.begin();
 	// while (it != MIME_types.end())
 	// {
 	// 	std::cout << "[\"" << it->first << "\", \"" << it->second << "\"]" << std::endl;
 	// 	it++;
 	// }
-	
 }
 
 
@@ -27,31 +35,36 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
+	std::cout << req.getHeaders()["Host"] << std::endl;
+	// std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
+	// while(it != req.getHeaders().end()){
+	// 	std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
+	// 	it++;
+	// }
 	std::string respo;
-	Uriparser pr(req.getUri());
-	int i = select_server(req);
+	// int i;
+	// i = select_server(req);
 
-
-	if (!pr.extens.empty()){ // request with file
-		std::map<std::string, std::string>::iterator it = MIME_types.find(pr.extens);
-		if (it != MIME_types.end()) { // Regular file
-			respo = MIME_response(pr, servers[i], it);
-		} else { // it's CGI
-			respo = CGI_response(req, servers[i]);
-		}
-	} else { // request with Directory
-		respo = Dir_response(pr, servers[i]);
-	}
-
-	// if (pr.path.find(".php") != std::string::npos) { 
-	// 	Cgi_request cgi(req, servers[0]);
-	// 	respo = cgi.execute();
+	// if (!req.getExtension().empty()){ // request with file
+	// 	std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
+	// 	if (it != MIME_types.end()) { // Regular file
+	// 		respo = MIME_response(req, i, it);
+	// 	} else { // it's CGI
+	// 		respo = CGI_response(req, i);
+	// 	}
+	// } else { // request with Directory
+	// 	respo = Dir_response(req, i);
 	// }
-	// else {
-	// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
-	// 	std::string tmp (req.getHeaders().find("Accept")->second);
-	// 	respo += read_file(getenv("PWD"), pr.path.c_str());
-	// }
+
+	// // if (pr.path.find(".php") != std::string::npos) { 
+	// // 	Cgi_request cgi(req, servers[0]);
+	// // 	respo = cgi.execute();
+	// // }
+	// // else {
+	// // 	respo = "HTTP/1.1 200 OK\r\n\r\n";
+	// // 	std::string tmp (req.getHeaders().find("Accept")->second);
+	// // 	respo += read_file(getenv("PWD"), pr.path.c_str());
+	// // }
 	return respo;
 }
 
@@ -65,7 +78,13 @@ int	Response::select_server(request &req){
 	ss << Host.begin().base() + i + 1;
 	int port;
 	ss >> port;
-	std::string server_name(Host.begin(), Host.begin() + i);
+	std::string server_name;
+	std::cout << "HOST = " << Host << " i = " << i << std::endl;
+	try {
+		server_name.assign(Host.begin(), Host.begin() + i);
+	} catch (std::exception &e) {
+		std::cout << "Exception Here = " << e.what() << std::endl;
+	}
 
 	for (size_t j = 0; j < servers.size(); j++)  // Looking in servers by Port if there is more than one
 	{
@@ -83,29 +102,67 @@ int	Response::select_server(request &req){
 	return list_servers_p[0];
 }
 
-std::string	Response::MIME_response(Uriparser &pr, ServerConfig &server, std::map<std::string, std::string>::iterator &it) {
+std::string	Response::MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it) {
 	std::string respo;
-	std::string filename(server.get_root() + pr.path);
+	std::vector<std::string> headers;
+	std::string filename(servers[i].get_root() + req.getUri()), length;
+	std::stringstream ss;
+	std::ifstream file(filename);
 
-	// std::cout << "MIME Filename = " << filename << std::endl;
+	std::cout << "MIME Filename = " << filename << std::endl;
+	if (file.is_open())
+	{
+		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+		ss << content.length();
+		ss >> length;
+		headers.push_back("Content-Type: " + it->second);
+		headers.push_back("Content-Length: " + length);
+		return (make_response(200, headers, content));
+	}
 	return std::string();
 }
 
-std::string	Response::CGI_response(request &req, ServerConfig &server){
+std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
-	Uriparser pr(req.getUri());
-	std::string filename(server.get_root() + pr.path);
+	std::cout << "ROOT = " << servers[i].get_root() << std::endl;
+	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;
-	Cgi_request cgi(req, server);
-	return cgi.execute();
+	Cgi_request cgi(req, servers[i]);
+	respo = cgi.execute();
+	return respo;
 }
 
-std::string	Response::Dir_response(Uriparser &pr, ServerConfig &server){
+std::string	Response::Dir_response(request &req, int i){
 	std::string respo;
-	std::string filename(server.get_root() + pr.path);
+	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "Dir Filename = " << filename << std::endl;
 
 	return std::string();
+}
+
+std::string	Response::make_response(int status, std::vector<std::string> &headers, std::string &body) {
+	std::string response("HTTP/1.1 ");
+
+	response += status_code(status);
+	for(int i = 0; i < headers.size(); i++) {
+		response += headers[i] + "\r\n";
+	}
+	response += "\r\n" + body;
+	return response;
+}
+
+std::string	Response::status_code(int status){
+	std::stringstream ss;
+	std::string tmp;
+	std::map<int, std::string>::iterator it = status_defin.find(status);
+	if (it != status_defin.end())
+	{
+		ss << it->first;
+		ss >> tmp;
+		tmp += it->second;
+		return tmp;
+	}
+	return std::string ("200 OK\r\n");
 }
