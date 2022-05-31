@@ -61,7 +61,6 @@ void	request::clear()
 {
 	method.clear();
 	URI.clear();
-	filename.clear();
 	version.clear();
 	header_raw.clear();
 	hdr_cmplt = 0;
@@ -71,9 +70,9 @@ void	request::clear()
 	req_cmplt = 0;
 
 	headers.clear();
-	
+	std::remove(filename.c_str());
+	filename.clear();
 
-	body.clear();
 	body_size = 0;
 	header_size = 0;
 	total_size = 0;
