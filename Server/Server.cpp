@@ -108,7 +108,9 @@ void	Server::run() {
 					if (valread <= 0)
 					{
 						if (valread == 0)
+						{
 							std::cout << "server: socket " << pfds[i].fd << " hung up\n";
+						}
 						else
 							perror("read");
 						close(pfds[i].fd);
@@ -131,11 +133,11 @@ void	Server::run() {
 					// } catch (std::exception &e) {
 					// 	std::cout << e.what() << std::endl;
 					// }
-					// ofs.open("outputo", std::ios_base::app | std::ios::binary);
+					ofs.open("outputo", std::ios_base::app | std::ios::binary);
 					// ofs << "/////// chunk " << ++j << " /////////" << std::endl;
-					// ofs << "**************** read *******************" << std::endl;
-					// ofs.write(buffer, valread);
-					// ofs.close();
+					ofs << "**************** read *******************" << std::endl;
+					ofs.write(buffer, valread);
+					ofs.close();
 				}
 				// request.append(std::string(buffer));
 				// request.push_back(std::string(buffer));
