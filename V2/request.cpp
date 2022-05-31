@@ -62,6 +62,8 @@ void	request::clear()
 	method.clear();
 	URI.clear();
 	version.clear();
+	extension.clear();
+	query.clear();
 	header_raw.clear();
 	hdr_cmplt = 0;
 	chunk_not_cmplt = 0;
