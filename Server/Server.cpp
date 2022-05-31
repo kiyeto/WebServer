@@ -77,7 +77,7 @@ void	Server::run() {
 
 		for (int i = 0; i < numfds; i++)
 		{
-			std::cout  << "i = " << i << std::endl;
+			// std::cout  << "i = " << i << std::endl;
 			if (pfds[i].revents == POLLIN) // checking for reading
 			{
 				// poll_count--;
@@ -93,7 +93,6 @@ void	Server::run() {
 							exit(EXIT_FAILURE);
 						}
 						add_pfd(new_socket);
-						request r;
 						requests[pfds[i].fd] = request();
 						// responses[pfds[i].fd] = Response();
 						std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
@@ -164,12 +163,20 @@ void	Server::run() {
 			{
 				std::cout << "OUT = " << pfds[i].fd << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
+				std::cout << "-----------Response-------------" << std::endl;
+				std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);
-				pfds[i].events = POLLIN;
-				std::cout << "Socket == " << pfds[i].fd << std::endl;
+				if (requests[pfds[i].fd].getHeaders().find("Connection")->second == "keep-alive")
+					pfds[i].events = POLLIN;
+				else {
+					close(pfds[i].fd);
+					delete_pfd(i);
+				}
 				requests[(pfds[i].fd)].clear();
+				requests.erase(pfds[i].fd);
+				std::cout << "Socket == " << pfds[i].fd << std::endl;
 			}
 		}
 	}

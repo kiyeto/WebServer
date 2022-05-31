@@ -16,6 +16,7 @@ class	Response {
 	std::map<std::string, std::string> MIME_types;
 	std::map<int, std::string> status_defin;
 	std::vector<ServerConfig>	&servers;
+	std::map<std::string, std::string> headers;
 
 	int	select_server(request &req);
 
