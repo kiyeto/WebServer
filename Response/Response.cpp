@@ -124,6 +124,14 @@ std::string	Response::CGI_response(request &req, int i){
 	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;
+	std::cout << " BODY = " << req.getFilename() << std::endl;
+	std::ifstream file(req.getFilename());
+	if (file.is_open())
+	{
+		std::string line;
+		while(std::getline(file, line))
+			std::cout << line << std::endl;
+	}
 	Cgi_request cgi(req, servers[i]);
 	respo = cgi.execute();
 	return respo;

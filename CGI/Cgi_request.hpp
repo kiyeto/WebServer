@@ -36,6 +36,7 @@ class Cgi_request {
 		std::string child_proce(const char **cmd, const char **envp);
 		void	parse_cgiResponse(std::string respo);
 		std::string	find_location(std::string extension);
+		
 	public:
 		Cgi_request(request &req, ServerConfig &server);
 		std::string execute();
