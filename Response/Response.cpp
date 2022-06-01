@@ -35,8 +35,15 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
-	std::cout << "-----------------Request--------------" << std::endl;
-	std::cout << "-----------------" << req.getMethod() << "----------------" << std::endl;
+	// std::cout << "-----------------Request--------------" << std::endl;
+	// std::map<std::string, std::string> mp = req.getHeaders();
+	// std::cout << req.getMethod() << std::endl;
+	// std::map<std::string, std::string>::iterator it = mp.begin();
+	// while (it != mp.end()) {
+	// 	std::cout << "REquest headers = " << it->first << " " << it->second << std::endl;
+	// 	it++;
+	// }
+	
 	std::string respo;
 	int i;
 	i = select_server(req);
@@ -124,14 +131,14 @@ std::string	Response::CGI_response(request &req, int i){
 	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;
-	std::cout << " BODY = " << req.getFilename() << std::endl;
-	std::ifstream file(req.getFilename());
-	if (file.is_open())
-	{
-		std::string line;
-		while(std::getline(file, line))
-			std::cout << line << std::endl;
-	}
+	// std::cout << " BODY = " << req.getFilename() << std::endl;
+	// std::ifstream file(req.getFilename());
+	// if (file.is_open())
+	// {
+	// 	std::string line;
+	// 	while(std::getline(file, line))
+	// 		std::cout << line << std::endl;
+	// }
 	Cgi_request cgi(req, servers[i]);
 	respo = cgi.execute();
 	return respo;

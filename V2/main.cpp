@@ -45,7 +45,7 @@
 // 	(*numfds)--;
 // }
 
-int main(int argc, char const *argv[])
+int main(int argc, char const *argv[], char const *envp[])
 {
 	if (argc != 2)
 	{

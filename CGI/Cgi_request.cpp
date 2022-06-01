@@ -3,22 +3,23 @@
 Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(server)
 {
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
-	// meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
-	// meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
-	// // meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
-	// if (req.getUri() == "/")
-	// 	meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + "/index.php")));
-	// else
-	// 	meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + req.getUri())));
+	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
+	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
+	if (req.getMethod() != "GET")
+		meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
+	if (req.getUri() == "/")
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + "/index.php")));
+	else
+		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + req.getUri())));
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
-	// meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
-	// meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
+	meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
+	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
 	// if (req.getBodySize())
 	// {
 	// 	meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
 	// 	meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
 	// }
-	meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "302" )));
+	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "302" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 
 }
@@ -53,15 +54,40 @@ std::string	Cgi_request::execute(){
 	}
 	args.push_back(cmd); // Need To Be replaced With CMD
 	args.push_back(meta.find("SCRIPT_NAME=")->second);
+	std::string query = meta.find("QUERY_STRING=")->second;
+	int i = 0;
+	while ((i = query.find("&")) != std::string::npos) {
+		args.push_back(std::string(query.begin(), query.begin() + i));
+		query.erase(query.begin(), query.begin() + i);
+	}
+	if (!query.empty())
+		args.push_back(std::string(query));
+	int input = open (req.getFilename().c_str(), O_RDONLY);
+	if (input != -1) {
+		std::ifstream file(req.getFilename());
+
+		std::string str((std::istreambuf_iterator<char>(file) ),
+                   (std::istreambuf_iterator<char>()    ));
+		std::cerr << str << std::endl;
+
+		while ((i = str.find("&")) != std::string::npos) {
+			args.push_back(std::string(str.begin(), str.begin() + i));
+			str.erase(str.begin(), str.begin() + i + 1);
+		}
+			if (!str.empty())
+				args.push_back(std::string(str));
+		// dup2(input, 0);
+	}
+	std::cout << "HERE" << std::endl;
 	// if (req.getMethod() == "POST")
 	// {
-		ss << meta.find("QUERY_STRING=")->second;
-		while (ss)
-		{
-			std::string tmp;
-			ss >> tmp;
-			args.push_back(tmp);
-		}
+		// ss << meta.find("QUERY_STRING=")->second;
+		// while (ss)
+		// {
+		// 	std::string tmp;
+		// 	ss >> tmp;
+		// 	args.push_back(tmp);
+		// }
 	// }
 	ss.clear();
 	const char *p[args.size() + 1];
@@ -77,11 +103,7 @@ std::string	Cgi_request::execute(){
 		meta_vars[i] = tmp[i].c_str();
 		it++;
 	}
-	std::cout << "content_length = " << meta.find("CONTENT_LENGTH=")->second << std::endl;
-	std::cout << "content_type = " << meta.find("CONTENT_TYPE=")->second << std::endl;
-	std::cout << " BODY = " << req.getFilename() << std::endl;
 	meta_vars[meta.size()] = NULL;
-	std::cout << "Size = " << start_line.size() << " Respo = " << response.size() << std::endl;
 	response = child_proce(p, (const char**)meta_vars);
 	parse_cgiResponse(response);
 	it = headers.find("Status");
@@ -120,31 +142,34 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	pipe(fds);
 	int child = fork();
 
-	std::ifstream file(req.getFilename());
-	std::string tmp;
-	std::cout << "====== into file ==== " << std::endl;
-	while(std::getline(file, tmp))
-	{
-		write(fds[1], tmp.c_str(), tmp.length());
-		std::cout << tmp << std::endl;
-	}
-	std::cout << "====== out of file ==== " << std::endl;
+	// std::ifstream file(req.getFilename());
+	// std::string tmp;
+	// std::cout << "====== into file ==== " << std::endl;
+	// while(std::getline(file, tmp))
+	// {
+	// 	write(fds[1], tmp.c_str(), tmp.length());
+	// 	std::cout << tmp << std::endl;
+	// }
+	// std::cout << "====== out of file ==== " << std::endl;
 	
 	if (child == 0) //child Process
 	{
-		int input = open (req.getFilename().c_str(), O_RDONLY);
-		if (input == -1)
-			std::cout << "Failure" << std::endl;
-		else
-		{
-			std::ifstream file(req.getFilename());
-			std::string str((std::istreambuf_iterator<char>(file) ),
-                       (std::istreambuf_iterator<char>()    ));
-			std::cerr << str << std::endl;
-			dup2(input, 0);
-		}
+		// int input = open (req.getFilename().c_str(), O_RDONLY);
+		// if (input != -1) {
+		// 	std::ifstream file(req.getFilename());
+		// 	std::string str((std::istreambuf_iterator<char>(file) ),
+        //                (std::istreambuf_iterator<char>()    ));
+		// 	std::cerr << str << std::endl;
+		// 	dup2(input, 0);
+		// }
+		// else
+		int i = -1;
+		while (cmd[++i])
+			std::cout << "cmd = " << cmd[i] << std::endl;
+		
 		dup2(fds[1], 1);
-		if (execve(cmd[0], (char *const *)cmd, (char *const *)envp) == -1)
+		close(fds[0]);
+		if (execve(cmd[0], (char *const *)cmd, (char *const *) NULL) == -1)
 			exit(1);
 	}
 	wait(NULL);
