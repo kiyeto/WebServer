@@ -30,6 +30,7 @@ request&		request::operator=(const request &req) {
 
 std::string request::gen_random(const int len)
 {
+	srand(time(0));
 	static const char alphanum[] =
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -218,8 +219,6 @@ bool	request::assemble_request(std::string & part)
 			return 0;
 		}
 	}
-	bool res=parse_body(part);
-	std::cout << res<< std::endl;
 	return parse_body(part);
 }
 
