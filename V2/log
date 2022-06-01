@@ -1,0 +1,88 @@
+server: new connexion on socket (4)
+server: new connexion on socket (5)
+IN = 4
+End of normal request !!! 
+HERE : 1
+-------------request-----------
+GET /index.php
+OUT = 4
+-----------------Request--------------
+-----------------GET----------------
+ROOT = /Users/bamghoug/Desktop/web3/wordpress
+CGI Filename = /Users/bamghoug/Desktop/web3/wordpress/index.php
+ BODY = 5PN2qmWqBlQ9wQj9
+content_length = HTTP/1.1
+content_type = HTTP/1.1
+ BODY = 5PN2qmWqBlQ9wQj9
+Size = 8 Respo = 0
+====== into file ==== 
+====== out of file ==== 
+====== into file ==== 
+====== out of file ==== 
+Failure
+LENGTH = 25
+-----------Response-------------
+HTTP/1.1 404 Not Found
+Content-Length: 25
+Status: 404 Not Found
+X-Powered-By: PHP/7.4.29
+Content-type: text/html; charset=UTF-8
+
+No input file specified.
+
+Socket == 4
+IN = 4
+End of normal request !!! 
+HERE : 1
+-------------request-----------
+GET /favicon.ico
+OUT = 4
+-----------------Request--------------
+-----------------GET----------------
+MIME Filename = /Users/bamghoug/Desktop/web3/wordpress/favicon.ico
+-----------Response-------------
+
+Socket == 4
+IN = 5
+End of normal request !!! 
+HERE : 1
+-------------request-----------
+GET /index.php
+OUT = 5
+-----------------Request--------------
+-----------------GET----------------
+ROOT = /Users/bamghoug/Desktop/web3/wordpress
+CGI Filename = /Users/bamghoug/Desktop/web3/wordpress/index.php
+ BODY = WRK5RhRXdCdG5nG5
+content_length = HTTP/1.1
+content_type = HTTP/1.1
+ BODY = WRK5RhRXdCdG5nG5
+Size = 8 Respo = 0
+====== into file ==== 
+====== out of file ==== 
+====== into file ==== 
+====== out of file ==== 
+Failure
+LENGTH = 25
+-----------Response-------------
+HTTP/1.1 404 Not Found
+Content-Length: 25
+Status: 404 Not Found
+X-Powered-By: PHP/7.4.29
+Content-type: text/html; charset=UTF-8
+
+No input file specified.
+
+Socket == 5
+IN = 5
+End of normal request !!! 
+HERE : 1
+-------------request-----------
+GET /favicon.ico
+OUT = 5
+-----------------Request--------------
+-----------------GET----------------
+MIME Filename = /Users/bamghoug/Desktop/web3/wordpress/favicon.ico
+-----------Response-------------
+
+Socket == 5

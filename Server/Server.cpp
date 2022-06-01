@@ -129,9 +129,10 @@ void	Server::run() {
 					buffer[valread] = 0;
 					std::string part = std::string(buffer, valread);
 					std::cout << "IN = " << pfds[i].fd << std::endl;
-					if (requests[pfds[i].fd].assemble_request(part))
+					bool res;
+					if ((res = requests[pfds[i].fd].assemble_request(part)))
+					{
 						pfds[i].events = POLLOUT;
-
 					/* Added By Brahim */
 					// try {
 					// 	response = resp.get_response(req);
@@ -173,6 +174,8 @@ void	Server::run() {
 			} //must check for writing here
 			else if (pfds[i].revents == POLLOUT)
 			{
+				std::cout << "-------------request-----------" << std::endl;
+				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				std::cout << "OUT = " << pfds[i].fd << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
 				// response = "HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\np\r\n";
