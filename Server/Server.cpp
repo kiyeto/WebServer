@@ -131,7 +131,7 @@ void	Server::run() {
 					std::cout << "IN = " << pfds[i].fd << std::endl;
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
-					{
+					// {
 						pfds[i].events = POLLOUT;
 					/* Added By Brahim */
 					// try {
