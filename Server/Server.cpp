@@ -84,20 +84,12 @@ void	Server::run()
 
 		for (int i = 0; i < numfds; i++)
 		{
+			bool new_cnx = 0;;
 			std::cout  << "i = " << i << std::endl;
-			if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN))
-			{
-				std::cout << "+++++++++++POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
-				pfds[i].events = POLLIN;
-				pfds[i].revents = -1;
-				close(pfds[i].fd);
-				delete_pfd(i);
-			}
-			/*else */if (pfds[i].revents == POLLIN) // checking for reading
+			if (pfds[i].revents & POLLIN) // checking for reading
 			{
 				// poll_count--;
 				int new_socket;
-				bool new_cnx = 0;;
 				for(int k = 0; k < sockets_created.size(); k++)
 				{
 					if (pfds[i].fd == sockets_created[k])
@@ -135,56 +127,26 @@ void	Server::run()
 					std::cout << "IN = " << pfds[i].fd << std::endl;
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
-					{
 						pfds[i].events = POLLOUT;
-					/* Added By Brahim */
-					// try {
-					// 	response = resp.get_response(req);
-
-					// } catch (std::exception &e) {
-					// 	std::cout << e.what() << std::endl;
-					// }
-					// ofs.open("outputo", std::ios_base::app | std::ios::binary);
-					// // ofs << "/////// chunk " << ++j << " /////////" << std::endl;
-					// // ofs << "**************** read *******************" << std::endl;
-					// ofs.write(buffer, valread);
-					// ofs.close();
-				}
-				// request.append(std::string(buffer));
-				// request.push_back(std::string(buffer));
-				// std::cout << *(--request.end()) << std::endl;
-				// request req((std::string(buffer)));
-				// path = std::string("/Users/abenouda/Desktop/WebServ") + req.getURI();
-				// if (stat(path.c_str(), &st) == 0)
-				// {
-				// 	std::ifstream ifs(path);
-				// 	// std::string	buf;
-				// 	std::stringstream s;
-				// 	if (ifs)
-				// 	{
-				// 		s << ifs.rdbuf();
-				// 		response = header + s.str();
-				// 		// std::cout << "*********** RESPONSE **********" << std::endl;
-				// 		// std::cout << "********* END RESPONSE ********" << std::endl;
-				// 		write(pfds[i].fd , response.c_str() , response.size());
-				// 		std::cout << response << std::endl;
-				// 	}
-				}
-				// else
-				// 	std::cout << "file not found !" << std::endl;
-				// std::cout << "------------------Response sent-------------------" << std::endl;
-				// close(pfds[i].fd);
-				// delete_pfd(&pfds, i, &numfds);
-			} //must check for writing here
-			else if (pfds[i].revents == POLLOUT)
+				} //must check for writing here
+			}
+			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
 			{
-				std::cout << "-------------request-----------" << std::endl;
+				std::cout << "+++++++++++POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
+				pfds[i].events = POLLIN;
+				pfds[i].revents = -1;
+				close(pfds[i].fd);
+				delete_pfd(i);
+			}
+			else if (pfds[i].revents & POLLOUT)
+			{
+				// std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
-				std::cout << "OUT = " << pfds[i].fd << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
 				// response = "HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\np\r\n";
 				std::cout << "-----------Response-------------" << std::endl;
-				std::cout << response << std::endl;
+				std::cout << "OUT = " << pfds[i].fd << std::endl;
+				// std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);
@@ -196,7 +158,7 @@ void	Server::run()
 				}
 				requests[(pfds[i].fd)].clear();
 				requests.erase(pfds[i].fd);
-				std::cout << "Socket == " << pfds[i].fd << std::endl;
+				// std::cout << "Socket == " << pfds[i].fd << std::endl;
 			}
 			// else if (pfds[i].revents == POLLERR)
 			// {
