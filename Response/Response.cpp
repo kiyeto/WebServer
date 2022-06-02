@@ -2,15 +2,15 @@
 
 
 Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers), headers() {
-	status_defin[400] = " Bad Request\r\n";
-	status_defin[200] = " OK\r\n";
-	status_defin[201] = " Created\r\n";
-	status_defin[202] = " Accepted\r\n";
-	status_defin[204] = " No Content\r\n";
-	status_defin[401] = " Unauthorized\r\n";
-	status_defin[403] = " Forbidden\r\n";
-	status_defin[404] = " Not Found\r\n";
-	status_defin[405] = " Method Not Allowed\r\n";
+	status_defin[400] = "400 Bad Request\r\n";
+	status_defin[200] = "200 OK\r\n";
+	status_defin[201] = "201 Created\r\n";
+	status_defin[202] = "202 Accepted\r\n";
+	status_defin[204] = "204 No Content\r\n";
+	status_defin[401] = "401 Unauthorized\r\n";
+	status_defin[403] = "403 Forbidden\r\n";
+	status_defin[404] = "404 Not Found\r\n";
+	status_defin[405] = "405 Method Not Allowed\r\n";
 	// std::map<std::string, std::string>::iterator it = MIME_types.begin();
 	// while (it != MIME_types.end())
 	// {
@@ -157,7 +157,8 @@ std::string	Response::Dir_response(request &req, int i){
 	std::cout << "Dir Filename = " << filename << std::endl;
 	loc_i = find_location(req.getUri(), i);
 	if (loc_i != -1) { // Location Found
-		
+		if (!is_allowed(req.getMethod(), servers[i].getLocation()[loc_i]))
+
 	}
 	else { // There is no Location with this Name
 
@@ -199,4 +200,34 @@ int		Response::find_location(std::string name, int i) {
 			return j;
 	}
 	return -1;
+}
+
+bool			Response::is_allowed(std::string method, LocationConfig location)
+{
+	std::vector<std::string> methods = location.getMethods();
+	for (size_t i = 0; i < methods.size(); i++){
+		if (method == methods[i])
+			return true;
+	}
+	return false;
+}
+
+std::string		Response::make_error_response(int status) {
+	std::string respo ("HTTP/1.1 ");
+	std::stringstream ss(status);
+	std::string	code, length, filename("errors/"), body;
+	std::ifstream	file;
+	ss >> code;
+
+	filename += code + ".html";
+	file.open(filename);
+	body.append( (std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()) );
+	ss.clear();
+	ss << body.length();
+	ss >> length;
+	respo += status_defin[status] + "\r\n";
+	respo += "Content-Type: " + (MIME_types[".html"] + "\r\n");
+	respo += "Content-Length: " + (length + "\r\n\r\n");
+	respo += body;
+	return respo;
 }
