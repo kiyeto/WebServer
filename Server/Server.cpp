@@ -30,7 +30,7 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 			perror("In bind");
 			exit(EXIT_FAILURE);
 		}
-		if (listen(server_fd, 10) < 0)
+		if (listen(server_fd, 1000) < 0)
 		{
 			perror("In listen");  
 			exit(EXIT_FAILURE);
@@ -85,7 +85,6 @@ void	Server::run()
 		for (int i = 0; i < numfds; i++)
 		{
 			bool new_cnx = 0;;
-			std::cout  << "i = " << i << std::endl;
 			if (pfds[i].revents == POLLIN) // checking for reading
 			{
 				// poll_count--;
@@ -145,7 +144,7 @@ void	Server::run()
 				// std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
-				// response = "HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\np\r\n";
+				response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 				std::cout << "-----------Response-------------" << std::endl;
 				// std::cout << "OUT = " << pfds[i].fd << std::endl;
 				// std::cout << response << std::endl;
