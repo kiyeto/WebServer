@@ -10,7 +10,7 @@ server {
   
   location = [
     root = root/other/path
-    path = /another
+    path = /
     method = GET POST DELETE
     upload = /upload/path/
     autoindex = off

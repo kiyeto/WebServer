@@ -58,7 +58,7 @@ std::string	Cgi_request::execute(){
 	int i = 0;
 	while ((i = query.find("&")) != std::string::npos) {
 		args.push_back(std::string(query.begin(), query.begin() + i));
-		query.erase(query.begin(), query.begin() + i);
+		query.erase(query.begin(), query.begin() + i + 1);
 	}
 	if (!query.empty())
 		args.push_back(std::string(query));
@@ -78,7 +78,7 @@ std::string	Cgi_request::execute(){
 				args.push_back(std::string(str));
 		// dup2(input, 0);
 	}
-	std::cout << "HERE" << std::endl;
+	// std::cout << "HERE" << std::endl;
 	// if (req.getMethod() == "POST")
 	// {
 		// ss << meta.find("QUERY_STRING=")->second;
