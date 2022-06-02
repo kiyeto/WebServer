@@ -53,7 +53,8 @@ int	Server::checkTheport(int port) {
 	return 0;
 }
 
-void	Server::run() {
+void	Server::run()
+{
 	int					valread;
 	struct sockaddr_in	address;
 	socklen_t			addrlen = sizeof(address);
@@ -63,6 +64,7 @@ void	Server::run() {
 	std::fstream ofs;
 	Response	resp(servers);
 
+	signal(SIGPIPE, SIG_IGN);
 	while (1)
 	{
 		std::cout << "Waiting for a connection " << std::endl;
@@ -82,13 +84,15 @@ void	Server::run() {
 
 		for (int i = 0; i < numfds; i++)
 		{
-			// std::cout  << "i = " << i << std::endl;
-			// if (pfds[i].revents & POLLHUP)
-			// {
-			// 	std::cout << "POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
-			// 	close(pfds[i].fd);
-			// 	delete_pfd(i);
-			// }
+			std::cout  << "i = " << i << std::endl;
+			if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN))
+			{
+				std::cout << "+++++++++++POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
+				pfds[i].events = POLLIN;
+				pfds[i].revents = -1;
+				close(pfds[i].fd);
+				delete_pfd(i);
+			}
 			/*else */if (pfds[i].revents == POLLIN) // checking for reading
 			{
 				// poll_count--;
@@ -165,7 +169,7 @@ void	Server::run() {
 				// 		write(pfds[i].fd , response.c_str() , response.size());
 				// 		std::cout << response << std::endl;
 				// 	}
-				// }
+				}
 				// else
 				// 	std::cout << "file not found !" << std::endl;
 				// std::cout << "------------------Response sent-------------------" << std::endl;
