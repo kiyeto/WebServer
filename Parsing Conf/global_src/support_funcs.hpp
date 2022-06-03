@@ -18,6 +18,7 @@
 # include <sstream>
 # include <vector>
 # include <map>
+# include <iterator>
 # include <algorithm>
 # include <unistd.h>
 

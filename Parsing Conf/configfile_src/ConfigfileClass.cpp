@@ -176,6 +176,13 @@ void ConfigfileClass::configfileparser()
                     } 
                     throw Error_exc("Invalid Sytax : Location / port");
 
+                case 'h':
+                    if (this->serverConf[n_servers].host.empty() && std::strncmp("host = ", buf.c_str(), 7) == 0)
+                    {
+                        this->serverConf[n_servers].host = buf.substr(buf.find("host = ") + strlen("host = "));
+                        break;
+                    }
+                    throw  Error_exc("Inavalid Syntax : host");
 
                 case 'a':
                     if (this->serverConf[n_servers].log.empty() && std::strncmp("access_log = ", buf.c_str(), 13) == 0)
@@ -195,11 +202,23 @@ void ConfigfileClass::configfileparser()
                             break;
                     }
                         throw Error_exc("Invalid Syntax : BodySizeLimit");
-
+                //to be fixed
                 case 'e':
-                    if (this->serverConf[n_servers].error.empty() && std::strncmp("error_page = ", buf.c_str(), 13) == 0)
+                    if (this->serverConf[n_servers].error_pages.empty() && std::strncmp("error_page = ", buf.c_str(), 13) == 0)
                     {
-                        this->serverConf[n_servers].error = buf.substr(buf.find("error_page = ") + strlen("error_page = "));
+                        std::string error = buf.substr(buf.find("error_page = ") + strlen("error_page = "));
+                        std::vector<std::string> tmp = split(error, ';');
+                        for (size_t i = 0; i < tmp.size(); i++)
+                        {
+                            int key;
+                            std::string value;
+                            std::vector<std::string> tmp2 = split(tmp[i], ':');
+                            if (tmp2.size() != 2)
+                                throw Error_exc("Invalid Syntax : Error Pages must be Written in the format : error_page = 404: /404.html ; 500: /500.html ...");
+                            key = std::stoi(tmp2[0]);
+                            value = tmp2[1];
+                            this->serverConf[n_servers].error_pages.insert(std::pair<int, std::string>(key, value));
+                        }
                         break;
                     }
                     throw Error_exc("Invalid Syntax : Error page");        
