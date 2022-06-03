@@ -1,0 +1,651 @@
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+REQUEST FROM SOCKET : 4
+End of normal request !!! 
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+GET /
+UROO = /
+request ext = /
+Dir Filename = /
+-----------Response-------------
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+REQUEST FROM SOCKET : 4
+End of normal request !!! 
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+GET /template/
+UROO = /template/
+request ext = /template/
+Dir Filename = /template/
+-----------Response-------------
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+i = 2
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
++++++++++++POLLHUP HANDELINGU 4
+socket (4) closed.
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+i = 1
++++++++++++POLLHUP HANDELINGU 5
+socket (5) closed.
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+i = 0
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||

@@ -11,6 +11,10 @@ Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_typ
 	status_defin[403] = "403 Forbidden\r\n";
 	status_defin[404] = "404 Not Found\r\n";
 	status_defin[405] = "405 Method Not Allowed\r\n";
+	status_defin[301] = "301 Moved Permanently\r\n";
+	status_defin[302] = "302 Found\r\n";
+	status_defin[304] = "304 Not Modified\r\n";
+
 	// std::map<std::string, std::string>::iterator it = MIME_types.begin();
 	// while (it != MIME_types.end())
 	// {
@@ -43,6 +47,8 @@ std::string Response::get_response(request	&req) {
 	// 	std::cout << "REquest headers = " << it->first << " " << it->second << std::endl;
 	// 	it++;
 	// }
+
+	std::cout << "request ext = " << req.getUri() << std::endl;
 	
 	std::string respo;
 	int i;
@@ -150,20 +156,38 @@ std::string	Response::CGI_response(request &req, int i){
 }
 
 std::string	Response::Dir_response(request &req, int i){
-	std::string respo;
+	std::string respo, ser_root, loca_root;
 	std::string filename(servers[i].get_root() + req.getUri());
 	int loc_i;
 
-	std::cout << "Dir Filename = " << filename << std::endl;
+	std::cout << "Dir Filename = " << req.getUri() << std::endl;
 	loc_i = find_location(req.getUri(), i);
-	if (loc_i != -1) { // Location Found
+	ser_root = servers[i].get_root();
+	if (!ser_root.empty() && ser_root[ser_root.size() - 1] == '/')
+		ser_root.erase(ser_root.end() - 1);
+	/* LOCATION FOUNDED */
+	if (loc_i != -1) {
+		loca_root = servers[i].getLocation()[loc_i].get_root();
+		if (!loca_root.empty() && loca_root[loca_root.size() - 1] != '/')
+			loca_root += "/";
 		if (!is_allowed(req.getMethod(), servers[i].getLocation()[loc_i]))
-
+			respo = make_error_response(405);
+		else {
+			if (req.getMethod() == "GET"){
+				if (loca_root.empty()) // Location without root
+					respo = make_redirection(304, ser_root + req.getUri());
+				else { // Location with root
+					respo = make_redirection(301, loca_root);
+				}
+			}
+			else if (req.getMethod() == "POST"){}
+			else {}
+		}
 	}
 	else { // There is no Location with this Name
 
 	}
-	return std::string();
+	return respo;
 }
 
 std::string	Response::make_response(int status, std::vector<std::string> &headers, std::string &body) {
@@ -182,12 +206,7 @@ std::string	Response::status_code(int status){
 	std::string tmp;
 	std::map<int, std::string>::iterator it = status_defin.find(status);
 	if (it != status_defin.end())
-	{
-		ss << it->first;
-		ss >> tmp;
-		tmp += it->second;
-		return tmp;
-	}
+		return it->second;
 	return std::string ("200 OK\r\n");
 }
 
@@ -205,6 +224,8 @@ int		Response::find_location(std::string name, int i) {
 bool			Response::is_allowed(std::string method, LocationConfig location)
 {
 	std::vector<std::string> methods = location.getMethods();
+	if (methods.empty())
+		return true;
 	for (size_t i = 0; i < methods.size(); i++){
 		if (method == methods[i])
 			return true;
@@ -229,5 +250,15 @@ std::string		Response::make_error_response(int status) {
 	respo += "Content-Type: " + (MIME_types[".html"] + "\r\n");
 	respo += "Content-Length: " + (length + "\r\n\r\n");
 	respo += body;
+	return respo;
+}
+
+std::string		Response::make_redirection(int status, std::string to){
+	std::string respo ("HTTP/1.1 ");
+
+	respo += status_defin.find(status)->second;
+	respo += "Location: " + (to + "\r\n");
+	respo += "Content-Length: 0\r\n\r\n";
+
 	return respo;
 }

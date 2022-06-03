@@ -29,6 +29,7 @@ class	Response {
 	std::string		status_code(int status);
 	int				find_location(std::string name, int i);
 	bool			is_allowed(std::string method, LocationConfig location);
+	std::string		make_redirection(int status, std::string to);
 
 	public :
 		Response(std::vector<ServerConfig> &servers);
