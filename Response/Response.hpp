@@ -16,6 +16,7 @@ class	Response {
 	std::map<std::string, std::string> MIME_types;
 	std::map<int, std::string> status_defin;
 	std::vector<ServerConfig>	&servers;
+	std::map<std::string, std::string> headers;
 
 	int	select_server(request &req);
 
@@ -23,8 +24,10 @@ class	Response {
 	std::string	CGI_response(request &req, int i);
 	std::string	Dir_response(request &req, int i);
 
-	std::string	make_response(int status, std::vector<std::string> &headers, std::string &body);
-	std::string	status_code(int status);
+	std::string									make_response(int status, std::vector<std::string> &headers, std::string &body);
+	std::string									status_code(int status);
+	int		find_location(std::string name, int i);
+
 	public :
 		Response(std::vector<ServerConfig> &servers);
 		std::string	get_response(request &req);

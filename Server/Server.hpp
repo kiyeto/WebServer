@@ -17,6 +17,7 @@
 #include <vector>
 #include <poll.h>
 #include <fcntl.h>
+#include <signal.h>
 
 #include "../Parsing Conf/configfile_src/ServerConfig.hpp"
 #include "../Parsing Conf/configfile_src/LocationConfig.hpp"
@@ -30,6 +31,7 @@ class Server {
 	std::vector<int> ports, sockets_created;
 	std::map<int, request> requests;
 	std::map<int, Response> respones;
+	const char *envp[];
 
 	int	checkTheport(int port);
 	void	add_pfd(int fd);

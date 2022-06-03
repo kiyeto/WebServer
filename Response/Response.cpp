@@ -1,7 +1,7 @@
 #include "Response.hpp"
 
 
-Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers) {
+Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers), headers() {
 	status_defin[400] = " Bad Request\r\n";
 	status_defin[200] = " OK\r\n";
 	status_defin[201] = " Created\r\n";
@@ -35,42 +35,50 @@ std::string	read_file(std::string root, const char* filename){
 }
 
 std::string Response::get_response(request	&req) {
-	std::cout << req.getHeaders()["Host"] << std::endl;
-	// std::map<std::string, std::string>::iterator it = req.getHeaders().begin();
-	// while(it != req.getHeaders().end()){
-	// 	std::cout << "HEADERS = " << it->first << ": " << it->second << std::endl;
+	// std::cout << "-----------------Request--------------" << std::endl;
+	// std::map<std::string, std::string> mp = req.getHeaders();
+	// std::cout << req.getMethod() << std::endl;
+	// std::map<std::string, std::string>::iterator it = mp.begin();
+	// while (it != mp.end()) {
+	// 	std::cout << "REquest headers = " << it->first << " " << it->second << std::endl;
 	// 	it++;
 	// }
+	
 	std::string respo;
-	// int i;
-	// i = select_server(req);
-
-	// if (!req.getExtension().empty()){ // request with file
-	// 	std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
-	// 	if (it != MIME_types.end()) { // Regular file
-	// 		respo = MIME_response(req, i, it);
-	// 	} else { // it's CGI
-	// 		respo = CGI_response(req, i);
-	// 	}
-	// } else { // request with Directory
-	// 	respo = Dir_response(req, i);
+	int i;
+	i = select_server(req);
+	if (!req.getExtension().empty()){ // request with file
+		std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
+		if (it != MIME_types.end()) { // Regular file
+			respo = MIME_response(req, i, it);
+		} else { // it's CGI
+			respo = CGI_response(req, i);
+		}
+	} else { // request with Directory
+		respo = Dir_response(req, i);
+	}
+	headers.clear();
+	// if (pr.path.find(".php") != std::string::npos) { 
+	// 	Cgi_request cgi(req, servers[0]);
+	// 	respo = cgi.execute();
 	// }
-
-	// // if (pr.path.find(".php") != std::string::npos) { 
-	// // 	Cgi_request cgi(req, servers[0]);
-	// // 	respo = cgi.execute();
-	// // }
-	// // else {
-	// // 	respo = "HTTP/1.1 200 OK\r\n\r\n";
-	// // 	std::string tmp (req.getHeaders().find("Accept")->second);
-	// // 	respo += read_file(getenv("PWD"), pr.path.c_str());
-	// // }
+	// else {
+	// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
+	// 	std::string tmp (req.getHeaders().find("Accept")->second);
+	// 	respo += read_file(getenv("PWD"), pr.path.c_str());
+	// }
 	return respo;
 }
 
 int	Response::select_server(request &req){
 	std::stringstream ss;
-	std::string Host(req.getHeaders().find("Host")->second);
+	std::string Host;
+	std::map<std::string, std::string> head = req.getHeaders();
+	std::map<std::string, std::string>::iterator it = head.find("Host");
+	if (it != head.end())
+		Host = req.getHeaders().find("Host")->second;
+	else
+		return 0;
 	size_t i = Host.find(":");
 	std::vector<int> list_servers_p; // list of Servers with the same port by index
 	std::vector<int> list_servers_n; // list of Servers with the same name by index
@@ -79,7 +87,7 @@ int	Response::select_server(request &req){
 	int port;
 	ss >> port;
 	std::string server_name;
-	std::cout << "HOST = " << Host << " i = " << i << std::endl;
+	// std::cout << "HOST = " << Host << " i = " << i << std::endl;
 	try {
 		server_name.assign(Host.begin(), Host.begin() + i);
 	} catch (std::exception &e) {
@@ -128,6 +136,14 @@ std::string	Response::CGI_response(request &req, int i){
 	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;
+	// std::cout << " BODY = " << req.getFilename() << std::endl;
+	// std::ifstream file(req.getFilename());
+	// if (file.is_open())
+	// {
+	// 	std::string line;
+	// 	while(std::getline(file, line))
+	// 		std::cout << line << std::endl;
+	// }
 	Cgi_request cgi(req, servers[i]);
 	respo = cgi.execute();
 	return respo;
@@ -136,9 +152,16 @@ std::string	Response::CGI_response(request &req, int i){
 std::string	Response::Dir_response(request &req, int i){
 	std::string respo;
 	std::string filename(servers[i].get_root() + req.getUri());
+	int loc_i;
 
 	std::cout << "Dir Filename = " << filename << std::endl;
+	loc_i = find_location(req.getUri(), i);
+	if (loc_i != -1) { // Location Found
+		
+	}
+	else { // There is no Location with this Name
 
+	}
 	return std::string();
 }
 
@@ -165,4 +188,15 @@ std::string	Response::status_code(int status){
 		return tmp;
 	}
 	return std::string ("200 OK\r\n");
+}
+
+int		Response::find_location(std::string name, int i) {
+	std::vector<LocationConfig> locs = servers[i].getLocation();
+	size_t j = 0;
+
+	for (; j < locs.size(); j++) {
+		if (locs[j].get_name() == name)
+			return j;
+	}
+	return -1;
 }

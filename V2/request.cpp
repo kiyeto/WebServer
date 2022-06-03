@@ -30,6 +30,7 @@ request&		request::operator=(const request &req) {
 
 std::string request::gen_random(const int len)
 {
+	srand(time(0));
 	static const char alphanum[] =
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -61,8 +62,9 @@ void	request::clear()
 {
 	method.clear();
 	URI.clear();
-	filename.clear();
 	version.clear();
+	extension.clear();
+	query.clear();
 	header_raw.clear();
 	hdr_cmplt = 0;
 	chunk_not_cmplt = 0;
@@ -71,9 +73,9 @@ void	request::clear()
 	req_cmplt = 0;
 
 	headers.clear();
-	file.
+	std::remove(filename.c_str());
+	filename.clear();
 
-	body.clear();
 	body_size = 0;
 	header_size = 0;
 	total_size = 0;
@@ -94,6 +96,7 @@ bool	request::parse_unchunked(std::string & part)
 	{
 		std::cout << "End of normal request !!! " << std::endl;
 		req_cmplt = 1;
+		chunk_not_cmplt = 0;
 		return 1;
 	}
 
@@ -103,6 +106,13 @@ bool	request::parse_unchunked(std::string & part)
 		file.write(part.c_str(), part.length());
 		file.close();
 		chunk_len -= part.length();
+		if (chunk_len == 0)
+		{
+			std::cout << "End of normal request !!! " << std::endl;
+			req_cmplt = 1;
+			chunk_not_cmplt = 0;
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -195,12 +205,13 @@ bool	request::assemble_request(std::string & part)
 			this->hdr_cmplt = 1;
 			header_raw += std::string(part.c_str(), header_end + 4);
 			parse_headers(header_raw);
-			if (method == "POST")
-			{
+			// if (method == "POST")
+			// {
 				std::string sub = part.substr(header_end + 4);
 				return parse_body(sub);
-			}
-			return 1;
+			// }
+			// else
+			// 	return 1;
 		}
 		else if (header_end == -1)
 		{

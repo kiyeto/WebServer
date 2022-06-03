@@ -1,7 +1,7 @@
 server {
   listen = 8080
   server_name = test1
-  root = /Users/bamghoug/Desktop/web3/wordpress
+  root = /Users/abenouda/Desktop/push2/v2
   index = index.php
   body_size_limit = 100
   error_page = error/page
@@ -10,7 +10,7 @@ server {
   
   location = [
     root = root/other/path
-    path = /another
+    path = /
     method = GET POST DELETE
     upload = /upload/path/
     autoindex = off
@@ -29,6 +29,15 @@ server {
     name = .php
     root = root/path
     path = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
+    method = GET POST DELETE
+    upload = /upload/path/
+    cgi = cgi/path
+    autoindex = off
+  ]
+  location = [
+    name = .py
+    root = root/path
+    path = /usr/bin/python
     method = GET POST DELETE
     upload = /upload/path/
     cgi = cgi/path
