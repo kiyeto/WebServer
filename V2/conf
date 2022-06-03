@@ -1,24 +1,24 @@
 server {
   listen = 8080
   server_name = test1
-  root = /Users/abenouda/Desktop/push2/v2
-  index = index.php
+  root = /Users/bamghoug/Desktop/web3/V2
+  index = index.html
   body_size_limit = 100
   error_page = error/page
-
-
+  
   
   location = [
-    root = root/other/path
-    path = /
+    name = /
+    root = template
     method = GET POST DELETE
     upload = /upload/path/
     autoindex = off
   ]
   
   location = [
-    root = root/path
-    path = /anotherone
+    name = /anotherone
+    root = V2/template
+	index = index.php
     method = GET POST DELETE
     upload = /upload/path/
     autoindex = off

@@ -66,6 +66,7 @@ int main(int argc, char const *argv[], char const *envp[])
 	}
 	std::vector<ServerConfig> servers = config.getServerConfig();
 	Server server(servers);
+	
 
 	// // Only this line has been changed. Everything is same.
 	// std::string header = "HTTP/1.1 200 OK\r\n\r\n"; // = "HTTP/1.1 200 OK\n\n\nHello world!";    
