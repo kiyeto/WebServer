@@ -10,6 +10,7 @@ server {
   location = [
     name = .php
     root = root/path
+    redirect = 301 www.google.com
     location_index = index.php
     method = GET POST DELETE
     upload = /upload/path/

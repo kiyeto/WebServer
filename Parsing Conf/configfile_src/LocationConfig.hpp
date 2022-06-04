@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/03 23:30:18 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/04 12:58:28 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ private:
     std::string name;
     std::string location_index;
     std::string root;
-    std::string redirect;
+    std::vector<std::string> redirect;
     std::string upload;
     std::vector<std::string> methods;
     std::vector<std::string> cgi;
@@ -34,7 +34,7 @@ public:
     std::string get_name();
     std::string get_location_index();
     std::string get_root();
-    std::string get_redirect();
+    std::vector<std::string> get_redirect();
     std::string get_upload();
     std::vector<std::string> getMethods();
     std::vector<std::string> getCgi();
@@ -45,8 +45,14 @@ friend std::ostream &operator<<(std::ostream &output, LocationConfig &D )
         output << "name : " << D.get_name() << std::endl;
         output << "location_index : " << D.get_location_index() << std::endl;
         output << "root : " << D.get_root() << std::endl;
-        output << "redirect : " << D.get_redirect() << std::endl;
         output << "upload : " << D.get_upload() << std::endl;
+        // for (auto i: D.get_redirect())
+        // {
+        //     output << "redirect : " << i << std::endl;
+        // }
+        std::vector<std::string> redir = D.get_redirect();
+        output << "redirect code : " << redir[0] << std::endl;
+        output << "redirect link : " << redir[1] << std::endl;
         for (auto i: D.getMethods())
             std::cout << "Mathods " << i << ' ' << std::endl;
         for (auto i: D.getCgi())
