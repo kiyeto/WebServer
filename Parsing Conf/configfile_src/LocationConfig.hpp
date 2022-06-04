@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/06/04 13:06:00 by bamghoug         ###   ########.fr       */
-=======
-/*   Updated: 2022/06/04 13:36:29 by mbrija           ###   ########.fr       */
->>>>>>> 7c42e3b58ffe4cda8da9551ba15a40dcee0240ca
+/*   Updated: 2022/06/04 17:14:55 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +41,6 @@ public:
 	bool	get_autoindex();
     
        
-<<<<<<< HEAD
-// friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
-// { 
-//         output << "name : " << D.get_name() << std::endl;
-//         output << "location_index : " << D.get_location_index() << std::endl;
-//         output << "root : " << D.get_root() << std::endl;
-//         output << "redirect : " << D.get_redirect() << std::endl;
-//         output << "upload : " << D.get_upload() << std::endl;
-//         for (auto i: D.getMethods())
-//             std::cout << "Mathods " << i << ' ' << std::endl;
-//         for (auto i: D.getCgi())
-//             std::cout << "Cgi " << i << ' ' << std::endl;
-//         return output;
-// }
-=======
 friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
 { 
         output << "name : " << D.get_name() << std::endl;
@@ -80,9 +61,9 @@ friend std::ostream &operator<<(std::ostream &output, LocationConfig &D )
             std::cout << "Mathods " << i << ' ' << std::endl;
         for (auto i: D.getCgi())
             std::cout << "Cgi " << i << ' ' << std::endl;
+        output << "auto_index : " << D.get_autoindex() << std::endl;
         return output;
 }
->>>>>>> 7c42e3b58ffe4cda8da9551ba15a40dcee0240ca
 
     //parse here
     void locationParser(std::string buf);
