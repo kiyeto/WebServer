@@ -9,38 +9,11 @@ server {
   
   location = [
     name = /
-    root = template
+    root = template/
+	location_index = index.html
     method = GET POST DELETE
     upload = /upload/path/
     autoindex = off
-  ]
-  
-  location = [
-    name = /anotherone
-    root = V2/template
-	index = index.php
-    method = GET POST DELETE
-    upload = /upload/path/
-    autoindex = off
-    redirect = https://www.9anime.to
   ]
 
-  location = [
-    name = .php
-    root = root/path
-    path = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
-    method = GET POST DELETE
-    upload = /upload/path/
-    cgi = cgi/path
-    autoindex = off
-  ]
-  location = [
-    name = .py
-    root = root/path
-    path = /usr/bin/python
-    method = GET POST DELETE
-    upload = /upload/path/
-    cgi = cgi/path
-    autoindex = off
-  ]
 }

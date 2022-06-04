@@ -14,7 +14,7 @@ std::string AutoIndex::fixnl(char * time)
 	return t;
 }
 
-AutoIndex::AutoIndex(std::string& p)
+AutoIndex::AutoIndex(std::string p)
 {
 	DIR *dir = opendir(p.c_str());
 	struct stat result;

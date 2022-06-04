@@ -26,7 +26,7 @@ class	Response {
 	std::string	Dir_response(request &req, int i);
 
 	std::string		make_response(int status, std::vector<std::string> &headers, std::string &body);
-	std::string		make_error_response(int status);
+	std::string		make_error_response(int status, ServerConfig &server);
 	std::string		status_code(int status);
 	int				find_location(std::string name, int i);
 	bool			is_allowed(std::string method, LocationConfig location);

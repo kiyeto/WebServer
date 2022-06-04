@@ -179,7 +179,13 @@ std::string	Response::Dir_response(request &req, int i){
 		if (!is_allowed(req.getMethod(), location)) // Check The Method if Allowed
 			respo = make_error_response(405, servers[i]);
 		else if (location.get_redirect().size() != 0)
-			respo = make_redirection(location.get_redirect()[0], location.get_redirect()[1])
+		{
+			int redirect_code;
+			std::stringstream ss;
+			ss << location.get_redirect()[0];
+			ss >> redirect_code;
+			respo = make_redirection(redirect_code, location.get_redirect()[1]);
+		}
 		else {
 			if (req.getMethod() == "GET")
 			{
@@ -189,14 +195,14 @@ std::string	Response::Dir_response(request &req, int i){
 				{
 					if (location.get_autoindex()) // AutoIndex is on
 					{
-						AutoIndex autoindex(Location.get_root() + req.getUri());
+						AutoIndex autoindex(location.get_root() + req.getUri());
 
 						std::vector<std::string> headers;
 						std::string body(autoindex.getHtml()), length;
 						std::stringstream ss;
 						ss << body.length();
 						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + (std::string(MIME[".html"]) + "\r\n"));
+						headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
 						headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
 						respo = make_response(200, headers, body);
 					}
@@ -209,11 +215,11 @@ std::string	Response::Dir_response(request &req, int i){
 					if (file.is_open())
 					{
 						std::vector<std::string> headers;
-						std::string body(), length;
+						std::string body, length;
 						std::stringstream ss;
 						ss << body.length();
 						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + (std::string(MIME[".html"]) + "\r\n"));
+						headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
 						headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
 						respo = make_response(200, headers, body);
 					}
@@ -238,16 +244,17 @@ std::string	Response::Dir_response(request &req, int i){
 					if (file.is_open())
 					{
 						std::vector<std::string> headers;
-						std::string body(), length;
+						std::string body, length;
 						std::stringstream ss;
 						ss << body.length();
 						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + (std::string(MIME[".html"]) + "\r\n"));
+						headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
 						headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
 						respo = make_response(201, headers, body);
 					}
 					else
 						make_error_response(404, servers[i]);
+				}
 			}
 			else {}
 		}
@@ -304,7 +311,7 @@ bool			Response::is_allowed(std::string method, LocationConfig location)
 std::string		Response::make_error_response(int status, ServerConfig &server) {
 	std::string respo ("HTTP/1.1 ");
 	std::stringstream ss(status);
-	std::map<int, std::string> error_pages = Server.get_error_pages();
+	std::map<int, std::string> error_pages = server.get_error_pages();
 	std::map<int, std::string>::iterator it = error_pages.find(status);
 	std::string	code, length, filename, body;
 	std::ifstream	file;

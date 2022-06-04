@@ -17,6 +17,6 @@ class AutoIndex
 		std::string fixnl(char * time);
 		AutoIndex(){}
 	public:
-		AutoIndex(std::string & path);
+		AutoIndex(std::string path);
 		std::string getHtml() const;
 };
