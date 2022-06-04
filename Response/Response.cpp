@@ -14,6 +14,10 @@ Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_typ
 	status_defin[301] = "301 Moved Permanently\r\n";
 	status_defin[302] = "302 Found\r\n";
 	status_defin[304] = "304 Not Modified\r\n";
+	status_defin[501] = "501 Not Implemented\r\n";
+	status_defin[414] = "414 Request-URI Too Long\r\n";
+	status_defin[413] = "413 Request Entity Too Large\r\n";
+
 
 	// std::map<std::string, std::string>::iterator it = MIME_types.begin();
 	// while (it != MIME_types.end())
