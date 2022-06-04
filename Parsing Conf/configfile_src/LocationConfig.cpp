@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 14:39:41 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/04 17:16:00 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ LocationConfig & LocationConfig::operator= (LocationConfig const &p)
         this->redirect = p.redirect;
         this->root = p.root;
         this->upload = p.upload;
+        this->auto_index = p.auto_index;
     }
     return *this;
 }
