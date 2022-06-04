@@ -1,12 +1,13 @@
 #include "request.hpp"
 
-request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename(), file() {}
+request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename(), file(), status_code(0) {}
 
 request::request(const request &req){
 	(*this) = req;
 }
 
-request&		request::operator=(const request &req) {
+request&		request::operator=(const request &req)
+{
 	method = 			req.method;
 	URI = 				req.URI;
 	extension = 		req.extension;
@@ -25,6 +26,7 @@ request&		request::operator=(const request &req) {
 	body_size = 		req.body_size;
 	header_size = 		req.header_size;
 	total_size = 		req.total_size;
+	status_code	=		req.status_code;
 	return (*this);
 }
 
@@ -45,8 +47,16 @@ std::string request::gen_random(const int len)
 	return tmp_s;
 }
 
-void	request::check_URI()
+int	request::check_URI()
 {
+	std::string allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
+	if (URI.length() > 2048)
+		return (414);
+	for (int i = 0; i < URI.length(); i++)
+	{
+		if (allowed_chars.find(URI[i]) == -1)
+			return (400);
+	}
 	int	pos = URI.find("?");
 	if (pos != -1)
 	{
@@ -56,6 +66,7 @@ void	request::check_URI()
 	pos = URI.find_last_of(".");
 	if (pos != -1)
 		extension = URI.substr(pos);
+	return 0;
 }
 
 void	request::clear()
@@ -79,6 +90,7 @@ void	request::clear()
 	body_size = 0;
 	header_size = 0;
 	total_size = 0;
+	status_code = 0;
 }
 
 bool	request::parse_unchunked(std::string & part)
@@ -204,14 +216,12 @@ bool	request::assemble_request(std::string & part)
 		{
 			this->hdr_cmplt = 1;
 			header_raw += std::string(part.c_str(), header_end + 4);
-			parse_headers(header_raw);
-			// if (method == "POST")
-			// {
-				std::string sub = part.substr(header_end + 4);
-				return parse_body(sub);
-			// }
-			// else
-			// 	return 1;
+			if (parse_headers(header_raw))
+				return (1);
+
+			std::string sub = part.substr(header_end + 4);
+			return parse_body(sub);
+
 		}
 		else if (header_end == -1)
 		{
@@ -222,29 +232,20 @@ bool	request::assemble_request(std::string & part)
 	return parse_body(part);
 }
 
-void	request::parse_headers(std::string& raw)
+int		request::parse_headers(std::string& raw)
 {
-	// std::cout << "*********** REQUEST **********" << std::endl;
-	long header_end = raw.find("\r\n\r\n") + 4;
-
-	// if (raw.length() - header_end > 1)
-	// 	this->body = raw.substr(header_end);
-	// else
-	// 	this->body.empty();
+	int	header_end = raw.find("\r\n\r\n") + 4;
 
 	header_size = header_end;
-	// body_size = body.length();
-	// total_size = header_size + body_size;
-
-	// std::cout << "header_size : " << header_size << std::endl << "body_size : "  << body_size << std::endl << "total : " << body_size + header_size << std::endl;
-
 	std::string start_line = raw.substr(0, raw.find("\n"));
 
 	this->method = start_line.substr(0, start_line.find(" "));
 	start_line.erase(0, start_line.find(" ") + 1);
+
 	this->URI = start_line.substr(0, start_line.find(" "));
-	check_URI();
+	status_code = check_URI();
 	start_line.erase(0, start_line.find(" ") + 1);
+
 	this->version = start_line.substr(0, start_line.find(" "));
 	start_line.erase(0, start_line.find(" "));
 
@@ -264,21 +265,18 @@ void	request::parse_headers(std::string& raw)
 			break;
 		}
 	}
-
-	// std::map<std::string, std::string>::iterator b = headers.begin();
-	// std::map<std::string, std::string>::iterator e = headers.end();
-
-	// while (b != e)
-	// {
-	// 	std::cout << b->first << "	|	" << b->second << std::endl;
-	// 	b++;
-	// }
-	// std::cout << "--- START BODY ---" << std::endl;
-	// std::cout << this->body;
-	// std::cout << "--- END BODY ---" << std::endl;
-
-	// std::cout << "********* END REQUEST ********" << std::endl;
 	header_raw.clear();
+	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
+	std::map<std::string, std::string>::iterator c_l = headers.find("Content-Length");
+	if (status_code)
+		return (status_code);
+	if (method != "GET" && method != "POST" && method != "DELETE")
+		return (status_code = 501);
+	if (method == "POST" && (trnsfr_enc == headers.end() || c_l == headers.end()))
+		return (status_code = 400);
+	if (trnsfr_enc->second != "chunked")
+		return (status_code = 501);
+	return (0);
 }
 
 std::string	request::getMethod() const {

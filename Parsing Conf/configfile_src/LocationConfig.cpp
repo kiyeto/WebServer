@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 11:51:03 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/04 13:05:57 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "LocationConfig.hpp"
 
 LocationConfig::LocationConfig(/* args */) : 
-    name(""), location_index(""), root(""), redirect(""),
+    name(""), location_index(""), root(""), redirect(0),
     upload(""), methods(), cgi(), auto_index(0)
 {
 }
@@ -56,7 +56,7 @@ std::string LocationConfig::get_root()
     return this->root;
 }
 
-std::string LocationConfig::get_redirect()
+std::vector<std::string> LocationConfig::get_redirect()
 {
     return this->redirect;
 }
@@ -112,11 +112,19 @@ void LocationConfig::locationParser(std::string buf)
                 this->root = buf.substr(buf.find("root = ") + strlen("root = "));
                 break;
             }
-            else if (this->redirect.empty() && std::strncmp("redirect = ", buf.c_str(), 11) == 0)
-            {
-                this->redirect = buf.substr(buf.find("redirect = ") + strlen("redirect ="));
-                break;
-            }
+             else if (this->redirect.empty() && std::strncmp("redirect = ", buf.c_str(), 11) == 0)
+                    {
+                        std::string str = buf.substr(buf.find("redirect = ") + strlen("redirect = "));
+                        std::vector<std::string> tmp = split(str, ' ');
+                        if (tmp.size() != 2)
+                            throw Error_exc("Invalid Syntax : redirect not valid");
+                        for (size_t i = 0; i < tmp.size(); i++)
+                        {
+                            tmp[i] = trim(tmp[i], " ");
+                            this->redirect.push_back(tmp[i]);
+                        }
+                        break;
+                    }
             throw Error_exc("syntax err : invalid root/redirect");
             
         case 'u':

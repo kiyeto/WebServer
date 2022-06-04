@@ -237,12 +237,7 @@ void ConfigfileClass::configfileparser()
                         this->serverConf[n_servers].root = buf.substr(buf.find("root = ") + strlen("root = "));
                         break;
                     }
-                    else if (this->serverConf[n_servers].redirect.empty() && std::strncmp("redirect = ", buf.c_str(), 11) == 0)
-                    {
-                        this->serverConf[n_servers].redirect = buf.substr(buf.find("redirect = ") + strlen("redirect = "));
-                        break;
-                    }
-                    throw Error_exc("Invalid Syntax : Root / Redirect");
+                    throw Error_exc("Invalid Syntax : Root");
 
                 case 'i':
                     if (this->serverConf[n_servers].index.empty() && std::strncmp("index = ", buf.c_str(), 8) == 0)

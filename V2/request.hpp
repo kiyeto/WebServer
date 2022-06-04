@@ -22,6 +22,7 @@ private:
 	int				chunk_len;
 	int				sent;
 	int				fd;
+	int				status_code;
 	bool			req_cmplt;
 	std::string		filename;
 	std::ofstream	file;
@@ -34,7 +35,7 @@ private:
 	long			header_size;
 	long			total_size;
 
-	void			check_URI();
+	int				check_URI();
 	std::string		gen_random(const int len);
 	bool			parse_unchunked(std::string & part);
 	bool			parse_chunked(std::string& raw);
@@ -46,7 +47,7 @@ public:
 	request& operator=(const request &req);
 
 	bool	assemble_request(std::string& part);
-	void	parse_headers(std::string& raw);
+	int		parse_headers(std::string& raw);
 	void	clear();
 
 	request(std::string raw);

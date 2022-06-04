@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/03 23:45:23 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/04 12:54:02 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 
 ServerConfig::ServerConfig(/* args */) :
-    port(-1), name(""), root(""), redirect(""),
+    port(-1), name(""), root("")/*, redirect(0)*/,
     index(""), log(""), error_pages(), body_size(100000000000),
     location_count(0), location(0)
 {
@@ -37,7 +37,7 @@ ServerConfig & ServerConfig::operator=(ServerConfig const &p)
         this->log = p.log;
         this->name = p.name;
         this->port = p.port;
-        this->redirect = p.redirect;
+        // this->redirect = p.redirect;
         this->root = p.root;
         this->host = p.host;
     }
@@ -60,10 +60,10 @@ std::string ServerConfig::get_root()
 {
     return this->root;
 }
-std::string ServerConfig::get_redirect()
-{
-    return this->redirect;   
-}
+// std::vector<std::string> ServerConfig::get_redirect()
+// {
+//     return this->redirect;   
+// }
 std::string ServerConfig::get_index()
 {
     return this->index;

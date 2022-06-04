@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:22 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 12:02:47 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/04 13:06:02 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ private:
     std::string host;
     std::string name;
     std::string root;
-    std::string redirect;
+    // std::vector<std::string> redirect;
     std::string index;
     std::string log;
     std::map<int, std::string> error_pages;
@@ -60,7 +60,7 @@ public:
     std::string get_host();
     size_t get_port();
     std::string get_root();
-    std::string get_redirect();
+    // std::vector<std::string> get_redirect();
     std::string get_index();
     std::string get_log();
     std::map<int, std::string> get_error_pages();

@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 11:50:27 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/04 13:06:00 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ private:
     std::string name;
     std::string location_index;
     std::string root;
-    std::string redirect;
+    std::vector<std::string> redirect;
     std::string upload;
     std::vector<std::string> methods;
     std::vector<std::string> cgi;
@@ -34,7 +34,7 @@ public:
     std::string get_name();
     std::string get_location_index();
     std::string get_root();
-    std::string get_redirect();
+    std::vector<std::string> get_redirect();
     std::string get_upload();
     std::vector<std::string> getMethods();
     std::vector<std::string> getCgi();
