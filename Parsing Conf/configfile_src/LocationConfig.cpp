@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/29 00:22:16 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/03 23:39:03 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "LocationConfig.hpp"
 
 LocationConfig::LocationConfig(/* args */) : 
-    name(""), path(""), root(""), redirect(""),
+    name(""), location_index(""), root(""), redirect(""),
     upload(""), methods(), cgi(), auto_index(0)
 {
 }
@@ -30,7 +30,7 @@ LocationConfig & LocationConfig::operator= (LocationConfig const &p)
         this->name = p.name;
         this->cgi = p.cgi;
         this->methods = p.methods;
-        this->path = p.path;
+        this->location_index = p.location_index;
         this->redirect = p.redirect;
         this->root = p.root;
         this->upload = p.upload;
@@ -47,9 +47,9 @@ std::string LocationConfig::get_name()
     return this->name;
 }
 
-std::string LocationConfig::get_path()
+std::string LocationConfig::get_location_index()
 {
-    return this->path;
+    return this->location_index;
 }
 std::string LocationConfig::get_root()
 {
@@ -93,13 +93,13 @@ void LocationConfig::locationParser(std::string buf)
             }
             throw Error_exc("syntax err : invalid autoindex");
             
-            case 'p' :            
-            if(this->path.empty() && std::strncmp("path = ", buf.c_str(), 7) == 0)
+            case 'l' :            
+            if(this->location_index.empty() && std::strncmp("location_index = ", buf.c_str(), 17) == 0)
             {
-                this->path = buf.substr(buf.find("path = ") + strlen("path = "));
+                this->location_index = buf.substr(buf.find("location_index = ") + strlen("location_index = "));
                 break;
             }
-            throw Error_exc("syntax err : invalid path");
+            throw Error_exc("syntax err : invalid location index");
             
         case 'r':
             if(this->root.empty() && std::strncmp("root = ", buf.c_str(), 7) == 0)

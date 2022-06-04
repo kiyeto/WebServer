@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/28 23:29:24 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/03 23:30:18 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ class LocationConfig
 {
 private:
     std::string name;
-    std::string path;
+    std::string location_index;
     std::string root;
     std::string redirect;
     std::string upload;
@@ -32,7 +32,7 @@ public:
     LocationConfig & operator= (LocationConfig const &p);
     //getters
     std::string get_name();
-    std::string get_path();
+    std::string get_location_index();
     std::string get_root();
     std::string get_redirect();
     std::string get_upload();
@@ -40,19 +40,19 @@ public:
     std::vector<std::string> getCgi();
     
        
-// friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
-// { 
-//         output << "name : " << D.get_name() << std::endl;
-//         output << "path : " << D.get_path() << std::endl;
-//         output << "root : " << D.get_root() << std::endl;
-//         output << "redirect : " << D.get_redirect() << std::endl;
-//         output << "upload : " << D.get_upload() << std::endl;
-//         for (auto i: D.getMethods())
-//             std::cout << "Mathods " << i << ' ' << std::endl;
-//         for (auto i: D.getCgi())
-//             std::cout << "Cgi " << i << ' ' << std::endl;
-//         return output;
-// }
+friend std::ostream &operator<<(std::ostream &output, LocationConfig &D ) 
+{ 
+        output << "name : " << D.get_name() << std::endl;
+        output << "location_index : " << D.get_location_index() << std::endl;
+        output << "root : " << D.get_root() << std::endl;
+        output << "redirect : " << D.get_redirect() << std::endl;
+        output << "upload : " << D.get_upload() << std::endl;
+        for (auto i: D.getMethods())
+            std::cout << "Mathods " << i << ' ' << std::endl;
+        for (auto i: D.getCgi())
+            std::cout << "Cgi " << i << ' ' << std::endl;
+        return output;
+}
 
     //parse here
     void locationParser(std::string buf);
