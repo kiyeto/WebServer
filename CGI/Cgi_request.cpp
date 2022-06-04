@@ -208,7 +208,7 @@ std::string	Cgi_request::find_location(std::string extension){
 	std::vector<LocationConfig>::iterator it = locations.begin();
 	for ( ; it < locations.end(); it++) {
 		if (it->get_name() == extension)
-			return it->get_path();
+			return it->get_root();
 	}
 	return std::string();
 }

@@ -18,7 +18,7 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 		sockets_created.push_back(server_fd);
 
 		address.sin_family = AF_INET;
-		address.sin_addr.s_addr = INADDR_ANY;
+		address.sin_addr.s_addr = inet_addr(servers[i].get_host().c_str());
 		address.sin_port = htons( servers[i].get_port() );
 
 		memset(address.sin_zero, '\0', sizeof address.sin_zero);

@@ -11,6 +11,7 @@
 #include "../V2/request.hpp"
 #include "../CGI/Uriparser.hpp"
 #include "../CGI/Cgi_request.hpp"
+#include "../AutoIndex/autoindex.hpp"
 
 class	Response {
 	std::map<std::string, std::string> MIME_types;

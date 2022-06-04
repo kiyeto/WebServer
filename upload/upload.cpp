@@ -3,77 +3,6 @@
 #include <fstream>
 #include "../V2/request.hpp"
 
-// bool	upload_file(std::string filename)
-// {
-// 	std::ifstream body(filename, std::ifstream::binary);
-// 	std::ofstream file;
-// 	std::string boundry;
-// 	std::string process;
-// 	std::string line;
-// 	std::string name;
-// 	char buffer[4096];
-// 	int start;
-// 	bool f = 0;
-// 	bool end = 0;
- 
-//  	while(!end)
-// 	{
-// 		body.read(buffer, 4096);
-// 		if (body)
-// 		{
-// 			process = std::string(buffer, 4096);
-// 			if (!boundry.length())
-// 			{
-// 				if (process.find("\r\n") != -1)
-// 					boundry = process.substr(0, pos);
-// 			}
-// 			if (!f)
-// 			{
-// 				line = process.substr(0, process.find("\r\n"));
-// 				if (line == boundry)
-// 				process.erase(0, pos + 2);
-			
-// 				pos = process.find("\r\n");
-// 				if (pos != -1)
-// 				{
-// 					int end = pos;
-// 					line = process.substr(0, pos);
-// 					pos = process.find("filename");
-// 					if (pos != -1)
-// 					{
-// 						name = process.substr(pos + 10,  line.length() - (pos + 10) - 1);
-// 						process.erase(0, pos + 2);
-// 						pos = process.find("\r\n\r\n");0
-// 						if (pos != -1)
-// 						{
-// 							process.erase(0, pos + 4);
-// 							if (process.find(boundry) == -1 || process.find(boundry + "--") == -1)
-// 							{
-// 								file.open(name, std::ios_base::app | std::ios::binary);
-// 								file.write(process.c_str(), process.length());				
-// 								file.close();
-// 							}
-// 							else
-// 							{
-// 								pos = process.find(boundry);
-// 								int diff = process.length() - pos;
-// 								file.open(name, std::ios_base::app | std::ios::binary);
-// 								file.write(process.c_str(), diff);
-// 								file.close();
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 			else
-// 			{
-// 				if ()
-// 			}
-// 		}
-// 	}
-// 	return 0;
-// }
-
 bool	upload_file(std::string filename)
 {
 	std::ifstream body(filename, std::ifstream::binary);
@@ -127,8 +56,6 @@ bool	upload_file(std::string filename)
 			file.close();
 		}
 	}
-   
- 
 	return 0;
 }
 

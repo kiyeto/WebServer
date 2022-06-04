@@ -18,6 +18,7 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <arpa/inet.h>
 
 #include "../Parsing Conf/configfile_src/ServerConfig.hpp"
 #include "../Parsing Conf/configfile_src/LocationConfig.hpp"

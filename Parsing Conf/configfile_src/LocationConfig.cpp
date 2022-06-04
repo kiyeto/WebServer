@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LocationConfig.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:33:32 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/03 23:39:03 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/04 11:51:03 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ std::vector<std::string> LocationConfig::getMethods()
 std::vector<std::string> LocationConfig::getCgi()
 {
     return this->cgi;
+}
+
+bool	LocationConfig::get_autoindex()
+{
+	return auto_index;
 }
 
 void LocationConfig::locationParser(std::string buf)
