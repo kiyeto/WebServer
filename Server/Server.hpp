@@ -31,7 +31,7 @@ class Server {
 	int numfds, maxfds;
 	std::vector<int> ports, sockets_created;
 	std::map<int, request> requests;
-	std::map<int, Response> respones;
+	std::map<int, Response> responses;
 	const char *envp[];
 
 	int	checkTheport(int port);
