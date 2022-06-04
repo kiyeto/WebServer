@@ -7,14 +7,14 @@ server {
   body_size_limit = 100
   error_page = 404:404.html ; 405:405.html 
 
+
+
   location = [
-    name = .php
-    root = root/path
-    redirect = 301 www.google.com
-    location_index = index.php
+    name = /
+    root = template/
+    location_index = index.html
     method = GET POST DELETE
     upload = /upload/path/
-    cgi = cgi/path
     autoindex = off
   ]
 }

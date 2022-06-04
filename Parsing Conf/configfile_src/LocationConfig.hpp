@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:32:50 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 12:58:28 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/04 13:36:29 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,11 @@ friend std::ostream &operator<<(std::ostream &output, LocationConfig &D )
         //     output << "redirect : " << i << std::endl;
         // }
         std::vector<std::string> redir = D.get_redirect();
-        output << "redirect code : " << redir[0] << std::endl;
-        output << "redirect link : " << redir[1] << std::endl;
+        if (!redir.empty())
+        {
+            output << "redirect code : " << redir[0] << std::endl;
+            output << "redirect link : " << redir[1] << std::endl;
+        }
         for (auto i: D.getMethods())
             std::cout << "Mathods " << i << ' ' << std::endl;
         for (auto i: D.getCgi())
