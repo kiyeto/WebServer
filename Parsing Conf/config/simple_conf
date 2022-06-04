@@ -1,15 +1,16 @@
 server {
   listen = 1337
+  host = 127.0.0.1
   server_name = test1
   root = root/path
-  index = index.html
+  index = index.html index.php
   body_size_limit = 100
-  error_page = error/page
+  error_page = 404:404.html ; 405:405.html 
 
   location = [
     name = .php
     root = root/path
-    path = /goinfre/bamghoug/.brew/opt/php@7.4/bin/php-cgi
+    location_index = index.php
     method = GET POST DELETE
     upload = /upload/path/
     cgi = cgi/path

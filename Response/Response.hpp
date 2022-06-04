@@ -24,9 +24,12 @@ class	Response {
 	std::string	CGI_response(request &req, int i);
 	std::string	Dir_response(request &req, int i);
 
-	std::string									make_response(int status, std::vector<std::string> &headers, std::string &body);
-	std::string									status_code(int status);
-	int		find_location(std::string name, int i);
+	std::string		make_response(int status, std::vector<std::string> &headers, std::string &body);
+	std::string		make_error_response(int status);
+	std::string		status_code(int status);
+	int				find_location(std::string name, int i);
+	bool			is_allowed(std::string method, LocationConfig location);
+	std::string		make_redirection(int status, std::string to);
 
 	public :
 		Response(std::vector<ServerConfig> &servers);

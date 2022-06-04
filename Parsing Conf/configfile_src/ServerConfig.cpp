@@ -6,7 +6,7 @@
 /*   By: mbrija <mbrija@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:56 by mbrija            #+#    #+#             */
-/*   Updated: 2022/05/25 16:19:14 by mbrija           ###   ########.fr       */
+/*   Updated: 2022/06/03 23:45:23 by mbrija           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 ServerConfig::ServerConfig(/* args */) :
     port(-1), name(""), root(""), redirect(""),
-    index(""), log(""), error(""), body_size(100000000000),
+    index(""), log(""), error_pages(), body_size(100000000000),
     location_count(0), location(0)
 {
 }
@@ -30,7 +30,7 @@ ServerConfig & ServerConfig::operator=(ServerConfig const &p)
     if(this != &p)
     {
         this->body_size = p.body_size;
-        this->error = p.error;
+        this->error_pages = p.error_pages;
         this->index = p.index;
         this->location = p.location;
         this->location_count = p.location_count;
@@ -39,6 +39,7 @@ ServerConfig & ServerConfig::operator=(ServerConfig const &p)
         this->port = p.port;
         this->redirect = p.redirect;
         this->root = p.root;
+        this->host = p.host;
     }
     return *this;
 }
@@ -71,9 +72,9 @@ std::string ServerConfig::get_log()
 {
     return this->log;   
 }
-std::string ServerConfig::get_error()
+std::map<int, std::string> ServerConfig::get_error_pages()
 {
-    return this->error;
+    return this->error_pages;
 }
 size_t ServerConfig::get_body_size()
 {
@@ -86,4 +87,8 @@ size_t ServerConfig::get_location_count()
 std::vector<LocationConfig> ServerConfig::getLocation()
 {
     return this->location;    
+}
+std::string ServerConfig::get_host()
+{
+    return this->host;
 }

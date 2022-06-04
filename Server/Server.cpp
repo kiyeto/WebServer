@@ -72,8 +72,8 @@ void	Server::run()
 
 		for (int i = 0; i < numfds; ++i)
 		{
-			std::cout << "fd = " << pfds[i].fd << ", " << pfds[i].events << " | " << ((pfds[i].revents & POLLIN) ? "POLLIN" : "") << ", "\
-			<< ((pfds[i].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[i].revents & POLLHUP) ? "POLLHUP" : "") << ", " << ((pfds[i].revents & POLLERR) ? "POLLERR" : "") << "\n";
+			// std::cout << "fd = " << pfds[i].fd << ", " << pfds[i].events << " | " << ((pfds[i].revents & POLLIN) ? "POLLIN" : "") << ", "\
+			// << ((pfds[i].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[i].revents & POLLHUP) ? "POLLHUP" : "") << ", " << ((pfds[i].revents & POLLERR) ? "POLLERR" : "") << "\n";
 		}
 
 		if (poll_count == -1)
@@ -100,10 +100,10 @@ void	Server::run()
 						}
 						add_pfd(new_socket);
 						requests[pfds[i].fd] = request();
-						std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
-						std::cout << "new fd = " << pfds[numfds-1].fd << ", " << pfds[numfds-1].events << " | " << ((pfds[numfds-1].revents & POLLIN) ? "POLLIN" : "") << ", "\
-									<< ((pfds[numfds-1].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[numfds-1].revents & POLLHUP) ? "POLLHUP" : "") \
-									<< ", " << ((pfds[numfds-1].revents & POLLERR) ? "POLLERR" : "") << "\n";
+						// std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
+						// std::cout << "new fd = " << pfds[numfds-1].fd << ", " << pfds[numfds-1].events << " | " << ((pfds[numfds-1].revents & POLLIN) ? "POLLIN" : "") << ", "\
+						// 			<< ((pfds[numfds-1].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[numfds-1].revents & POLLHUP) ? "POLLHUP" : "") \
+						// 			<< ", " << ((pfds[numfds-1].revents & POLLERR) ? "POLLERR" : "") << "\n";
 						new_cnx = 1;
 						break ;
 					}
