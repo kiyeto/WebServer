@@ -144,7 +144,7 @@ void	Server::run()
 				// std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = resp.get_response(requests[pfds[i].fd]);
-				response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+				// response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 				std::cout << "-----------Response-------------" << std::endl;
 				// std::cout << "OUT = " << pfds[i].fd << std::endl;
 				// std::cout << response << std::endl;
