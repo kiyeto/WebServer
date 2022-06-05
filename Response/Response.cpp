@@ -149,7 +149,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 		headers.push_back("Content-Length: " + length);
 		return (make_response(200, headers, content));
 	}
-	return std::string();
+	return make_error_response(404, servers[i]);
 }
 
 std::string	Response::CGI_response(request &req, int i){
