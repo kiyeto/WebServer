@@ -64,6 +64,8 @@ std::string Response::get_response(request	&req) {
 	// 	it++;
 	// }
 	
+	std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
+
 	std::string respo;
 	int i;
 	i = select_server(req);

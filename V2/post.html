@@ -2,19 +2,50 @@
 <html>
 <body>
 
-<h2>HTML Forms</h2>
+  <!-- <?php
 
-<form id="form" action="#" method="post" enctype="multipart/form-data">
+  function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+  }
+  
+  $name = $lname = $login = "";
+  
+  if ($_SERVER["REQUEST_METHOD"] == "POST")
+  {
+    $name = test_input($_POST["fname"]);
+    $email = test_input($_POST["login"]);
+  }
+?> -->
+
+<h2>Let's get to know you !!</h2>
+
+<form id="form" action="form.php" method="post" enctype="multipart/form-data">
   <label for="fname">First name:</label><br>
   <input type="text" id="fname" name="fname" value="John"><br>
   <label for="lname">Last name:</label><br>
   <input type="text" id="lname" name="lname" value="Doe"><br>
+  <label for="login">Login:</label><br>
+  <input type="text" id="login" name="login" value="your login"><br>
   <label for="img">Picture:</label><br>
   <input type="file" id="img" name="img"><br><br>
   <input type="submit" value="Submit">
 </form> 
 
-<p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>
+<!-- 
+<?php
+
+echo "<h2>Your Input:</h2>";
+echo $name;
+echo "<br>";
+echo $lname;
+echo "<br>";
+echo $login;
+
+?> -->
+<!--<p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>-->
 
 </body>
 </html>

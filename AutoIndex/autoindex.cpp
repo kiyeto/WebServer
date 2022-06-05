@@ -20,17 +20,7 @@ AutoIndex::AutoIndex(std::string p)
 	struct stat result;
 	std::string directories;
 	std::string f;
-	result_file = "<!DOCTYPE html>\n\
-			\r<html>\n\
-			\r\t<head>\n\
-			\r\t\t<title>Page Title</title>\n\
-			\r\t</head>\n\
-			\r\t<body>\n\
-			\r\t\t<style>a.file{background: url(file.png) left top no-repeat;}a.dir{background: url(directory.png) left top no-repeat;}\n\
-			a.icon{-webkit-padding-start: 1.5em;text-decoration: none;user-select: auto;}</style>\n\
-			\r\t\t<h1>Index of /</h1>\n\
-			\r\t\t<hr>\n\
-			\r\t\t\t<table style=\"width:100%\">\n";
+	result_file = "<!DOCTYPE html><html><head><title>Page Title</title></head><body><style>a.file{background: url(file.png) left top no-repeat;}a.dir{background: url(directory.png) left top no-repeat;} a.icon{-webkit-padding-start: 1.5em;text-decoration: none;user-select: auto;}</style><h1>Index of /</h1><hr><table style=\"width:100%\">";
 	if (dir)
 	{
 		struct dirent* entity;
@@ -66,11 +56,10 @@ AutoIndex::AutoIndex(std::string p)
 			}
 			entity = readdir(dir);
 		}
-		result_file += directories + f + "\r\t\t\t</table><hr>\n\
-				\r\t</body>\n\
-				\r</html>";
-		// file.open("html.html");
-		// file << result_file;
+		result_file += directories + f + "</table><hr></body></html>";
+		file.open("html.html");
+		file << result_file;
+		file.close();
 		closedir(dir);
 		// std::cout << dirs.str() << files.str();
 	}

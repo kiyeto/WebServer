@@ -16,4 +16,13 @@ server {
   autoindex = off
   ]
 
+  location = [
+  name = .php
+  root = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
+  location_index = index.html
+  method = GET POST DELETE
+  upload = template
+  autoindex = off
+  ]
+
 }

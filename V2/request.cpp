@@ -32,7 +32,7 @@ request&		request::operator=(const request &req)
 
 std::string request::gen_random(const int len)
 {
-	srand(time(0));
+	srand(0);
 	static const char alphanum[] =
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -197,7 +197,10 @@ bool	request::parse_body(std::string & part)
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
 
 	if (!filename.length())
+	{
 		filename = gen_random(16);
+		std::cout << filename << std::endl;
+	}
 	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != -1))
 		return parse_chunked(part);
 	else
@@ -303,7 +306,7 @@ long		request::getBodySize() const{
 	return body_size;
 }
 
-std::string	request::getFilename() const {
+std::string&	request::getFilename() {
 	return	filename;
 }
 

@@ -131,7 +131,11 @@ void	Server::run()
 					std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
+					{
 						pfds[i].events = POLLOUT;
+						std::cout << "hnaaaa = " << requests[pfds[i].fd].getFilename() << '\n'; 
+
+					}
 				} //must check for writing here
 			}
 			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
@@ -144,7 +148,7 @@ void	Server::run()
 			}
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
-				// std::cout << "-------------request-----------" << std::endl;
+				std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
 				std::cout << "-----------Response-------------" << std::endl;
@@ -159,9 +163,9 @@ void	Server::run()
 					close(pfds[i].fd);
 					delete_pfd(i);
 				}
-				requests[(pfds[i].fd)].clear();
-				requests.erase(pfds[i].fd);
-				// std::cout << "Socket == " << pfds[i].fd << std::endl;
+				// requests[(pfds[i].fd)].clear();
+				// requests.erase(pfds[i].fd);
+				std::cout << "Socket == " << pfds[i].fd << std::endl;
 			}
 		}
 	}
