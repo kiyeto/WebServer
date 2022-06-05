@@ -1,19 +1,19 @@
 server {
-  listen = 1337
+  listen = 8080
   host = 127.0.0.1
   server_name = test1
-  root = root/path
-  index = index.html index.php
+  root = /Users/bamghoug/Desktop/web3/V2
+  index = index.html
   body_size_limit = 100
-  error_page = 404:404.html ; 405:405.html 
-
+  
+  
   location = [
     name = /
     root = template/
-    redirect = 301 senko.com
     location_index = index.html
     method = GET POST DELETE
     upload = /upload/path/
-    autoindex = on
+    autoindex = off
   ]
+
 }

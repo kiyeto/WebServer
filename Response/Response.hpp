@@ -16,7 +16,7 @@
 class	Response {
 	std::map<std::string, std::string> MIME_types;
 	std::map<int, std::string> status_defin;
-	std::vector<ServerConfig>	&servers;
+	std::vector<ServerConfig>	servers;
 	std::map<std::string, std::string> headers;
 
 	int	select_server(request &req);
@@ -33,6 +33,10 @@ class	Response {
 	std::string		make_redirection(int status, std::string to);
 
 	public :
+		Response();
 		Response(std::vector<ServerConfig> &servers);
+		Response(Response& response);
+
+		Response &operator=(const Response& response);
 		std::string	get_response(request &req);
 };

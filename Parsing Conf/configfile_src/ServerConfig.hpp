@@ -6,7 +6,7 @@
 /*   By: bamghoug <bamghoug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/17 00:29:22 by mbrija            #+#    #+#             */
-/*   Updated: 2022/06/04 13:06:02 by bamghoug         ###   ########.fr       */
+/*   Updated: 2022/06/04 17:51:59 by bamghoug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ public:
 //         output << "host : " << D.get_host() << std::endl;
 //         output << "port : " << D.get_port() << std::endl;
 //         output << "root : " << D.get_root() << std::endl;
-//         output << "redirect : " << D.get_redirect() << std::endl;
 //         output << "index : " << D.get_index() << std::endl;
 //         output << "log : " << D.get_log() << std::endl;
 //         output << "limit size : " << D.get_body_size() << std::endl;
@@ -60,7 +59,6 @@ public:
     std::string get_host();
     size_t get_port();
     std::string get_root();
-    // std::vector<std::string> get_redirect();
     std::string get_index();
     std::string get_log();
     std::map<int, std::string> get_error_pages();
