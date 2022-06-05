@@ -10,9 +10,9 @@ server {
   location = [
   name = /
   root = template
-
+  location_index = index.html
   method = GET POST DELETE
-  upload = /upload/path/
+  upload = template
   autoindex = off
   ]
 

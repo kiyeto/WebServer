@@ -35,7 +35,7 @@ class	Response {
 	public :
 		Response();
 		Response(std::vector<ServerConfig> &servers);
-		Response(Response& response);
+		Response(const Response& response);
 
 		Response &operator=(const Response& response);
 		std::string	get_response(request &req);

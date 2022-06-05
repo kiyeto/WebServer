@@ -62,7 +62,7 @@ void	Server::run()
 	request		req;
 	char buffer[4096] = {0};
 	std::fstream ofs;
-	Response	resp(servers);
+	// Response	resp(servers);
 
 	signal(SIGPIPE, SIG_IGN);
 	while (1)
@@ -99,7 +99,6 @@ void	Server::run()
 							exit(EXIT_FAILURE);
 						}
 						add_pfd(new_socket);
-						requests[pfds[i].fd] = request();
 						// std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
 						// std::cout << "new fd = " << pfds[numfds-1].fd << ", " << pfds[numfds-1].events << " | " << ((pfds[numfds-1].revents & POLLIN) ? "POLLIN" : "") << ", "\
 						// 			<< ((pfds[numfds-1].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[numfds-1].revents & POLLHUP) ? "POLLHUP" : "") \
@@ -124,6 +123,10 @@ void	Server::run()
 						continue;
 					}
 					buffer[valread] = 0;
+					requests[pfds[i].fd] = request();
+					responses[pfds[i].fd] = Response(servers);
+					std::map<int , Response>::iterator it = responses.begin();
+					std::cout << "second + " << it->first << std::endl;
 					std::string part = std::string(buffer, valread);
 					std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
 					bool res;
@@ -141,7 +144,6 @@ void	Server::run()
 			}
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
-				responses[pfds[i].fd] = resp;
 				// std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
