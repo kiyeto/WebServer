@@ -1,19 +1,19 @@
 server {
-  listen = 8080
-  host = 127.0.0.1
-  server_name = test1
-  root = /Users/bamghoug/Desktop/web3/V2
-  index = index.html
-  body_size_limit = 100
-  
-  
-  location = [
-  name = /
-  root = template
-
-  method = GET POST DELETE
-  upload = /upload/path/
-  autoindex = off
-  ]
+		listen = 8080
+		host = 127.0.0.1
+		server_name = test1
+		root = /Users/bamghoug/Desktop/web3/V2
+		index = index.html
+		body_size_limit = 100
+		
+		
+	location = [
+		name = /
+		root = template/
+		location_index = index.html
+		method = GET POST DELETE
+		upload = /upload/path/
+		autoindex = off
+	]
 
 }

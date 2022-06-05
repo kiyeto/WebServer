@@ -99,6 +99,7 @@ void	Server::run()
 							exit(EXIT_FAILURE);
 						}
 						add_pfd(new_socket);
+						requests[pfds[i].fd] = request();
 						// std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
 						// std::cout << "new fd = " << pfds[numfds-1].fd << ", " << pfds[numfds-1].events << " | " << ((pfds[numfds-1].revents & POLLIN) ? "POLLIN" : "") << ", "\
 						// 			<< ((pfds[numfds-1].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[numfds-1].revents & POLLHUP) ? "POLLHUP" : "") \
@@ -123,7 +124,6 @@ void	Server::run()
 						continue;
 					}
 					buffer[valread] = 0;
-					requests[pfds[i].fd] = request();
 					std::string part = std::string(buffer, valread);
 					std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
 					bool res;
@@ -141,13 +141,13 @@ void	Server::run()
 			}
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
-				responses[pfds[i].fd] = resp;
 				// std::cout << "-------------request-----------" << std::endl;
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
-				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
+				response = resp.get_response(requests[pfds[i].fd]);
+				response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
 				std::cout << "-----------Response-------------" << std::endl;
 				// std::cout << "OUT = " << pfds[i].fd << std::endl;
-				std::cout << response << std::endl;
+				// std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);
