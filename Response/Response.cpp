@@ -1,34 +1,33 @@
 #include "Response.hpp"
 
+bool	upload_file(std::string filename);
+
 Response::Response() : MIME_types(get_MIME_types()), status_defin(), servers(), headers() {}
 
 Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers), headers() {
-	status_defin[400] = "400 Bad Request\r\n";
 	status_defin[200] = "200 OK\r\n";
 	status_defin[201] = "201 Created\r\n";
 	status_defin[202] = "202 Accepted\r\n";
 	status_defin[204] = "204 No Content\r\n";
+	status_defin[400] = "400 Bad Request\r\n";
 	status_defin[401] = "401 Unauthorized\r\n";
 	status_defin[403] = "403 Forbidden\r\n";
 	status_defin[404] = "404 Not Found\r\n";
 	status_defin[405] = "405 Method Not Allowed\r\n";
+	status_defin[413] = "413 Request Entity Too Large\r\n";
+	status_defin[414] = "414 Request-URI Too Long\r\n";
+	status_defin[300] = "300 Multiple Choices\r\n";
+	status_defin[300] = "300 Multiple Choices\r\n";
 	status_defin[301] = "301 Moved Permanently\r\n";
 	status_defin[302] = "302 Found\r\n";
+	status_defin[303] = "303 See Other\r\n";
 	status_defin[304] = "304 Not Modified\r\n";
+	status_defin[305] = "305 Use Proxy\r\n";
+	status_defin[307] = "307 Temporary Redirect\r\n";
 	status_defin[501] = "501 Not Implemented\r\n";
-	status_defin[414] = "414 Request-URI Too Long\r\n";
-	status_defin[413] = "413 Request Entity Too Large\r\n";
-
-
-	// std::map<std::string, std::string>::iterator it = MIME_types.begin();
-	// while (it != MIME_types.end())
-	// {
-	// 	std::cout << "[\"" << it->first << "\", \"" << it->second << "\"]" << std::endl;
-	// 	it++;
-	// }
 }
 
-Response::Response(Response& response){
+Response::Response(const Response& response){
 	*this = response;
 }
 
@@ -65,6 +64,8 @@ std::string Response::get_response(request	&req) {
 	// 	it++;
 	// }
 	
+	std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
+
 	std::string respo;
 	int i;
 	i = select_server(req);
@@ -76,7 +77,7 @@ std::string Response::get_response(request	&req) {
 			respo = CGI_response(req, i);
 		}
 	} else // request with Directory
-		return (Dir_response(req, i));
+		respo = Dir_response(req, i);
 	headers.clear();
 	// if (pr.path.find(".php") != std::string::npos) { 
 	// 	Cgi_request cgi(req, servers[0]);
@@ -148,7 +149,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 		headers.push_back("Content-Length: " + length);
 		return (make_response(200, headers, content));
 	}
-	return std::string();
+	return make_error_response(404, servers[i]);
 }
 
 std::string	Response::CGI_response(request &req, int i){
@@ -189,26 +190,27 @@ std::string	Response::Dir_response(request &req, int i){
 		// 	loca_root += "/";
 		if (!is_allowed(req.getMethod(), location)) // Check The Method if Allowed
 			return (make_error_response(405, servers[i]));
-		else if (location.get_redirect().size() != 0)
+		else if (location.get_redirect().size() == 2)
 		{
 			int redirect_code;
+			std::string http_redi = location.get_redirect()[1];
+			if (http_redi.find("http://") == std::string::npos)
+				http_redi.insert(0, "http://");
 			std::stringstream ss;
 			ss << location.get_redirect()[0];
 			ss >> redirect_code;
-			respo = make_redirection(redirect_code, location.get_redirect()[1]);
+			return (make_redirection(redirect_code, http_redi));
 		}
 		else {
 			if (req.getMethod() == "GET")
 			{
-				if (location.get_root()[location.get_root().size() - 1] != '/')
-					respo = make_redirection(301, location.get_root() + "/");
+				if (req.getUri()[req.getUri().size() - 1] != '/')
+					respo = make_redirection(301, req.getUri() + "/");
 				else if (location.get_location_index().empty()) // index File Not Specified
 				{
-					std::cout << "auto = " << location.get_autoindex() << std::endl;
 					if (location.get_autoindex()) // AutoIndex is on
 					{
 						AutoIndex autoindex(location.get_root() + req.getUri());
-						std::cout << "OK!" << std::endl;
 						std::vector<std::string> headers;
 						std::string body(autoindex.getHtml()), length;
 						std::stringstream ss;
@@ -226,20 +228,21 @@ std::string	Response::Dir_response(request &req, int i){
 					std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
 					if (file.is_open())
 					{
-						std::cout << "FILE = " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
-						std::vector<std::string> headers;
-						std::string body, length;
-						std::stringstream ss;
+						return make_redirection(301, location.get_root() + req.getUri() + location.get_location_index());
+						// std::cout << "FILE = " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
+						// std::vector<std::string> headers;
+						// std::string body, length;
+						// std::stringstream ss;
 
-						body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
-						ss << body.length();
-						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
-						headers.push_back(std::string("Content-Length: ") + length);
-						respo = make_response(200, headers, body);
+						// body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+						// ss << body.length();
+						// ss >> length;
+						// headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+						// headers.push_back(std::string("Content-Length: ") + length);
+						// respo = make_response(200, headers, body);
 					}
 					else
-						make_error_response(404, servers[i]);
+						return (make_error_response(404, servers[i]));
 				}
 				
 				// else if (loca_root.empty()) // Location without root
@@ -249,27 +252,31 @@ std::string	Response::Dir_response(request &req, int i){
 			}
 			else if (req.getMethod() == "POST")
 			{
-				if (req.getUri()[req.getUri().size() - 1] != '/')
-					respo = make_redirection(301, req.getUri() + "/");
-				else if (location.get_location_index().empty()) // index File Not Specified
-						make_error_response(403, servers[i]);
-				else if (!location.get_location_index().empty())
+				if (!location.get_upload().empty())
 				{
-					std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
-					if (file.is_open())
-					{
-						std::vector<std::string> headers;
-						std::string body, length;
-						std::stringstream ss;
-						ss << body.length();
-						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
-						headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
-						respo = make_response(201, headers, body);
-					}
-					else
-						make_error_response(404, servers[i]);
+
 				}
+				// if (req.getUri()[req.getUri().size() - 1] != '/')
+				// 	respo = make_redirection(301, req.getUri() + "/");
+				// else if (location.get_location_index().empty()) // index File Not Specified
+				// 	respo = make_error_response(403, servers[i]);
+				// else if (!location.get_location_index().empty())
+				// {
+				// 	std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
+				// 	if (file.is_open())
+				// 	{
+				// 		std::vector<std::string> headers;
+				// 		std::string body, length;
+				// 		std::stringstream ss;
+				// 		ss << body.length();
+				// 		ss >> length;
+				// 		headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
+				// 		headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
+				// 		respo = make_response(201, headers, body);
+				// 	}
+				// 	else
+				// 		make_error_response(404, servers[i]);
+				// }
 			}
 			else {}
 		}
@@ -334,11 +341,13 @@ std::string		Response::make_error_response(int status, ServerConfig &server) {
 
 	if (it != error_pages.end())
 		filename = it->second;
-	else
+	else {
 		filename = "../Response/errors/";
-	ss << status;
-	ss >> code;
-	filename += code + ".html";
+		ss << status;
+		ss >> code;
+		filename += code + ".html";
+	}
+	std::cout << "ERROR " << filename << std::endl;
 	file.open(filename);
 	if (!file.is_open())
 		file.open("../Response/errors/404.html");

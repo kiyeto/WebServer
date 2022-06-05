@@ -8,9 +8,9 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	if (req.getMethod() != "GET")
 		meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
 	if (req.getUri() == "/")
-		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + "/index.php")));
+		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + "/index.php")));
 	else
-		meta.insert(std::make_pair(std::string("SCRIPT_NAME="), std::string(server.get_root() + req.getUri())));
+		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + req.getUri())));
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
@@ -19,7 +19,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	// 	meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
 	// 	meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
 	// }
-	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "302" )));
+	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 
 }
@@ -154,22 +154,22 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	
 	if (child == 0) //child Process
 	{
-		// int input = open (req.getFilename().c_str(), O_RDONLY);
-		// if (input != -1) {
-		// 	std::ifstream file(req.getFilename());
-		// 	std::string str((std::istreambuf_iterator<char>(file) ),
-        //                (std::istreambuf_iterator<char>()    ));
-		// 	std::cerr << str << std::endl;
-		// 	dup2(input, 0);
-		// }
-		// else
-		int i = -1;
-		while (cmd[++i])
-			std::cout << "cmd = " << cmd[i] << std::endl;
+		int input = open (req.getFilename().c_str(), O_RDONLY);
+		if (input != -1) {
+			std::ifstream file(req.getFilename());
+			std::string str((std::istreambuf_iterator<char>(file) ),
+                       (std::istreambuf_iterator<char>()    ));
+			std::cerr << str << std::endl;
+			dup2(input, 0);
+		}
+		else
+			close(fds[0]);
+		// int i = -1;
+		// while (envp[++i])
+		// 	std::cout << "env = " << envp[i] << std::endl;
 		
 		dup2(fds[1], 1);
-		close(fds[0]);
-		if (execve(cmd[0], (char *const *)cmd, (char *const *) NULL) == -1)
+		if (execve(cmd[0], (char *const *)cmd, (char *const *) envp) == -1)
 			exit(1);
 	}
 	wait(NULL);
