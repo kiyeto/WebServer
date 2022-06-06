@@ -1,5 +1,1 @@
-----------------------------983721228639498718197832
-Content-Disposition: form-data; fname="name"
-
-no mista
-----------------------------983721228639498718197832--
+fname=John&lname=Doe&login=your+login	

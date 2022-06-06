@@ -7,22 +7,18 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	ss << server.get_port();
 	ss >> port;
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
-	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
+	// meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
-	if (req.getMethod() != "GET")
-		meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
+	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if (req.getUri() == "/")
 		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + "/index.php")));
 	else
-		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + req.getUri())));
+		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri()));
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
-	// if (req.getBodySize())
-	// {
-	// 	meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
-	// 	meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
-	// }
+	meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
+	meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
 	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 
@@ -57,7 +53,7 @@ std::string	Cgi_request::execute(){
 		}
 	}
 	args.push_back(cmd); // Need To Be replaced With CMD
-	args.push_back(meta.find("SCRIPT_NAME=")->second);
+	args.push_back(meta.find("SCRIPT_FILENAME=")->second);
 	std::string query = meta.find("QUERY_STRING=")->second;
 	int i = 0;
 	while ((i = query.find("&")) != std::string::npos) {
@@ -66,33 +62,7 @@ std::string	Cgi_request::execute(){
 	}
 	if (!query.empty())
 		args.push_back(std::string(query));
-	int input = open (req.getFilename().c_str(), O_RDONLY);
-	if (input != -1) {
-		std::ifstream file(req.getFilename());
-
-		std::string str((std::istreambuf_iterator<char>(file) ),
-                   (std::istreambuf_iterator<char>()    ));
-		std::cerr << str << std::endl;
-
-		while ((i = str.find("&")) != std::string::npos) {
-			args.push_back(std::string(str.begin(), str.begin() + i));
-			str.erase(str.begin(), str.begin() + i + 1);
-		}
-			if (!str.empty())
-				args.push_back(std::string(str));
-		// dup2(input, 0);
-	}
-	// std::cout << "HERE" << std::endl;
-	// if (req.getMethod() == "POST")
-	// {
-		// ss << meta.find("QUERY_STRING=")->second;
-		// while (ss)
-		// {
-		// 	std::string tmp;
-		// 	ss >> tmp;
-		// 	args.push_back(tmp);
-		// }
-	// }
+	
 	ss.clear();
 	const char *p[args.size() + 1];
 	for(int i = 0; i < args.size(); i++)
@@ -127,9 +97,11 @@ std::string	Cgi_request::execute(){
 		headers.clear();
 		return start_line;
 	}
-	start_line += " 200 OK\r\n";
+	if (meta["REQUEST_METHOD="] == "POST")
+		start_line += " 201 Created\r\n";
+	else
+		start_line += " 200 OK\r\n";
 	int len = response.length() - (response.find("\r\n\r\n") + 4);
-	std::cout << "LEN = " << len << std::endl;
 	ss << len;
 	std::string length;
 	ss >> length;
@@ -169,8 +141,8 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 		else
 			close(fds[0]);
 		int i = -1;
-		while (envp[++i])
-			std::cout << "env = " << envp[i] << std::endl;
+		while (cmd[++i])
+			std::cout << "cmd = " << cmd[i] << std::endl;
 		
 		dup2(fds[1], 1);
 		if (execve(cmd[0], (char *const *)cmd, (char *const *) envp) == -1)

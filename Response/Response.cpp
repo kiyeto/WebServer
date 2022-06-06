@@ -64,7 +64,7 @@ std::string Response::get_response(request	&req) {
 	// 	it++;
 	// }
 	
-	std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
+	// std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
 
 	std::string respo;
 	int i;
@@ -182,6 +182,7 @@ std::string	Response::Dir_response(request &req, int i){
 	// ser_root = servers[i].get_root();
 	// if (!ser_root.empty() && ser_root[ser_root.size() - 1] == '/')
 	// 	ser_root.erase(ser_root.end() - 1);
+
 	/* LOCATION FOUNDED */
 	if (loc_i != -1) {
 		location = servers[i].getLocation()[loc_i];
@@ -226,6 +227,7 @@ std::string	Response::Dir_response(request &req, int i){
 				else if (!location.get_location_index().empty()) // Location index file specified
 				{
 					std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
+					std::cout << "Found " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
 					if (file.is_open())
 					{
 						return make_redirection(301, location.get_root() + req.getUri() + location.get_location_index());
