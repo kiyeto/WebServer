@@ -3,13 +3,18 @@
 Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(server)
 {
 	std::stringstream ss;
+	std::map<std::string, std::string> headers = req.getHeaders();
+	std::map<std::string, std::string>::iterator it;
 	std::string port;
 	ss << server.get_port();
 	ss >> port;
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
 	// meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
+	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
+	if ((it = headers.find("Cookie")) != headers.end())
+		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
 	if (req.getUri() == "/")
 		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + "/index.php")));
 	else
@@ -17,8 +22,14 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
-	meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string( req.getHeaders().find("Content-Length")->second )));
-	meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string( req.getHeaders().find("Content-Type")->second )));
+	if ((it = headers.find("Content-Length")) != headers.end())
+		meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), it->second ));
+	else
+		meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string() ));
+	if ((it = headers.find("Content-Type")) != headers.end())
+		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), it->second));
+	else
+		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string()));
 	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 
@@ -141,8 +152,8 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 		else
 			close(fds[0]);
 		int i = -1;
-		while (cmd[++i])
-			std::cout << "cmd = " << cmd[i] << std::endl;
+		// while (cmd[++i])
+		// 	std::cout << "cmd = " << cmd[i] << std::endl;
 		
 		dup2(fds[1], 1);
 		if (execve(cmd[0], (char *const *)cmd, (char *const *) envp) == -1)

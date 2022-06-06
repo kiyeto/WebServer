@@ -256,7 +256,7 @@ std::string	Response::Dir_response(request &req, int i){
 			{
 				if (!location.get_upload().empty())
 				{
-
+					
 				}
 				// if (req.getUri()[req.getUri().size() - 1] != '/')
 				// 	respo = make_redirection(301, req.getUri() + "/");
