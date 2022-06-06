@@ -154,7 +154,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 
 std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
-	std::cout << "ROOT = " << servers[i].get_root() << std::endl;
+	// std::cout << "ROOT = " << servers[i].get_root() << std::endl;
 	std::string filename(servers[i].get_root() + req.getUri());
 
 	std::cout << "CGI Filename = " << filename << std::endl;

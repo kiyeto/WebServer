@@ -66,7 +66,7 @@ int	request::check_URI()
 	pos = URI.find_last_of(".");
 	if (pos != -1)
 		extension = URI.substr(pos);
-	return 0;
+	return (0);
 }
 
 void	request::clear()
@@ -219,7 +219,7 @@ bool	request::assemble_request(std::string & part)
 		{
 			this->hdr_cmplt = 1;
 			header_raw += std::string(part.c_str(), header_end + 4);
-			if (parse_headers(header_raw))
+			if (int i = parse_headers(header_raw))
 				return (1);
 
 			std::string sub = part.substr(header_end + 4);
@@ -275,9 +275,9 @@ int		request::parse_headers(std::string& raw)
 		return (status_code);
 	if (method != "GET" && method != "POST" && method != "DELETE")
 		return (status_code = 501);
-	if (method == "POST" && (trnsfr_enc == headers.end() || c_l == headers.end()))
+	if (method == "POST" && trnsfr_enc == headers.end() && c_l == headers.end())
 		return (status_code = 400);
-	if (trnsfr_enc->second != "chunked")
+	if (trnsfr_enc != headers.end() && trnsfr_enc->second != "chunked")
 		return (status_code = 501);
 	return (0);
 }

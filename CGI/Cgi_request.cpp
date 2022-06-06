@@ -2,17 +2,21 @@
 
 Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(server)
 {
+	std::stringstream ss;
+	std::string port;
+	ss << server.get_port();
+	ss >> port;
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
 	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
 	if (req.getMethod() != "GET")
-		meta.insert(std::make_pair(std::string("REQUEST_METHOD="), std::string(req.getMethod())));
+		meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if (req.getUri() == "/")
 		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + "/index.php")));
 	else
 		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + req.getUri())));
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
-	meta.insert(std::make_pair(std::string("SERVER_PORT="), std::string("8080")));
+	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
 	// if (req.getBodySize())
 	// {
@@ -164,9 +168,9 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 		}
 		else
 			close(fds[0]);
-		// int i = -1;
-		// while (envp[++i])
-		// 	std::cout << "env = " << envp[i] << std::endl;
+		int i = -1;
+		while (envp[++i])
+			std::cout << "env = " << envp[i] << std::endl;
 		
 		dup2(fds[1], 1);
 		if (execve(cmd[0], (char *const *)cmd, (char *const *) envp) == -1)

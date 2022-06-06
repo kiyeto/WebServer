@@ -2,15 +2,15 @@ server {
   listen = 8080
   host = 127.0.0.1
   server_name = test1
-  root = /Users/bamghoug/Desktop/web3/V2
-  index = index.html
+  root = /Users/bamghoug/Desktop/web3/wordpress
+  index = index.php
   body_size_limit = 100
   
   
   location = [
   name = /
-  root = template
-  location_index = index.html
+  
+  location_index = index.php
   method = GET POST DELETE
   upload = template
   autoindex = off
@@ -19,10 +19,6 @@ server {
   location = [
   name = .php
   root = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
-  location_index = index.html
-  method = GET POST DELETE
-  upload = template
-  autoindex = off
   ]
 
 }

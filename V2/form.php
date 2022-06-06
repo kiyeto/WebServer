@@ -11,15 +11,20 @@ $name = $lname = $login = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-	$name = test_input($_POST["fname"]);
-	$email = test_input($_POST["login"]);
+	if (isset($_POST['fname'])) {
+		$name = test_input($_POST['fname']);
+	 }
+	 if (isset($_POST['login'])) {
+		 $login = test_input($_POST['login']);
+		//do something
+	 }
 }
 
 
 echo "<h2>Your Input:</h2>";
 echo $name;
-echo "<br>";
-echo $lname;
+// echo "<br>";
+// echo $lname;
 echo "<br>";
 echo $login;
 
