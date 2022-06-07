@@ -1,0 +1,170 @@
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+REQUEST FROM SOCKET : 5
+2PN0bdwPY7CA8M06
+End of normal request !!! 
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+GET /
+Dir Filename = /
+loc template
+-----------Response-------------
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1313
+
+<!DOCTYPE html><html><head><title>Page Title</title></head><body><style>a.file{background: url(file.png) left top no-repeat;}a.dir{background: url(directory.png) left top no-repeat;} a.icon{-webkit-padding-start: 1.5em;text-decoration: none;user-select: auto;}</style><h1>Index of /</h1><hr><table style="width:100%"><tr><td style="width:50%"><a class="icon dir" href=../> ../ </a></td><td style="width:20%"></td><td style="width:20%"></td   style="width:10%"><td></td></tr><tr><td><a class="icon dir" href=css/> css/ </a> </td>
+<td align="right">Sun Jun  5 11:00:41 2022
+<td align="right">-</td></tr><tr><td><a class="icon dir" href=fonts/> fonts/ </a> </td>
+<td align="right">Sat May 28 20:14:18 2022
+<td align="right">-</td></tr><tr><td><a class="icon dir" href=img/> img/ </a> </td>
+<td align="right">Sat May 28 20:14:18 2022
+<td align="right">-</td></tr><tr><td><a class="icon dir" href=js/> js/ </a> </td>
+<td align="right">Sat May 28 20:14:18 2022
+<td align="right">-</td></tr><tr><td><a class="icon file" href=index.html> index.html </a></td><td align="right">Sat May 28 20:14:18 2022</td><td align="right">17514</td></tr><tr><td><a class="icon file" href=prepros-6.config> prepros-6.config </a></td><td align="right">Sat May 28 20:14:18 2022</td><td align="right">6274</td></tr></table><hr></body></html>
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+REQUEST FROM SOCKET : 5
+2PN0bdwPY7CA8M06
+End of normal request !!! 
+REQUEST FROM SOCKET : 6
+2PN0bdwPY7CA8M06
+End of normal request !!! 
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+GET /directory.png
+RESpo = HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 876
+
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>404 Error Page | CodingNepal</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+      <div id="error-page">
+         <div class="content">
+            <h2 class="header" data-text="404">
+               404
+            </h2>
+            <h4 data-text="Opps! Page not found">
+               Opps! Page not found
+            </h4>
+            <p>
+               Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem.
+            </p>
+            <div class="btns">
+               <a href="https://www.codingnepalweb.com/">return home</a>
+               <a href="https://www.codingnepalweb.com/">report problem</a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+-----------Response-------------
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 876
+
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>404 Error Page | CodingNepal</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+      <div id="error-page">
+         <div class="content">
+            <h2 class="header" data-text="404">
+               404
+            </h2>
+            <h4 data-text="Opps! Page not found">
+               Opps! Page not found
+            </h4>
+            <p>
+               Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem.
+            </p>
+            <div class="btns">
+               <a href="https://www.codingnepalweb.com/">return home</a>
+               <a href="https://www.codingnepalweb.com/">report problem</a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+GET /file.png
+RESpo = HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 876
+
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>404 Error Page | CodingNepal</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+      <div id="error-page">
+         <div class="content">
+            <h2 class="header" data-text="404">
+               404
+            </h2>
+            <h4 data-text="Opps! Page not found">
+               Opps! Page not found
+            </h4>
+            <p>
+               Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem.
+            </p>
+            <div class="btns">
+               <a href="https://www.codingnepalweb.com/">return home</a>
+               <a href="https://www.codingnepalweb.com/">report problem</a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+-----------Response-------------
+HTTP/1.1 404 Not Found
+Content-Type: text/html
+Content-Length: 876
+
+<!DOCTYPE html>
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>404 Error Page | CodingNepal</title>
+      <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+      <div id="error-page">
+         <div class="content">
+            <h2 class="header" data-text="404">
+               404
+            </h2>
+            <h4 data-text="Opps! Page not found">
+               Opps! Page not found
+            </h4>
+            <p>
+               Sorry, the page you're looking for doesn't exist. If you think something is broken, report a problem.
+            </p>
+            <div class="btns">
+               <a href="https://www.codingnepalweb.com/">return home</a>
+               <a href="https://www.codingnepalweb.com/">report problem</a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||
+|||||||||||||||||| Waiting for a connection ||||||||||||||||||

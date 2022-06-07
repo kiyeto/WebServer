@@ -40,20 +40,6 @@ Response	&Response::operator=(const Response& response){
 	return *this;
 }
 
-std::string	read_file(std::string root, const char* filename){
-	std::ifstream fd;
-	if (strcmp(filename, "/") == 0)
-		fd.open(root + "/index.php");
-	else
-		fd.open(root + filename);
-	std::cout << root + filename << std::endl;
-	if (!fd.is_open())
-		std::cout << "Failed" << std::endl;
-	std::string ret( (std::istreambuf_iterator<char>(fd) ),
-                       (std::istreambuf_iterator<char>()    ) );
-	return ret;
-}
-
 std::string Response::get_response(request	&req) {
 	// std::cout << "-----------------Request--------------" << std::endl;
 	// std::map<std::string, std::string> mp = req.getHeaders();
@@ -65,10 +51,10 @@ std::string Response::get_response(request	&req) {
 	// }
 	
 	// std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
-
-	std::string respo;
 	int i;
 	i = select_server(req);
+	// find_location(req.getUri(), i);
+	std::string respo;
 	if (!req.getExtension().empty()){ // request with file
 		std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
 		if (it != MIME_types.end()) { // Regular file
@@ -135,12 +121,22 @@ int	Response::select_server(request &req){
 std::string	Response::MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it) {
 	std::string respo;
 	std::vector<std::string> headers;
-	std::string filename(servers[i].get_root() + req.getUri()), length;
+	std::string filename(req.getUri()), length;
 	std::stringstream ss;
 	std::ifstream file(filename);
 
-	std::cout << "MIME Filename = " << filename << std::endl;
-	if (file.is_open())
+	if (file.is_open()) // Chech the Path Received Directly
+	{
+		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+		ss << content.length();
+		ss >> length;
+		headers.push_back("Content-Type: " + it->second);
+		headers.push_back("Content-Length: " + length);
+		return (make_response(200, headers, content));
+	}
+	filename = servers[i].get_root() + req.getUri();
+	file.open(filename.c_str());
+	if (file.is_open()) // Chech the root of the Server + the path received
 	{
 		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
 		ss << content.length();
@@ -154,6 +150,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 
 std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
+	// std::pair<int, std::string> location = find_location(req.getExtension(), i);
 	// std::cout << "ROOT = " << servers[i].get_root() << std::endl;
 	std::string filename(servers[i].get_root() + req.getUri());
 
@@ -175,7 +172,7 @@ std::string	Response::Dir_response(request &req, int i){
 	std::string respo, ser_root, loca_root;
 	std::string filename(servers[i].get_root() + req.getUri());
 	LocationConfig location;
-	int loc_i;
+	std::pair<int, std::string> loc_i;
 
 	std::cout << "Dir Filename = " << req.getUri() << std::endl;
 	loc_i = find_location(req.getUri(), i);
@@ -184,12 +181,12 @@ std::string	Response::Dir_response(request &req, int i){
 	// 	ser_root.erase(ser_root.end() - 1);
 
 	/* LOCATION FOUNDED */
-	if (loc_i != -1) {
-		location = servers[i].getLocation()[loc_i];
+	if (loc_i.first != -1) {
+		location = servers[i].getLocation()[loc_i.first];
 		// loca_root = location.get_root();
 		// if (!loca_root.empty() && loca_root[loca_root.size() - 1] != '/')
 		// 	loca_root += "/";
-		if (!is_allowed(req.getMethod(), location)) // Check The Method if Allowed
+		if (!is_allowed(req.getMethod(), location)) // Check if The Method Allowed
 			return (make_error_response(405, servers[i]));
 		else if (location.get_redirect().size() == 2)
 		{
@@ -203,88 +200,62 @@ std::string	Response::Dir_response(request &req, int i){
 			return (make_redirection(redirect_code, http_redi));
 		}
 		else {
-			if (req.getMethod() == "GET")
+			if (req.getUri()[req.getUri().size() - 1] != '/')
+				return (make_redirection(301, req.getUri() + "/"));
+			else if (location.get_location_index().empty()) // index File Not Specified
 			{
-				if (req.getUri()[req.getUri().size() - 1] != '/')
-					respo = make_redirection(301, req.getUri() + "/");
-				else if (location.get_location_index().empty()) // index File Not Specified
+				if (location.get_autoindex()) // AutoIndex is on
 				{
-					if (location.get_autoindex()) // AutoIndex is on
-					{
-						AutoIndex autoindex(location.get_root() + req.getUri());
-						std::vector<std::string> headers;
-						std::string body(autoindex.getHtml()), length;
-						std::stringstream ss;
-						ss << body.length();
-						ss >> length;
-						headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
-						headers.push_back(std::string("Content-Length: ") + length);
-						respo = make_response(200, headers, body);
-					}
-					else // AutoIndex Is Off
-						return (make_error_response(403, servers[i]));
+					std::cout << "loc " << loc_i.second << std::endl;
+					AutoIndex autoindex(loc_i.second);
+					std::vector<std::string> headers;
+					std::string body(autoindex.getHtml()), length;
+					std::stringstream ss;
+					ss << body.length();
+					ss >> length;
+					headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+					headers.push_back(std::string("Content-Length: ") + length);
+					respo = make_response(200, headers, body);
 				}
-				else if (!location.get_location_index().empty()) // Location index file specified
-				{
-					std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
-					std::cout << "Found " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
-					if (file.is_open())
-					{
-						return make_redirection(301, location.get_root() + req.getUri() + location.get_location_index());
-						// std::cout << "FILE = " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
-						// std::vector<std::string> headers;
-						// std::string body, length;
-						// std::stringstream ss;
-
-						// body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
-						// ss << body.length();
-						// ss >> length;
-						// headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
-						// headers.push_back(std::string("Content-Length: ") + length);
-						// respo = make_response(200, headers, body);
-					}
-					else
-						return (make_error_response(404, servers[i]));
-				}
-				
-				// else if (loca_root.empty()) // Location without root
-				// 	respo = make_redirection(304, ser_root + req.getUri());
-				// else { // Location with root
-				// 	respo = make_redirection(301, loca_root);
+				else // AutoIndex Is Off
+					return (make_error_response(403, servers[i]));
 			}
-			else if (req.getMethod() == "POST")
+			else if (!location.get_location_index().empty()) // Location index file specified
 			{
-				if (!location.get_upload().empty())
-				{
-					
-				}
-				// if (req.getUri()[req.getUri().size() - 1] != '/')
-				// 	respo = make_redirection(301, req.getUri() + "/");
-				// else if (location.get_location_index().empty()) // index File Not Specified
-				// 	respo = make_error_response(403, servers[i]);
-				// else if (!location.get_location_index().empty())
+				if (loc_i.second[loc_i.second.size() - 1] != '/')
+					loc_i.second += "/";
+				std::ifstream file(loc_i.second + location.get_location_index());
+				// std::cout << "Found " << loc_i.second + location.get_location_index() << std::endl;
+				// if (file.is_open())
 				// {
-				// 	std::ifstream file(location.get_root() + req.getUri() + location.get_location_index());
-				// 	if (file.is_open())
-				// 	{
-				// 		std::vector<std::string> headers;
-				// 		std::string body, length;
-				// 		std::stringstream ss;
-				// 		ss << body.length();
-				// 		ss >> length;
-				// 		headers.push_back(std::string("Content-Type: ") + (std::string(MIME_types[".html"]) + "\r\n"));
-				// 		headers.push_back(std::string("Content-Length: ") + (length + "\r\n\r\n"));
-				// 		respo = make_response(201, headers, body);
-				// 	}
-				// 	else
-				// 		make_error_response(404, servers[i]);
+					return make_redirection(301, loc_i.second + location.get_location_index());
+					// std::cout << "FILE = " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
+					// std::vector<std::string> headers;
+					// std::string body, length;
+					// std::stringstream ss;
+					// body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+					// ss << body.length();
+					// ss >> length;
+					// headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+					// headers.push_back(std::string("Content-Length: ") + length);
+					// respo = make_response(200, headers, body);
 				// }
+				// else
+				// 	return (make_error_response(404, servers[i]));
 			}
-			else {}
+			
+			// else if (loca_root.empty()) // Location without root
+			// 	respo = make_redirection(304, ser_root + req.getUri());
+			// else { // Location with root
+			// 	respo = make_redirection(301, loca_root);
 		}
 	}
 	else { // There is no Location with this Name
-
+		std::cout << "Location Not found" << std::endl;
+		std::string uri = req.getUri();
+		uri.erase(0, 1);
+		uri += "/";
+		return (make_redirection(301, uri + servers[i].get_index()));
 	}
 	return respo;
 }
@@ -309,15 +280,27 @@ std::string	Response::status_code(int status){
 	return std::string ("200 OK\r\n");
 }
 
-int		Response::find_location(std::string name, int i) {
+std::pair<int, std::string>		Response::find_location(std::string name, int i) {
+	std::string copy (name);
+	size_t	last_i = copy.find_last_of('/');
 	std::vector<LocationConfig> locs = servers[i].getLocation();
 	size_t j = 0;
 
-	for (; j < locs.size(); j++) {
-		if (locs[j].get_name() == name)
-			return j;
+	while (last_i != std::string::npos)
+	{
+		j = 0;
+		for (; j < locs.size(); j++) {
+			if (locs[j].get_name() == copy)
+			{
+				name.erase(0,copy.length());
+				name.insert(0, locs[j].get_root());
+				return std::make_pair(j, name);
+			}
+		}
+		copy.erase(copy.begin() + last_i, copy.end());
+		last_i = copy.find_last_of('/');
 	}
-	return -1;
+	return std::make_pair(-1, std::string());
 }
 
 bool			Response::is_allowed(std::string method, LocationConfig location)
@@ -349,10 +332,12 @@ std::string		Response::make_error_response(int status, ServerConfig &server) {
 		ss >> code;
 		filename += code + ".html";
 	}
-	std::cout << "ERROR " << filename << std::endl;
 	file.open(filename);
 	if (!file.is_open())
+	{
+		status = 404;
 		file.open("../Response/errors/404.html");
+	}
 	body.append( (std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()) );
 	ss.clear();
 	ss << body.length();

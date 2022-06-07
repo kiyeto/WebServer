@@ -15,10 +15,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if ((it = headers.find("Cookie")) != headers.end())
 		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
-	if (req.getUri() == "/")
-		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), std::string(server.get_root() + "/index.php")));
-	else
-		meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri()));
+	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri()));
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
@@ -46,7 +43,7 @@ std::string	Cgi_request::execute(){
 
 	if (cmd.empty()) // there is no Location for this File Extension
 	{
-		std::ifstream file(meta.find("SCRIPT_NAME=")->second);
+		std::ifstream file(meta.find("SCRIPT_FILENAME=")->second);
 		if (file.is_open()) {
 			std::string body( (std::istreambuf_iterator<char>(file) ),
                        (std::istreambuf_iterator<char>()    ) );
@@ -151,8 +148,8 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 		}
 		else
 			close(fds[0]);
-		int i = -1;
-		// while (cmd[++i])
+		// int i = -1;
+		// while (envp[++i])
 		// 	std::cout << "cmd = " << cmd[i] << std::endl;
 		
 		dup2(fds[1], 1);

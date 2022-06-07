@@ -3,7 +3,7 @@
 #include <fstream>
 #include "../V2/request.hpp"
 
-bool	upload_file(std::string filename)
+bool	upload_file(std::string filename, std::string upload_dir)
 {
 	std::ifstream body(filename, std::ifstream::binary);
 	std::ofstream file;
@@ -20,10 +20,10 @@ bool	upload_file(std::string filename)
 	while (std::getline(body, line))
 	{
 		if (line.find(boundry + "--") != -1)
-		{
-			std::cout << line << std::endl;
 			return 1;
-		}
+		// {
+			// std::cout << line << std::endl;
+		// }
 		if (line.find(boundry) != -1)
 		{
 			up = 0;
@@ -38,7 +38,7 @@ bool	upload_file(std::string filename)
 			if (pos != -1)
 			{
 				name = line.substr(pos + 10, line.length() - (pos + 10) - 2);
-				std::remove(name.c_str());
+				std::remove((upload_dir + name).c_str());
 				std::cout << name << std::endl;
 				up = 1;
 				// std::getline(body, line);
@@ -50,7 +50,7 @@ bool	upload_file(std::string filename)
 		}
 		else
 		{
-			file.open(name, std::ios_base::app | std::ios::binary);
+			file.open(upload_dir + name, std::ios_base::app | std::ios::binary);
 			file.write(line.c_str(), line.length());
 			file.write("\n", 1);
 			file.close();

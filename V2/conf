@@ -3,17 +3,17 @@ server {
   host = 127.0.0.1
   server_name = test1
   root = /Users/bamghoug/Desktop/web3/V2
-  index = index.html
+  index = index.php
   body_size_limit = 100
+  error_page = 404:404.html
   
   
   location = [
-  name = /
-  root = ../wordpress
-  location_index = index.p
+  name = /template
+  root = template
   method = GET POST DELETE
-  upload = template
-  autoindex = off
+  upload = template/upload
+  autoindex = on
   ]
 
   location = [
@@ -24,7 +24,7 @@ server {
 
 server {
   listen = 9000
-  host = 10.11.2.12
+  host = 10.11.13.7
   server_name = test1
   root = /Users/bamghoug/Desktop/web3/V2
   index = index.html
@@ -33,8 +33,8 @@ server {
   
   location = [
   name = /
-  root = template
-  location_index = index.html
+  root = wordpress
+  location_index = index.php
   method = GET POST DELETE
   upload = template
   autoindex = off
