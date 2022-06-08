@@ -125,6 +125,24 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	std::stringstream ss;
 	std::ifstream file(filename);
 
+	if (req.getMethod() == "POST")
+	{
+		std::pair<int, std::string> location = find_location(req.getUri(), i);
+		if (location.first == -1) // Default Upload directory
+		{}
+		else{
+			if (servers[i].getLocation()[location.first].get_upload().empty()) // Upload forbidden
+				return make_error_response(403, servers[i]);
+			else { // upload Allowed
+				std::vector<std::string> headers;
+				std::string body;
+				upload_file(req.getFilename(), location.second + servers[i].getLocation()[location.first].get_upload());
+				headers.push_back("Content-Type: " + MIME_types[".html"]);
+				headers.push_back("Content-Length: 0");
+				return make_response(201, headers, body);
+			}
+		}
+	}
 	if (file.is_open()) // Chech the Path Received Directly
 	{
 		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
@@ -326,7 +344,7 @@ std::pair<int, std::string>		Response::find_location(std::string name, int i) {
 			{
 				name.erase(0,copy.length());
 				name.insert(0, locs[j].get_root());
-				std::cout << "Location found = " << name << std::endl;
+				// std::cout << "Location found = " << name << std::endl;
 				return std::make_pair(j, name);
 			}
 		}

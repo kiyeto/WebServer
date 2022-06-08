@@ -313,3 +313,7 @@ std::string&	request::getFilename() {
 std::string	request::getQuery() const {
 	return query;
 }
+
+int 		request::getStatusCode() const {
+	return status_code;
+}
