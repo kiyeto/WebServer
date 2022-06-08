@@ -32,7 +32,6 @@ request&		request::operator=(const request &req)
 
 std::string request::gen_random(const int len)
 {
-	srand(0);
 	static const char alphanum[] =
 		"0123456789"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -195,6 +194,7 @@ bool	request::parse_chunked(std::string & part)
 bool	request::parse_body(std::string & part)
 {
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
+	srand(time(NULL));
 
 	if (!filename.length())
 	{

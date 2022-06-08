@@ -1,6 +1,6 @@
 #include "Response.hpp"
 
-bool	upload_file(std::string filename);
+bool	upload_file(std::string filename, std::string upload_dir);
 
 Response::Response() : MIME_types(get_MIME_types()), status_defin(), servers(), headers() {}
 
@@ -200,49 +200,81 @@ std::string	Response::Dir_response(request &req, int i){
 			return (make_redirection(redirect_code, http_redi));
 		}
 		else {
-			if (req.getUri()[req.getUri().size() - 1] != '/')
-				return (make_redirection(301, req.getUri() + "/"));
-			else if (location.get_location_index().empty()) // index File Not Specified
+			if (req.getMethod() == "GET")
 			{
-				if (location.get_autoindex()) // AutoIndex is on
+				if (req.getUri()[req.getUri().size() - 1] != '/')
+					return (make_redirection(301, req.getUri() + "/"));
+				else if (location.get_location_index().empty()) // index File Not Specified
 				{
-					std::cout << "loc " << loc_i.second << std::endl;
-					AutoIndex autoindex(loc_i.second);
-					std::vector<std::string> headers;
-					std::string body(autoindex.getHtml()), length;
-					std::stringstream ss;
-					ss << body.length();
-					ss >> length;
-					headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
-					headers.push_back(std::string("Content-Length: ") + length);
-					respo = make_response(200, headers, body);
+					if (location.get_autoindex()) // AutoIndex is on
+					{
+						// std::cout << "loc " << loc_i.second << std::endl;
+						AutoIndex autoindex(loc_i.second);
+						std::vector<std::string> headers;
+						std::string body(autoindex.getHtml()), length;
+						std::stringstream ss;
+						ss << body.length();
+						ss >> length;
+						headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+						headers.push_back(std::string("Content-Length: ") + length);
+						respo = make_response(200, headers, body);
+					}
+					else // AutoIndex Is Off
+						return (make_error_response(403, servers[i]));
 				}
-				else // AutoIndex Is Off
-					return (make_error_response(403, servers[i]));
+				else if (!location.get_location_index().empty()) // Location index file specified
+				{
+					if (loc_i.second[loc_i.second.size() - 1] != '/')
+						loc_i.second += "/";
+					std::ifstream file(loc_i.second + location.get_location_index());
+					if (file.is_open())
+					{
+						std::vector<std::string> headers;
+						std::string body, length;
+						std::stringstream ss;
+						body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+						ss << body.length();
+						ss >> length;
+						headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+						headers.push_back(std::string("Content-Length: ") + length);
+						respo = make_response(200, headers, body);
+					}
+					else
+					{
+						if (location.get_autoindex())
+						{
+							AutoIndex autoindex(loc_i.second);
+							std::vector<std::string> headers;
+							std::string body(autoindex.getHtml()), length;
+							std::stringstream ss;
+							ss << body.length();
+							ss >> length;
+							headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+							headers.push_back(std::string("Content-Length: ") + length);
+							return (make_response(200, headers, body));
+						}
+						return (make_error_response(403, servers[i]));
+					}
+				}
 			}
-			else if (!location.get_location_index().empty()) // Location index file specified
+			else if (req.getMethod() == "POST")
 			{
-				if (loc_i.second[loc_i.second.size() - 1] != '/')
-					loc_i.second += "/";
-				std::ifstream file(loc_i.second + location.get_location_index());
-				// std::cout << "Found " << loc_i.second + location.get_location_index() << std::endl;
-				// if (file.is_open())
-				// {
-					return make_redirection(301, loc_i.second + location.get_location_index());
-					// std::cout << "FILE = " << location.get_root() + req.getUri() + location.get_location_index() << std::endl;
-					// std::vector<std::string> headers;
-					// std::string body, length;
-					// std::stringstream ss;
-					// body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
-					// ss << body.length();
-					// ss >> length;
-					// headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
-					// headers.push_back(std::string("Content-Length: ") + length);
-					// respo = make_response(200, headers, body);
-				// }
-				// else
-				// 	return (make_error_response(404, servers[i]));
+				std::vector<std::string> headers;
+				std::string body;
+				if (location.get_upload().empty())
+					return make_error_response(403, servers[i]);
+				if (location.get_root().empty()) // if Location doesn't have a root
+					upload_file(req.getFilename(), servers[i].get_root() + location.get_name() + location.get_upload());
+				else
+				{
+					upload_file (req.getFilename(), location.get_root() + location.get_upload());
+					std::cout << "HERE" << std::endl;
+				}
+				headers.push_back("Content-Type: " + MIME_types[".html"]);
+				headers.push_back("Content-Length: 0");
+				return make_response(201, headers, body);
 			}
+			else {}
 			
 			// else if (loca_root.empty()) // Location without root
 			// 	respo = make_redirection(304, ser_root + req.getUri());
@@ -294,6 +326,7 @@ std::pair<int, std::string>		Response::find_location(std::string name, int i) {
 			{
 				name.erase(0,copy.length());
 				name.insert(0, locs[j].get_root());
+				std::cout << "Location found = " << name << std::endl;
 				return std::make_pair(j, name);
 			}
 		}

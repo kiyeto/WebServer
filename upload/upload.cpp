@@ -58,8 +58,3 @@ bool	upload_file(std::string filename, std::string upload_dir)
 	}
 	return 0;
 }
-
-int main ()
-{
-	upload_file("example3");
-}

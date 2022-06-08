@@ -5,15 +5,14 @@ server {
   root = /Users/bamghoug/Desktop/web3/V2
   index = index.php
   body_size_limit = 100
-  error_page = 404:404.html
-  
   
   location = [
   name = /template
-  root = template
+  root = /Users/bamghoug/Desktop/web3/V2/template
+  location_index = index.html
   method = GET POST DELETE
-  upload = template/upload
-  autoindex = on
+  upload = /upload
+  autoindex = off
   ]
 
   location = [
@@ -24,7 +23,7 @@ server {
 
 server {
   listen = 9000
-  host = 10.11.13.7
+  host = 0.0.0.0
   server_name = test1
   root = /Users/bamghoug/Desktop/web3/V2
   index = index.html
