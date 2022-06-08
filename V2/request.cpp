@@ -194,13 +194,10 @@ bool	request::parse_chunked(std::string & part)
 bool	request::parse_body(std::string & part)
 {
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
-	srand(time(NULL));
+	// srand(time(NULL));
 
 	if (!filename.length())
-	{
 		filename = gen_random(16);
-		std::cout << filename << std::endl;
-	}
 	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != -1))
 		return parse_chunked(part);
 	else

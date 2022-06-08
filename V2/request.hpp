@@ -59,6 +59,6 @@ public:
 	long		getBodySize() const;
 	std::string&	getFilename();
 	std::string	getQuery() const;
-	int 		request::getStatusCode() const
+	int 		getStatusCode() const;
 
 };

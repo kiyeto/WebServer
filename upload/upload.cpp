@@ -14,9 +14,9 @@ bool	upload_file(std::string filename, std::string upload_dir)
 	bool notfile = 0;
 	bool up = 0;
  
+	std::cout << boundry << "boundry len : " << upload_dir + "/" + filename << std::endl;
 	std::getline(body, boundry);
 	boundry.erase(boundry.length() - 1);
-	// std::cout << boundry << "boundry len : " << boundry.length() << std::endl;
 	while (std::getline(body, line))
 	{
 		if (line.find(boundry + "--") != -1)

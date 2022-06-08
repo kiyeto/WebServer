@@ -121,13 +121,28 @@ int	Response::select_server(request &req){
 std::string	Response::MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it) {
 	std::string respo;
 	std::vector<std::string> headers;
-	std::string filename(req.getUri()), length;
+	std::string filename, length;
 	std::stringstream ss;
-	std::ifstream file(filename);
 
+	std::pair<int, std::string> location = find_location(req.getUri(), i);
+	std::cout << "MIME + " << location.second << std::endl;
+	filename = location.second;
+	std::ifstream file(filename);
+	if (!is_allowed(req.getMethod(), servers[i].getLocation()[location.first])) // Check if The Method Allowed
+			return (make_error_response(405, servers[i]));
+	// else if (servers[i].getLocation()[location.first].get_redirect().size() == 2)
+	// {
+	// 	int redirect_code;
+	// 	std::string http_redi = servers[i].getLocation()[location.first].get_redirect()[1];
+	// 	if (http_redi.find("http://") == std::string::npos)
+	// 		http_redi.insert(0, "http://");
+	// 	std::stringstream ss;
+	// 	ss << servers[i].getLocation()[location.first].get_redirect()[0];
+	// 	ss >> redirect_code;
+	// 	return (make_redirection(redirect_code, http_redi));
+	// }
 	if (req.getMethod() == "POST")
 	{
-		std::pair<int, std::string> location = find_location(req.getUri(), i);
 		if (location.first == -1) // Default Upload directory
 		{}
 		else{
@@ -143,7 +158,8 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 			}
 		}
 	}
-	if (file.is_open()) // Chech the Path Received Directly
+	else if (req.getMethod() == "DELETE") {}
+	if (file.is_open()) // Check the Path Received Directly
 	{
 		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
 		ss << content.length();
@@ -245,6 +261,7 @@ std::string	Response::Dir_response(request &req, int i){
 					if (loc_i.second[loc_i.second.size() - 1] != '/')
 						loc_i.second += "/";
 					std::ifstream file(loc_i.second + location.get_location_index());
+					std::cout << "file = " << loc_i.second + location.get_location_index() << std::endl;
 					if (file.is_open())
 					{
 						std::vector<std::string> headers;
@@ -285,8 +302,8 @@ std::string	Response::Dir_response(request &req, int i){
 					upload_file(req.getFilename(), servers[i].get_root() + location.get_name() + location.get_upload());
 				else
 				{
+					std::cout << "HERE " << location.get_root() + location.get_upload() << std::endl;
 					upload_file (req.getFilename(), location.get_root() + location.get_upload());
-					std::cout << "HERE" << std::endl;
 				}
 				headers.push_back("Content-Type: " + MIME_types[".html"]);
 				headers.push_back("Content-Length: 0");
@@ -302,10 +319,29 @@ std::string	Response::Dir_response(request &req, int i){
 	}
 	else { // There is no Location with this Name
 		std::cout << "Location Not found" << std::endl;
+		std::string server_root = servers[i].get_root();
 		std::string uri = req.getUri();
-		uri.erase(0, 1);
-		uri += "/";
-		return (make_redirection(301, uri + servers[i].get_index()));
+		std::string filename;
+
+		if (server_root[server_root.size() - 1] == '/')
+			server_root.erase(servers.size() - 1, 1);
+		filename = server_root + uri + "/" + servers[i].get_index();
+		std::ifstream file(filename);
+		if (file.is_open())
+		{
+			if (uri[uri.size() - 1] == '/')
+				return (make_redirection(301, uri + servers[i].get_index()));
+			std::vector<std::string> headers;
+			std::string body, length;
+			std::stringstream ss;
+			body.assign((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
+			ss << body.length();
+			ss >> length;
+			headers.push_back(std::string("Content-Type: ") + MIME_types[".html"]);
+			headers.push_back(std::string("Content-Length: ") + length);
+			return (make_response(200, headers, body));
+		}
+		return (make_error_response(404, servers[i]));
 	}
 	return respo;
 }

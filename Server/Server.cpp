@@ -129,7 +129,8 @@ void	Server::run()
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
 						pfds[i].events = POLLOUT;
-				} //must check for writing here
+					
+					std::cout << requests[pfds[i].fd].getFilename() << " " << requests[pfds[i].fd].getUri() << std::endl;				} //must check for writing here
 			}
 			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
 			{
