@@ -66,7 +66,7 @@ void	Server::run()
 	signal(SIGPIPE, SIG_IGN);
 	while (1)
 	{
-		std::cout << "|||||||||||||||||| Waiting for a connection ||||||||||||||||||" << std::endl;
+		// std::cout << "|||||||||||||||||| Waiting for a connection ||||||||||||||||||" << std::endl;
 		int poll_count = poll(pfds, numfds, 10000);
 
 		for (int i = 0; i < numfds; ++i)
@@ -127,13 +127,14 @@ void	Server::run()
 					requests.insert(std::make_pair(pfds[i].fd, request()));
 					responses.insert(std::make_pair(pfds[i].fd, Response(servers)));
 					std::string part = std::string(buffer, valread);
-					std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
+					// std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
 					// std::cout << "BUFFER = " << buffer << " size = " << valread << std::endl;
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
 						pfds[i].events = POLLOUT;
 					
-					std::cout << requests[pfds[i].fd].getFilename() << " " << requests[pfds[i].fd].getUri() << std::endl;				} //must check for writing here
+					// std::cout << requests[pfds[i].fd].getFilename() << " " << requests[pfds[i].fd].getUri() << std::endl;
+				} //must check for writing here
 			}
 			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
 			{
@@ -146,10 +147,10 @@ void	Server::run()
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
 				// std::cout << "-------------request-----------" << std::endl;
-				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
+				// std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
-				std::cout << "-----------Response-------------" << std::endl;
-				std::cout << response << std::endl;
+				// std::cout << "-----------Response-------------" << std::endl;
+				// std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);

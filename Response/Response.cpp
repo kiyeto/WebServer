@@ -151,6 +151,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 			else { // upload Allowed
 				std::vector<std::string> headers;
 				std::string body;
+				std::cout << "hello = " << location.second + servers[i].getLocation()[location.first].get_upload() << std::endl;
 				upload_file(req.getFilename(), location.second + servers[i].getLocation()[location.first].get_upload());
 				headers.push_back("Content-Type: " + MIME_types[".html"]);
 				headers.push_back("Content-Length: 0");
@@ -209,7 +210,7 @@ std::string	Response::Dir_response(request &req, int i){
 	LocationConfig location;
 	std::pair<int, std::string> loc_i;
 
-	std::cout << "Dir Filename = " << req.getUri() << std::endl;
+	// std::cout << "Dir Filename = " << req.getUri() << std::endl;
 	loc_i = find_location(req.getUri(), i);
 	// ser_root = servers[i].get_root();
 	// if (!ser_root.empty() && ser_root[ser_root.size() - 1] == '/')
@@ -273,9 +274,8 @@ std::string	Response::Dir_response(request &req, int i){
 						std::map<std::string, std::string>::iterator it = MIME_types.find(extension);
 						if (it == MIME_types.end()){ // if it's CGI
 							Cgi_request cgi(servers[i]);
-							return cgi.dir_execute(req.getHeaders(), filename, extension, location.get_name() + location.get_location_index());
+							return cgi.dir_execute(req.getHeaders(), filename, extension, location.get_name());
 						}
-
 						std::vector<std::string> headers;
 						std::stringstream ss;
 						std::string body, length;

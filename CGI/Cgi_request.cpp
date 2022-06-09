@@ -11,7 +11,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	ss << server.get_port();
 	ss >> port;
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
-	// meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(server.get_root() + req.getUri())));
+	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
 	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
@@ -208,6 +208,10 @@ std::string	Cgi_request::dir_execute(std::map<std::string, std::string> headers,
 	ss << server.get_port();
 	ss >> port;
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
+	// locationName.erase(0,1);
+	it = headers.find("Host");
+	if (it != headers.end())
+		locationName = it->second + locationName + "/";
 	meta.insert(std::make_pair(std::string("PATH_INFO="), locationName ));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
 	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
@@ -229,5 +233,6 @@ std::string	Cgi_request::dir_execute(std::map<std::string, std::string> headers,
 	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 	this->extension = extension;
+	std::cout << "PATH INFO = " << meta["PATH_INFO="] << std::endl;
 	return this->execute();
 }

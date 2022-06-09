@@ -17,7 +17,6 @@ bool	upload_file(std::string filename, std::string upload_dir)
 	// std::string bd((std::istreambuf_iterator<char>(body) ), (std::istreambuf_iterator<char>() ));
 	std::getline(body, boundry);
 	std::cout << "upload dir : " << upload_dir << std::endl;
-	// std::cout << "boundry length = " << boundry.length() << std::endl;
 	if(!boundry.empty())
 		boundry.erase(boundry.length() - 1);
 	while (std::getline(body, line))

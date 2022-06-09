@@ -18,10 +18,10 @@ server {
 
   location = [
   name = /hielo
-  root = /Users/bamghoug/Desktop/HTML-CSS-Projects/Hielo_by_TEMPLATED
+  root = /Users/bamghoug/goinfre/Hielo_by_TEMPLATED
   location_index = index.html
   method = GET POST DELETE
-  upload = /upload
+  upload = /upload/
   autoindex = off
   ]
 
