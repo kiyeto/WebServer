@@ -122,10 +122,13 @@ void	Server::run()
 						continue;
 					}
 					buffer[valread] = 0;
-					responses[pfds[i].fd] = Response(servers);
-					requests[pfds[i].fd] = request();
+					// responses[pfds[i].fd] = Response(servers);
+					// requests[pfds[i].fd] = request();
+					requests.insert(std::make_pair(pfds[i].fd, request()));
+					responses.insert(std::make_pair(pfds[i].fd, Response(servers)));
 					std::string part = std::string(buffer, valread);
 					std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
+					// std::cout << "BUFFER = " << buffer << " size = " << valread << std::endl;
 					bool res;
 					if ((res = requests[pfds[i].fd].assemble_request(part)))
 						pfds[i].events = POLLOUT;
@@ -146,7 +149,7 @@ void	Server::run()
 				std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
 				std::cout << "-----------Response-------------" << std::endl;
-				// std::cout << response << std::endl;
+				std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);

@@ -1,5 +1,7 @@
 #include "Cgi_request.hpp"
 
+Cgi_request::Cgi_request(ServerConfig &server): req(), headers(), meta(), server(server) {}
+
 Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(server)
 {
 	std::stringstream ss;
@@ -15,7 +17,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if ((it = headers.find("Cookie")) != headers.end())
 		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
-	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri()));
+	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri())); // it Was server.get_root() + req.getUri()
 	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
@@ -27,6 +29,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), it->second));
 	else
 		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string()));
+	extension = req.getExtension();
 	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
 	// meta.insert(std::make_pair(std::string(""), std::string()));
 
@@ -35,7 +38,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 std::string	Cgi_request::execute(){
 	std::vector<std::string> args;
 
-	std::string cmd(find_location(req.getExtension()));
+	std::string cmd(find_location(extension));
 	std::string response;
 	std::stringstream ss;
 	const char *meta_vars[meta.size() + 1];
@@ -195,4 +198,36 @@ std::string	Cgi_request::find_location(std::string extension){
 			return it->get_root();
 	}
 	return std::string();
+}
+
+std::string	Cgi_request::dir_execute(std::map<std::string, std::string> headers, std::string &script_filename, std::string &extension, std::string locationName)
+{
+	std::stringstream ss;
+	std::map<std::string, std::string>::iterator it;
+	std::string port;
+	ss << server.get_port();
+	ss >> port;
+	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
+	meta.insert(std::make_pair(std::string("PATH_INFO="), locationName ));
+	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
+	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
+	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
+	if ((it = headers.find("Cookie")) != headers.end())
+		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
+	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), script_filename));
+	// meta.insert(std::make_pair(std::string("SERVER_NAME="), std::string("127.0.0.1")));
+	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
+	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
+	if ((it = headers.find("Content-Length")) != headers.end())
+		meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), it->second ));
+	else
+		meta.insert(std::make_pair(std::string("CONTENT_LENGTH="), std::string() ));
+	if ((it = headers.find("Content-Type")) != headers.end())
+		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), it->second));
+	else
+		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string()));
+	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
+	// meta.insert(std::make_pair(std::string(""), std::string()));
+	this->extension = extension;
+	return this->execute();
 }

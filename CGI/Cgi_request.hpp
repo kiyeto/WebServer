@@ -29,8 +29,9 @@
 
 class Cgi_request {
 	private:
-		request &req;
+		request req;
 		std::map<std::string, std::string> headers, meta;
+		std::string extension;
 		ServerConfig &server;
 
 		std::string child_proce(const char **cmd, const char **envp);
@@ -38,6 +39,8 @@ class Cgi_request {
 		std::string	find_location(std::string extension);
 		
 	public:
+		Cgi_request(ServerConfig &server);
 		Cgi_request(request &req, ServerConfig &server);
 		std::string execute();
+		std::string	dir_execute(std::map<std::string, std::string> headers, std::string &script_filename, std::string &extension, std::string locationName);
 };
