@@ -151,7 +151,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 			else { // upload Allowed
 				std::vector<std::string> headers;
 				std::string body;
-				std::cout << "hello = " << location.second + servers[i].getLocation()[location.first].get_upload() << std::endl;
+				location.second.erase(location.second.begin() + location.second.find_last_of("/"), location.second.end());
 				upload_file(req.getFilename(), location.second + servers[i].getLocation()[location.first].get_upload());
 				headers.push_back("Content-Type: " + MIME_types[".html"]);
 				headers.push_back("Content-Length: 0");
