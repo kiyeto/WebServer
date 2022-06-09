@@ -159,7 +159,19 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 			}
 		}
 	}
-	else if (req.getMethod() == "DELETE") {}
+	else if (req.getMethod() == "DELETE") {
+		std::cout << "to be Deleted " << location.second << std::endl;
+		std::ifstream file(location.second);
+		if (!file.good())
+			return make_error_response(404, servers[i]);
+		if (std::remove(location.second.c_str()) == 0)
+		{
+			std::vector<std::string> heads;
+			std::string body;
+			return make_response(204, heads, body);
+		}
+		make_error_response(403, servers[i]);
+	}
 	if (file.is_open()) // Check the Path Received Directly
 	{
 		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));

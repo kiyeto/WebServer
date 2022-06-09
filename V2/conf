@@ -21,7 +21,6 @@ server {
   root = /Users/bamghoug/goinfre/Hielo_by_TEMPLATED
   location_index = index.html
   method = GET POST DELETE
-  upload = /upload/
   autoindex = off
   ]
 
