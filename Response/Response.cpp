@@ -161,8 +161,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	}
 	else if (req.getMethod() == "DELETE") {
 		std::cout << "to be Deleted " << location.second << std::endl;
-		std::ifstream file(location.second);
-		if (!file.good())
+		if (access(location.second.c_str(), F_OK) == -1)
 			return make_error_response(404, servers[i]);
 		if (std::remove(location.second.c_str()) == 0)
 		{
@@ -170,7 +169,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 			std::string body;
 			return make_response(204, heads, body);
 		}
-		make_error_response(403, servers[i]);
+		return make_error_response(403, servers[i]);
 	}
 	if (file.is_open()) // Check the Path Received Directly
 	{
@@ -336,12 +335,27 @@ std::string	Response::Dir_response(request &req, int i){
 				headers.push_back("Content-Length: 0");
 				return make_response(201, headers, body);
 			}
-			else {} // Delete Request Method
-			
-			// else if (loca_root.empty()) // Location without root
-			// 	respo = make_redirection(304, ser_root + req.getUri());
-			// else { // Location with root
-			// 	respo = make_redirection(301, loca_root);
+			else { // Delete Request Method
+				std::cout << "Dir To Delete " << loc_i.second << std::endl;
+				struct stat buf;
+				if (stat(loc_i.second.c_str(), &buf) == 0)
+				{
+					if (buf.st_mode & S_IFDIR)
+					{
+						DIR *dirp;
+						struct dirent *d;
+						std::cout << "Yeah ITS Diir " << std::endl;
+						if ((dirp = opendir(loc_i.second.c_str())) != NULL)
+							delete_dir(loc_i.second, dirp, "*");
+						else
+							return make_error_response(403, servers[i]);
+					}
+					std::vector<std::string> heads;
+					std::string body;
+					return make_response(204, heads, body);
+				}
+				return make_error_response(404, servers[i]);
+			}
 		}
 	}
 	else { // There is no Location with this Name
@@ -471,4 +485,30 @@ std::string		Response::make_redirection(int status, std::string to){
 	respo += "Content-Length: 0\r\n\r\n";
 
 	return respo;
+}
+
+int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
+{
+	struct dirent *d;
+	struct stat buf;
+	while ((d = readdir(dirp)))
+	{
+		if (stat((dir + "/" + d->d_name).c_str(), &buf) == 0)
+		{
+			if (buf.st_mode & S_IFDIR)
+			{
+				std::cout << "Dire " << star << " " << d->d_name << std::endl;
+				if (strcmp(d->d_name, ".") != 0 && strcmp(d->d_name, "..") != 0){
+					DIR *dirp1 = opendir((dir + "/" + d->d_name).c_str());
+					if (dirp1 != NULL)
+						delete_dir((dir + "/") + d->d_name, dirp1, star + "*");
+				}
+			}
+			else 
+				std::cout << "File " << star << " " << d->d_name << std::endl;
+		}
+		else 
+			std::cout << "Stat file " << star << " " << d->d_name << std::endl;
+	}
+	return 0;
 }

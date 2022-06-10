@@ -149,8 +149,8 @@ void	Server::run()
 				// std::cout << "-------------request-----------" << std::endl;
 				// std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
-				// std::cout << "-----------Response-------------" << std::endl;
-				// std::cout << response << std::endl;
+				std::cout << "-----------Response-------------" << std::endl;
+				std::cout << response << std::endl;
 				write(pfds[i].fd, response.c_str(), response.length());
 				// close(pfds[i].fd);
 				// delete_pfd(i);

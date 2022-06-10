@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <dirent.h>
 
 #include "MIME.hpp"
 #include "../Parsing Conf/configfile_src/ServerConfig.hpp"
@@ -31,6 +32,7 @@ class	Response {
 	std::pair<int, std::string>			find_location(std::string name, int i);
 	bool			is_allowed(std::string method, LocationConfig location);
 	std::string		make_redirection(int status, std::string to);
+	int				delete_dir(std::string dir, DIR *d, std::string star);
 
 	public :
 		Response();
