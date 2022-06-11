@@ -346,7 +346,15 @@ std::string	Response::Dir_response(request &req, int i){
 						struct dirent *d;
 						std::cout << "Yeah ITS Diir " << std::endl;
 						if ((dirp = opendir(loc_i.second.c_str())) != NULL)
-							delete_dir(loc_i.second, dirp, "*");
+						{
+							if (delete_dir(loc_i.second, dirp, "*") != 0)
+								return make_error_response(403, servers[i]);
+							if (std::remove(loc_i.second.c_str()) != 0)
+								return make_error_response(403, servers[i]);
+							std::vector<std::string> heads;
+							std::string body;
+							return make_response(204, heads, body);
+						}
 						else
 							return make_error_response(403, servers[i]);
 					}
@@ -501,11 +509,19 @@ int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
 				if (strcmp(d->d_name, ".") != 0 && strcmp(d->d_name, "..") != 0){
 					DIR *dirp1 = opendir((dir + "/" + d->d_name).c_str());
 					if (dirp1 != NULL)
+					{
 						delete_dir((dir + "/") + d->d_name, dirp1, star + "*");
+						if (std::remove(((dir + "/") + d->d_name).c_str()) != 0)
+							return -1;
+					}
 				}
 			}
-			else 
-				std::cout << "File " << star << " " << d->d_name << std::endl;
+			else
+			{
+				std::cout << "File " << star << " " << (dir + "/" + d->d_name) << std::endl;
+				if (std::remove((dir + "/" + d->d_name).c_str()) != 0)
+					return -1;
+			}
 		}
 		else 
 			std::cout << "Stat file " << star << " " << d->d_name << std::endl;

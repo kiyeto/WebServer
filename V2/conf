@@ -17,6 +17,11 @@ server {
   ]
 
   location = [
+  name = /
+  root = /Users/bamghoug/Desktop/web3/V2
+  ]
+
+  location = [
   name = /hielo
   root = /Users/bamghoug/goinfre/Hielo_by_TEMPLATED
   location_index = index.html
