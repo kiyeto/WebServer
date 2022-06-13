@@ -268,14 +268,18 @@ int		request::parse_headers(std::string& raw)
 	header_raw.clear();
 	std::map<std::string, std::string>::iterator trnsfr_enc = headers.find("Transfer-Encoding");
 	std::map<std::string, std::string>::iterator c_l = headers.find("Content-Length");
+	std::map<std::string, std::string>::iterator host = headers.find("Host");
+
 	if (status_code)
 		return (status_code);
 	if (method != "GET" && method != "POST" && method != "DELETE")
-		return (status_code = 501);
-	if (method == "POST" && trnsfr_enc == headers.end() && c_l == headers.end())
-		return (status_code = 400);
-	if (trnsfr_enc != headers.end() && trnsfr_enc->second != "chunked")
-		return (status_code = 501);
+        return (501);
+    if (method == "POST" && trnsfr_enc == headers.end() && c_l == headers.end())
+        return (400);
+    if (method == "POST" && trnsfr_enc != headers.end() && trnsfr_enc->second != "chunked")
+        return (501);
+	if (host == headers.end())
+		return (400);
 	return (0);
 }
 

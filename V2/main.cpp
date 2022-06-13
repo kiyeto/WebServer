@@ -63,6 +63,7 @@ int main(int argc, char const *argv[], char const *envp[])
 		config.configfileparser();
 	} catch (const std::exception &e) {
 		std::cerr << e.what() << std::endl;
+		return 1;
 	}
 	std::vector<ServerConfig> servers = config.getServerConfig();
 	Server server(servers);

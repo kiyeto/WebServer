@@ -30,11 +30,12 @@ class Server {
 	struct pollfd *pfds;
 	int numfds, maxfds;
 	std::vector<int> ports, sockets_created;
+	std::vector<std::string> hosts;
 	std::map<int, request> requests;
 	std::map<int, Response> responses;
 	const char *envp[];
 
-	int	checkTheport(int port);
+	int	checkTheport(ServerConfig &server);
 	void	add_pfd(int fd);
 	void	delete_pfd(int i);
 	public:

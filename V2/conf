@@ -1,56 +1,16 @@
 server {
   listen = 8080
   host = 127.0.0.1
-  server_name = test1
-  root = /Users/bamghoug/Desktop/web3/V2
+  server_name = lol
+  root = /Users/bamghoug/Desktop/web3/V2/template
   index = index.html
-  body_size_limit = 100
-  
-
+  error_page = 404:404.html
 
   location = [
   name = /graphic
   root = /Users/bamghoug/Desktop/HTML-CSS-Projects/GraphicDesigner
   location_index = index.html
-  method = POST DELETE
-  autoindex = off
-  ]
-
-  location = [
-  name = /
-  root = /Users/bamghoug/Desktop/web3/V2
-  ]
-
-  location = [
-  name = /hielo
-  root = /Users/bamghoug/goinfre/Hielo_by_TEMPLATED
-  location_index = index.html
   method = GET POST DELETE
-  autoindex = off
-  ]
-
-  location = [
-  name = .php
-  root = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
-  ]
-}
-
-server {
-  listen = 9000
-  host = 0.0.0.0
-  server_name = test1
-  root = /Users/bamghoug/Desktop/web3
-  index = index.php
-  body_size_limit = 100
-  
-  
-
-  location = [
-  name = /wordpress
-  root = /Users/bamghoug/Desktop/web3/wordpress
-  location_index = index.php
-  method = GET POST DELETE
-  upload = template
   autoindex = off
   ]
 

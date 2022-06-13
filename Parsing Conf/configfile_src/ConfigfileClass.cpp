@@ -195,7 +195,7 @@ void ConfigfileClass::configfileparser()
                 case 'b' :
                     if (is_bodysize == false && std::strncmp("body_size_limit = ", buf.c_str(), 18) == 0)
                     {
-                        this->serverConf[n_servers].body_size = std::stoul(buf.substr(buf.find("body_size_limit = ") + strlen("body_size_limit = "))) * 1048576;
+                        this->serverConf[n_servers].body_size = std::stoul(buf.substr(buf.find("body_size_limit = ") + strlen("body_size_limit = ")));
                         if (this->serverConf[n_servers].body_size < 0)
                             throw Error_exc("body_size limit can't be negative");
                         else

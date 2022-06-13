@@ -8,7 +8,7 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 
 	for(int i = 0; i < servers.size(); i++)
 	{
-		if (checkTheport(servers[i].get_port()) == 1) // Check if the port is Already binded == 1, if not == 0
+		if (checkTheport(servers[i]) == 1)
 			continue;
 		if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
 		{
@@ -44,12 +44,15 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 		add_pfd(sockets_created[i]);
 }
 
-int	Server::checkTheport(int port) {
+int	Server::checkTheport(ServerConfig &server) {
 	for(int i = 0; i < ports.size(); i++){
-		if (ports[i] == port)
+		if (ports[i] == server.get_port())
+		{
 			return 1;
+		}
 	}
-	ports.push_back(port);
+	ports.push_back(server.get_port());
+	hosts.push_back(server.get_host());
 	return 0;
 }
 
@@ -68,13 +71,6 @@ void	Server::run()
 	{
 		// std::cout << "|||||||||||||||||| Waiting for a connection ||||||||||||||||||" << std::endl;
 		int poll_count = poll(pfds, numfds, 10000);
-
-		for (int i = 0; i < numfds; ++i)
-		{
-			// std::cout << "fd = " << pfds[i].fd << ", " << pfds[i].events << " | " << ((pfds[i].revents & POLLIN) ? "POLLIN" : "") << ", "\
-			// << ((pfds[i].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[i].revents & POLLHUP) ? "POLLHUP" : "") << ", " << ((pfds[i].revents & POLLERR) ? "POLLERR" : "") << "\n";
-		}
-
 		if (poll_count == -1)
 		{
 			perror("poll");  
@@ -86,7 +82,6 @@ void	Server::run()
 			bool new_cnx = 0;;
 			if (pfds[i].revents == POLLIN) // checking for reading
 			{
-				// poll_count--;
 				int new_socket;
 				for(int k = 0; k < sockets_created.size(); k++)
 				{
@@ -98,10 +93,6 @@ void	Server::run()
 							exit(EXIT_FAILURE);
 						}
 						add_pfd(new_socket);
-						// std::cout << "server: new connexion on socket (" << new_socket << ")" << std::endl;
-						// std::cout << "new fd = " << pfds[numfds-1].fd << ", " << pfds[numfds-1].events << " | " << ((pfds[numfds-1].revents & POLLIN) ? "POLLIN" : "") << ", "\
-						// 			<< ((pfds[numfds-1].revents & POLLOUT) ? "POLLOUT" : "") << ", "<< ((pfds[numfds-1].revents & POLLHUP) ? "POLLHUP" : "") \
-						// 			<< ", " << ((pfds[numfds-1].revents & POLLERR) ? "POLLERR" : "") << "\n";
 						new_cnx = 1;
 						break ;
 					}
@@ -110,7 +101,6 @@ void	Server::run()
 				if (!new_cnx)
 				{
 					valread = read(pfds[i].fd , buffer, 4095);
-					// std::cout << "valread "  << " : " << valread << std::endl;
 					if (valread <= 0)
 					{
 						if (valread == 0)
@@ -122,19 +112,12 @@ void	Server::run()
 						continue;
 					}
 					buffer[valread] = 0;
-					// responses[pfds[i].fd] = Response(servers);
-					// requests[pfds[i].fd] = request();
 					requests.insert(std::make_pair(pfds[i].fd, request()));
 					responses.insert(std::make_pair(pfds[i].fd, Response(servers)));
 					std::string part = std::string(buffer, valread);
-					// std::cout << "REQUEST FROM SOCKET : " << pfds[i].fd << std::endl;
-					// std::cout << "BUFFER = " << buffer << " size = " << valread << std::endl;
-					bool res;
-					if ((res = requests[pfds[i].fd].assemble_request(part)))
+					if (requests[pfds[i].fd].assemble_request(part))
 						pfds[i].events = POLLOUT;
-					
-					// std::cout << requests[pfds[i].fd].getFilename() << " " << requests[pfds[i].fd].getUri() << std::endl;
-				} //must check for writing here
+				} 
 			}
 			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
 			{
@@ -146,23 +129,33 @@ void	Server::run()
 			}
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
-				// std::cout << "-------------request-----------" << std::endl;
-				// std::cout << requests[pfds[i].fd].getMethod() << " " << requests[pfds[i].fd].getUri() << std::endl;
-				response = responses[pfds[i].fd].get_response(requests[pfds[i].fd]);
-				std::cout << "-----------Response-------------" << std::endl;
-				std::cout << response << std::endl;
-				write(pfds[i].fd, response.c_str(), response.length());
-				// close(pfds[i].fd);
-				// delete_pfd(i);
-				if (requests[pfds[i].fd].getHeaders().find("Connection")->second == "keep-alive")
-					pfds[i].events = POLLIN;
-				else {
+				std::cout << requests[pfds[i].fd].getQuery() << " " << requests[pfds[i].fd].getUri() << std::endl;
+				if (!responses[pfds[i].fd].is_complete())
+					response = responses[pfds[i].fd].build_response(requests[pfds[i].fd]);
+				else
+					response = responses[pfds[i].fd].get_response();
+				ssize_t wrote;
+				if ((wrote = send(pfds[i].fd, response.c_str() + responses[pfds[i].fd].get_total(), responses[pfds[i].fd].get_left(), 0))== -1)
+				{
 					close(pfds[i].fd);
 					delete_pfd(i);
+					responses.erase(pfds[i].fd);
+					continue;
+				}
+				responses[pfds[i].fd].Check(wrote);
+				if (responses[pfds[i].fd].is_sent())
+				{
+					if (requests[pfds[i].fd].getHeaders().find("Connection")->second == "keep-alive")
+						pfds[i].events = POLLIN;
+					else {
+						close(pfds[i].fd);
+						delete_pfd(i);
+					}
+					std::cout << "Message Sent!!!!" << std::endl;
+					responses[pfds[i].fd] = Response(servers);
 				}
 				requests[(pfds[i].fd)].clear();
 				requests.erase(pfds[i].fd);
-				// std::cout << "Socket == " << pfds[i].fd << std::endl;
 			}
 		}
 	}

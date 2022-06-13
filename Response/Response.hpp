@@ -19,9 +19,11 @@ class	Response {
 	std::map<int, std::string> status_defin;
 	std::vector<ServerConfig>	servers;
 	std::map<std::string, std::string> headers;
+	bool Done, sent;
+	std::string response;
+	size_t	total ,left;
 
 	int	select_server(request &req);
-
 	std::string	MIME_response(request &req, int i, std::map<std::string, std::string>::iterator &it);
 	std::string	CGI_response(request &req, int i);
 	std::string	Dir_response(request &req, int i);
@@ -40,5 +42,12 @@ class	Response {
 		Response(const Response& response);
 
 		Response &operator=(const Response& response);
-		std::string	get_response(request &req);
+		std::string	&build_response(request &req);
+		void	Check(ssize_t s);
+
+		bool	is_complete() const;
+		bool	is_sent() const;
+		std::string	&get_response();
+		size_t	get_total() const;
+		size_t	get_left() const;
 };

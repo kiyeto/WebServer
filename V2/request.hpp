@@ -7,6 +7,8 @@
 #include <fstream>
 #include <ctime>
 #include <unistd.h>
+#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
+
 
 class request
 {

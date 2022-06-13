@@ -10,4 +10,4 @@ SRC=  request.cpp ../Parsing\ Conf/configfile_src/ConfigfileClass.cpp ../Parsing
 all: $(NAME)
 
 $(NAME): $(SRC) Makefile
-	c++ -std=c++98 -g -fsanitize=address $(FLAGS) $(SRC) -o $(NAME)
+	c++ -std=c++98  $(FLAGS) $(SRC) -o $(NAME)

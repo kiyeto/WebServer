@@ -2,9 +2,9 @@
 
 bool	upload_file(std::string filename, std::string upload_dir);
 
-Response::Response() : MIME_types(get_MIME_types()), status_defin(), servers(), headers() {}
+Response::Response() : MIME_types(get_MIME_types()), status_defin(), servers(), headers(), Done(), sent(), response(), total(), left() {}
 
-Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers), headers() {
+Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_types()), status_defin(), servers(servers), headers(), Done(), sent(), response(), total(), left() {
 	status_defin[200] = "200 OK\r\n";
 	status_defin[201] = "201 Created\r\n";
 	status_defin[202] = "202 Accepted\r\n";
@@ -16,7 +16,6 @@ Response::Response(std::vector<ServerConfig> &servers) : MIME_types(get_MIME_typ
 	status_defin[405] = "405 Method Not Allowed\r\n";
 	status_defin[413] = "413 Request Entity Too Large\r\n";
 	status_defin[414] = "414 Request-URI Too Long\r\n";
-	status_defin[300] = "300 Multiple Choices\r\n";
 	status_defin[300] = "300 Multiple Choices\r\n";
 	status_defin[301] = "301 Moved Permanently\r\n";
 	status_defin[302] = "302 Found\r\n";
@@ -31,50 +30,47 @@ Response::Response(const Response& response){
 	*this = response;
 }
 
-Response	&Response::operator=(const Response& response){
+Response	&Response::operator=(const Response& res){
 	
-	MIME_types = response.MIME_types;
-	status_defin = response.status_defin;
-	headers = response.headers;
-	servers = response.servers;
+	MIME_types = res.MIME_types;
+	status_defin = res.status_defin;
+	headers = res.headers;
+	servers = res.servers;
+	Done = res.Done;
+	sent = res.sent;
+	response = res.response;
+	total = res.total;
+	left = res.left;
 	return *this;
 }
 
-std::string Response::get_response(request	&req) {
-	// std::cout << "-----------------Request--------------" << std::endl;
-	// std::map<std::string, std::string> mp = req.getHeaders();
-	// std::cout << req.getMethod() << std::endl;
-	// std::map<std::string, std::string>::iterator it = mp.begin();
-	// while (it != mp.end()) {
-	// 	std::cout << "REquest headers = " << it->first << " " << it->second << std::endl;
-	// 	it++;
-	// }
-	
-	// std::cout << "Method = " << req.getMethod() << " file = " << req.getFilename() << std::endl;
-	int i;
+std::string &Response::build_response(request	&req) {
+	headers = req.getHeaders();
+	std::map<std::string, std::string>::iterator content_len = headers.find("Content-Length");;
+	int i, file_size;
 	i = select_server(req);
-	// find_location(req.getUri(), i);
-	std::string respo;
-	if (!req.getExtension().empty()){ // request with file
+
+	std::ifstream in_file(req.getFilename(), std::ios::binary);
+	in_file.seekg(0, std::ios::end);
+	file_size = in_file.tellg();
+	std::cout << "file Size = " << file_size << " " << servers[i].get_body_size() << std::endl;
+	if (req.getMethod() == "POST" && file_size != -1 && file_size > servers[i].get_body_size())
+		response = make_error_response(413, servers[i]);
+	else if (req.getStatusCode())
+		response = make_error_response(req.getStatusCode(), servers[i]);
+	else if (!req.getExtension().empty()){ // request with file
 		std::map<std::string, std::string>::iterator it = MIME_types.find(req.getExtension());
 		if (it != MIME_types.end()) { // Regular file
-			respo = MIME_response(req, i, it);
+			response = MIME_response(req, i, it);
 		} else { // it's CGI
-			respo = CGI_response(req, i);
+			response = CGI_response(req, i);
 		}
 	} else // request with Directory
-		respo = Dir_response(req, i);
+		response = Dir_response(req, i);
 	headers.clear();
-	// if (pr.path.find(".php") != std::string::npos) { 
-	// 	Cgi_request cgi(req, servers[0]);
-	// 	respo = cgi.execute();
-	// }
-	// else {
-	// 	respo = "HTTP/1.1 200 OK\r\n\r\n";
-	// 	std::string tmp (req.getHeaders().find("Accept")->second);
-	// 	respo += read_file(getenv("PWD"), pr.path.c_str());
-	// }
-	return respo;
+	left = response.length();
+	Done = true;
+	return response;
 }
 
 int	Response::select_server(request &req){
@@ -83,20 +79,21 @@ int	Response::select_server(request &req){
 	std::map<std::string, std::string> head = req.getHeaders();
 	std::map<std::string, std::string>::iterator it = head.find("Host");
 	if (it != head.end())
+	{
 		Host = it->second;
+		std::cout << "HOST = " << Host << std::endl;
+	}
 	else
 		return 0;
 	size_t i = Host.find(":");
 	if (i == std::string::npos)
 		return 0;
 	std::vector<int> list_servers_p; // list of Servers with the same port by index
-	std::vector<int> list_servers_n; // list of Servers with the same name by index
 
 	ss << Host.begin().base() + i + 1;
 	int port;
 	ss >> port;
 	std::string server_name;
-	// std::cout << "HOST = " << Host << " i = " << i << std::endl;
 	try {
 		server_name.assign(Host.begin(), Host.begin() + i);
 	} catch (std::exception &e) {
@@ -111,9 +108,9 @@ int	Response::select_server(request &req){
 	{
 		for (size_t j = 0; j < list_servers_p.size(); j++) {
 			if (servers[list_servers_p[j]].get_name() == server_name)
-				list_servers_n.push_back(list_servers_p[j]);
+				return (list_servers_p[j]);
 		}
-		return list_servers_n[0];
+		return list_servers_p[0];
 	}
 	return list_servers_p[0];
 }
@@ -125,7 +122,6 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	std::stringstream ss;
 
 	std::pair<int, std::string> location = find_location(req.getUri(), i);
-	std::cout << "MIME + " << location.second << std::endl;
 	filename = location.second;
 	std::ifstream file(filename);
 	if (location.first != -1 && !is_allowed(req.getMethod(), servers[i].getLocation()[location.first])) // Check if The Method Allowed
@@ -144,7 +140,7 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	if (req.getMethod() == "POST")
 	{
 		if (location.first == -1) // Default Upload directory
-		{}
+			return make_error_response(403, servers[i]);
 		else{
 			if (servers[i].getLocation()[location.first].get_upload().empty()) // Upload forbidden
 				return make_error_response(403, servers[i]);
@@ -160,7 +156,6 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 		}
 	}
 	else if (req.getMethod() == "DELETE") {
-		std::cout << "to be Deleted " << location.second << std::endl;
 		if (access(location.second.c_str(), F_OK) == -1)
 			return make_error_response(404, servers[i]);
 		if (std::remove(location.second.c_str()) == 0)
@@ -180,9 +175,12 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 		headers.push_back("Content-Length: " + length);
 		return (make_response(200, headers, content));
 	}
-	filename = servers[i].get_root() + req.getUri();
+	std::string server_root = servers[i].get_root();
+	if (server_root[server_root.size() - 1] == '/')
+		server_root.erase(server_root.size() - 1, 1);
+	filename = server_root + req.getUri();
+	std::cout << "file = " << filename << std::endl;
 	file.open(filename.c_str());
-	std::cout << "here = " << filename << std::endl;
 	if (file.is_open()) // Check the root of the Server + the path received
 	{
 		std::string content((std::istreambuf_iterator<char>(file) ), (std::istreambuf_iterator<char>() ));
@@ -197,11 +195,17 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 
 std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
+	std::pair<int, std::string> location = find_location(req.getUri(), i);
 	// std::pair<int, std::string> location = find_location(req.getExtension(), i);
 	// std::cout << "ROOT = " << servers[i].get_root() << std::endl;
 	std::string filename(servers[i].get_root() + req.getUri());
 
-	std::cout << "CGI Filename = " << filename << std::endl;
+	// std::cout << "CGI Filename = " << filename << std::endl;
+	if (location.first != -1)
+	{
+		Cgi_request cg(servers[i]);
+		return cg.dir_execute(req, location.second, req.getExtension(), servers[i].getLocation()[location.first].get_name());
+	}
 	// std::cout << " BODY = " << req.getFilename() << std::endl;
 	// std::ifstream file(req.getFilename());
 	// if (file.is_open())
@@ -285,7 +289,8 @@ std::string	Response::Dir_response(request &req, int i){
 						std::map<std::string, std::string>::iterator it = MIME_types.find(extension);
 						if (it == MIME_types.end()){ // if it's CGI
 							Cgi_request cgi(servers[i]);
-							return cgi.dir_execute(req.getHeaders(), filename, extension, location.get_name());
+							// std::cout << "URI = " << req.g`etUri() << std::endl;
+ 							return cgi.dir_execute(req, filename, extension, location.get_name());
 						}
 						std::vector<std::string> headers;
 						std::stringstream ss;
@@ -329,14 +334,12 @@ std::string	Response::Dir_response(request &req, int i){
 						upload_file (req.getFilename(), location.get_root() + location.get_upload() + "/");
 					else 
 						upload_file (req.getFilename(), location.get_root() + location.get_upload());
-
 				}
 				headers.push_back("Content-Type: " + MIME_types[".html"]);
 				headers.push_back("Content-Length: 0");
 				return make_response(201, headers, body);
 			}
 			else { // Delete Request Method
-				std::cout << "Dir To Delete " << loc_i.second << std::endl;
 				struct stat buf;
 				if (stat(loc_i.second.c_str(), &buf) == 0)
 				{
@@ -344,7 +347,6 @@ std::string	Response::Dir_response(request &req, int i){
 					{
 						DIR *dirp;
 						struct dirent *d;
-						std::cout << "Yeah ITS Diir " << std::endl;
 						if ((dirp = opendir(loc_i.second.c_str())) != NULL)
 						{
 							if (delete_dir(loc_i.second, dirp, "*") != 0)
@@ -367,19 +369,32 @@ std::string	Response::Dir_response(request &req, int i){
 		}
 	}
 	else { // There is no Location with this Name
-		std::cout << "Location Not found" << std::endl;
 		std::string server_root = servers[i].get_root();
 		std::string uri = req.getUri();
 		std::string filename;
 
+		// if (uri[uri.size() - 1] != '/')
+		// 	return (make_redirection(301, uri + "/"));
+		if (req.getMethod() == "POST" || req.getMethod() == "DELETE")
+			return make_error_response(403, servers[i]);
 		if (server_root[server_root.size() - 1] == '/')
-			server_root.erase(servers.size() - 1, 1);
-		filename = server_root + uri + "/" + servers[i].get_index();
+			server_root.erase(server_root.size() - 1, 1);
+		filename = server_root + uri + servers[i].get_index();
 		std::ifstream file(filename);
 		if (file.is_open())
 		{
-			if (uri[uri.size() - 1] == '/')
-				return (make_redirection(301, uri + servers[i].get_index()));
+			std::string extension;
+			size_t f = filename.find("."); // Looking for . to get Extension
+			if (f != std::string::npos)
+				extension.assign(filename.begin() + f, filename.end());
+			std::map<std::string, std::string>::iterator it = MIME_types.find(extension);
+			if (it == MIME_types.end()){ // if it's CGI
+				Cgi_request cgi(servers[i]);
+				// std::cout << "URI = " << req.getUri() << std::endl;
+				std::string name = uri + servers[i].get_index();
+				std::cout << "yeah its = " << filename << std::endl;
+ 				return cgi.dir_execute(req, filename, extension, server_root + uri);
+			}
 			std::vector<std::string> headers;
 			std::string body, length;
 			std::stringstream ss;
@@ -461,7 +476,15 @@ std::string		Response::make_error_response(int status, ServerConfig &server) {
 	std::ifstream	file;
 
 	if (it != error_pages.end())
+	{
+		// size_t i;
 		filename = it->second;
+		// if ((i = filename.find_last_of("/")) != std::string::npos)
+		// {
+		// 	if (i != 0)
+		// 		return make_redirection(307, std::string(filename.begin(), filename.end()));
+		// }
+	}
 	else {
 		filename = "../Response/errors/";
 		ss << status;
@@ -505,7 +528,6 @@ int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
 		{
 			if (buf.st_mode & S_IFDIR)
 			{
-				std::cout << "Dire " << star << " " << d->d_name << std::endl;
 				if (strcmp(d->d_name, ".") != 0 && strcmp(d->d_name, "..") != 0){
 					DIR *dirp1 = opendir((dir + "/" + d->d_name).c_str());
 					if (dirp1 != NULL)
@@ -518,7 +540,6 @@ int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
 			}
 			else
 			{
-				std::cout << "File " << star << " " << (dir + "/" + d->d_name) << std::endl;
 				if (std::remove((dir + "/" + d->d_name).c_str()) != 0)
 					return -1;
 			}
@@ -527,4 +548,32 @@ int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
 			std::cout << "Stat file " << star << " " << d->d_name << std::endl;
 	}
 	return 0;
+}
+
+bool Response::is_complete() const {
+	return Done;
+}
+
+bool	Response::is_sent() const {
+	return sent;
+}
+
+void	Response::Check(ssize_t s)
+{
+	total += s;
+	left = response.length() - total;
+	if (total == response.length())
+		sent = true;
+}
+
+std::string& Response::get_response(){
+	return response;
+}
+
+size_t	Response::get_total() const {
+	return total;
+}
+
+size_t	Response::get_left() const {
+	return left;
 }
