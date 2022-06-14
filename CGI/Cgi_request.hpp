@@ -9,7 +9,6 @@
 #include <fstream>
 #include <fcntl.h>
 #include "../Request/request.hpp"
-#include "Uriparser.hpp"
 
 #include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
 #include "../Parsing Conf/configfile_src/LocationConfig.hpp"

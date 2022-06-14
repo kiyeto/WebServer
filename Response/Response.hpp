@@ -10,7 +10,6 @@
 #include "MIME.hpp"
 #include "../Parsing Conf/configfile_src/ServerConfig.hpp"
 #include "../Request/request.hpp"
-#include "../CGI/Uriparser.hpp"
 #include "../CGI/Cgi_request.hpp"
 #include "../AutoIndex/autoindex.hpp"
 
