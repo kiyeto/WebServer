@@ -15,17 +15,16 @@
 #include <vector>
 #include <poll.h>
 #include <fcntl.h>
-#include "request.hpp"
+#include "Request/request.hpp"
 
 /* Includes Added by Brahim*/
-#include "../Parsing Conf/configfile_src/ServerConfig.hpp"
-#include "../Parsing Conf/configfile_src/LocationConfig.hpp"
-#include "../Parsing Conf/configfile_src/ConfigfileClass.hpp"
-#include "../Response/Response.hpp"
-#include "../Server/Server.hpp"
+#include "Parsing Conf/configfile_src/ServerConfig.hpp"
+#include "Parsing Conf/configfile_src/LocationConfig.hpp"
+#include "Parsing Conf/configfile_src/ConfigfileClass.hpp"
+#include "Response/Response.hpp"
+#include "Server/Server.hpp"
 
 
-#define PORT 8080
 
 // void	add_pfd(struct pollfd **pfds, int fd, int *numfds, int *maxfds)
 // {
@@ -45,7 +44,7 @@
 // 	(*numfds)--;
 // }
 
-int main(int argc, char const *argv[], char const *envp[])
+int main(int argc, char const *argv[])
 {
 	if (argc != 2)
 	{

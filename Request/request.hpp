@@ -21,7 +21,7 @@ private:
 	std::string 	header_raw;
 	bool			hdr_cmplt;
 	bool			chunk_not_cmplt;
-	int				chunk_len;
+	size_t			chunk_len;
 	int				sent;
 	int				fd;
 	int				status_code;
@@ -32,7 +32,6 @@ private:
 
 	std::map<std::string, std::string>	headers;
 
-	std::string		body;
 	long			body_size;
 	long			header_size;
 	long			total_size;

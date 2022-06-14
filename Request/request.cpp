@@ -1,6 +1,6 @@
 #include "request.hpp"
 
-request::request() : method(""), URI(""), version(""), header_raw(), body(""), hdr_cmplt(0), chunk_not_cmplt(0), req_cmplt(0), chunk_len(0), sent(0), filename(), file(), status_code(0) {}
+request::request() : method(""), URI(""), extension(""), query(),  version(""), header_raw(), hdr_cmplt(0), chunk_not_cmplt(0), chunk_len(0), sent(0), fd(), status_code(0), req_cmplt(0), filename(), file() {}
 
 request::request(const request &req){
 	(*this) = req;
@@ -22,7 +22,6 @@ request&		request::operator=(const request &req)
 	req_cmplt = 		req.req_cmplt;
 	filename = 			req.filename;
 	headers =			req.headers;
-	body = 				req.body;
 	body_size = 		req.body_size;
 	header_size = 		req.header_size;
 	total_size = 		req.total_size;
@@ -51,19 +50,19 @@ int	request::check_URI()
 	std::string allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 	if (URI.length() > 2048)
 		return (414);
-	for (int i = 0; i < URI.length(); i++)
+	for (size_t i = 0; i < URI.length(); i++)
 	{
-		if (allowed_chars.find(URI[i]) == -1)
+		if (allowed_chars.find(URI[i]) == std::string::npos)
 			return (400);
 	}
-	int	pos = URI.find("?");
-	if (pos != -1)
+	size_t	pos = URI.find("?");
+	if (pos != std::string::npos)
 	{
 		query = URI.substr(pos + 1);
 		URI.erase(pos);
 	}
 	pos = URI.find_last_of(".");
-	if (pos != -1)
+	if (pos != std::string::npos)
 		extension = URI.substr(pos);
 	return (0);
 }
@@ -198,7 +197,7 @@ bool	request::parse_body(std::string & part)
 
 	if (!filename.length())
 		filename = gen_random(16);
-	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != -1))
+	if (trnsfr_enc != headers.end() && (trnsfr_enc->second.find("chunked") != std::string::npos))
 		return parse_chunked(part);
 	else
 		return parse_unchunked(part);
@@ -251,9 +250,9 @@ int		request::parse_headers(std::string& raw)
 
 	raw = raw.substr(raw.find("\r\n") + 2, header_size);
 
-	while (raw.find("\r\n") != -1)
+	while (raw.find("\r\n") != std::string::npos)
 	{
-		if (raw.find(": ") != -1)
+		if (raw.find(": ") != std::string::npos)
 		{
 			std::string line = raw.substr(0, raw.find("\r\n"));
 			headers.insert(std::pair<std::string, std::string>(line.substr(0, line.find(": ")), line.erase(0, line.find(": ") + 2)));

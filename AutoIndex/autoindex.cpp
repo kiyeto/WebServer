@@ -14,13 +14,13 @@ std::string AutoIndex::fixnl(char * time)
 	return t;
 }
 
-AutoIndex::AutoIndex(std::string p)
+AutoIndex::AutoIndex(std::string p, std::string uri)
 {
 	DIR *dir = opendir(p.c_str());
 	struct stat result;
 	std::string directories;
 	std::string f;
-	result_file = "<!DOCTYPE html><html><head><title>Page Title</title></head><body><style>a.file{background: url(file.png) left top no-repeat;}a.dir{background: url(directory.png) left top no-repeat;} a.icon{-webkit-padding-start: 1.5em;text-decoration: none;user-select: auto;}</style><h1>Index of /</h1><hr><table style=\"width:100%\">";
+	result_file = "<!DOCTYPE html><html><head><title>AutoIndex</title></head><body><style>a.file{background: url(/img/file.png) left top no-repeat;}a.dir{background: url(/img/directory.png) left top no-repeat;} a.icon{-webkit-padding-start: 1.5em;text-decoration: none;user-select: auto;}</style><h1>Index of " + uri + "</h1><hr><table style=\"width:100%\">";
 	if (dir)
 	{
 		struct dirent* entity;

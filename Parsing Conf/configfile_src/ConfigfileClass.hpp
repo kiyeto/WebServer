@@ -13,6 +13,7 @@
 #pragma once
 # include "../global_src/support_funcs.hpp"
 # include "ServerConfig.hpp"
+# include <algorithm>
 
 class ConfigfileClass
 {

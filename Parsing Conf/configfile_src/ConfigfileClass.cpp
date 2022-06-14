@@ -252,6 +252,13 @@ void ConfigfileClass::configfileparser()
                         break;
                     throw Error_exc("Invalid Syntax : Config File");
                 }
+                for (size_t i = 0; i < n_servers; i++)
+                {
+                    if (this->serverConf[n_servers].port == this->serverConf[i].port &&
+                     this->serverConf[n_servers].host == this->serverConf[i].host && 
+                     this->serverConf[n_servers].name == this->serverConf[i].name) 
+                        throw Error_exc("Invalid Syntax: Duplicated Server");
+                }
             }
         n_servers++;
         }

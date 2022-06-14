@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "../V2/request.hpp"
+#include "../Request/request.hpp"
 
 bool	upload_file(std::string filename, std::string upload_dir)
 {
@@ -10,7 +10,7 @@ bool	upload_file(std::string filename, std::string upload_dir)
 	std::string boundry;
 	std::string line;
 	std::string name;
-	int pos;
+	size_t pos;
 	bool notfile = 0;
 	bool up = 0;
  
@@ -21,12 +21,12 @@ bool	upload_file(std::string filename, std::string upload_dir)
 		boundry.erase(boundry.length() - 1);
 	while (std::getline(body, line))
 	{
-		if (line.find(boundry + "--") != -1)
+		if (line.find(boundry + "--") != std::string::npos)
 			return 1;
 		// {
 			// std::cout << line << std::endl;
 		// }
-		if (line.find(boundry) != -1)
+		if (line.find(boundry) != std::string::npos)
 		{
 			up = 0;
 			notfile = 0;
@@ -37,7 +37,7 @@ bool	upload_file(std::string filename, std::string upload_dir)
 		if (!up)
 		{
 			pos = line.find("filename");
-			if (pos != -1)
+			if (pos != std::string::npos)
 			{
 				name = line.substr(pos + 10, line.length() - (pos + 10) - 2);
 				std::remove((upload_dir + name).c_str());

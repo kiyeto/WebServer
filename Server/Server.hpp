@@ -15,7 +15,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <poll.h>
+#include <poll.h>		
 #include <fcntl.h>
 #include <signal.h>
 #include <arpa/inet.h>
@@ -33,7 +33,6 @@ class Server {
 	std::vector<std::string> hosts;
 	std::map<int, request> requests;
 	std::map<int, Response> responses;
-	const char *envp[];
 
 	int	checkTheport(ServerConfig &server);
 	void	add_pfd(int fd);

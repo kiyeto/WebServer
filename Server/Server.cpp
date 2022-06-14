@@ -4,9 +4,8 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 {
 	int 				server_fd;
 	struct sockaddr_in	address;
-	socklen_t			addrlen = sizeof(address);
 
-	for(int i = 0; i < servers.size(); i++)
+	for(size_t i = 0; i < servers.size(); i++)
 	{
 		if (checkTheport(servers[i]) == 1)
 			continue;
@@ -40,15 +39,16 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 	pfds = (struct pollfd*)malloc(sizeof(*pfds) * sockets_created.size());
 	maxfds = sockets_created.size();
 	numfds = 0;
-	for (int i = 0; i < sockets_created.size(); i++)
+	for (size_t i = 0; i < sockets_created.size(); i++)
 		add_pfd(sockets_created[i]);
 }
 
 int	Server::checkTheport(ServerConfig &server) {
-	for(int i = 0; i < ports.size(); i++){
-		if (ports[i] == server.get_port())
+	for(size_t i = 0; i < ports.size(); i++){
+		if ((size_t)ports[i] == server.get_port())
 		{
-			return 1;
+			if (hosts[i] == server.get_host())
+				return 1;
 		}
 	}
 	ports.push_back(server.get_port());
@@ -83,7 +83,7 @@ void	Server::run()
 			if (pfds[i].revents == POLLIN) // checking for reading
 			{
 				int new_socket;
-				for(int k = 0; k < sockets_created.size(); k++)
+				for(size_t k = 0; k < sockets_created.size(); k++)
 				{
 					if (pfds[i].fd == sockets_created[k])
 					{

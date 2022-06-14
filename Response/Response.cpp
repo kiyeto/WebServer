@@ -46,15 +46,15 @@ Response	&Response::operator=(const Response& res){
 
 std::string &Response::build_response(request	&req) {
 	headers = req.getHeaders();
-	std::map<std::string, std::string>::iterator content_len = headers.find("Content-Length");;
 	int i, file_size;
 	i = select_server(req);
 
+	std::cout << "server id= " << i << std::endl;
 	std::ifstream in_file(req.getFilename(), std::ios::binary);
 	in_file.seekg(0, std::ios::end);
 	file_size = in_file.tellg();
-	std::cout << "file Size = " << file_size << " " << servers[i].get_body_size() << std::endl;
-	if (req.getMethod() == "POST" && file_size != -1 && file_size > servers[i].get_body_size())
+	// std::cout << "file Size = " << file_size << " " << servers[i].get_body_size() << std::endl;
+	if (req.getMethod() == "POST" && file_size != -1 && file_size > (int)servers[i].get_body_size())
 		response = make_error_response(413, servers[i]);
 	else if (req.getStatusCode())
 		response = make_error_response(req.getStatusCode(), servers[i]);
@@ -78,27 +78,25 @@ int	Response::select_server(request &req){
 	std::string Host;
 	std::map<std::string, std::string> head = req.getHeaders();
 	std::map<std::string, std::string>::iterator it = head.find("Host");
+	std::string server_name;
+	size_t port;
+
 	if (it != head.end())
-	{
 		Host = it->second;
-		std::cout << "HOST = " << Host << std::endl;
-	}
 	else
 		return 0;
 	size_t i = Host.find(":");
-	if (i == std::string::npos)
-		return 0;
-	std::vector<int> list_servers_p; // list of Servers with the same port by index
-
-	ss << Host.begin().base() + i + 1;
-	int port;
-	ss >> port;
-	std::string server_name;
-	try {
-		server_name.assign(Host.begin(), Host.begin() + i);
-	} catch (std::exception &e) {
-		std::cout << "Exception Here = " << e.what() << std::endl;
+	if (i == std::string::npos){
+		port = 80;
+		server_name.assign(Host.begin(), Host.end());
 	}
+	else {
+		ss << Host.begin().base() + i + 1;
+		ss >> port;
+		server_name.assign(Host.begin(), Host.begin() + i);
+	}
+
+	std::vector<int> list_servers_p; // list of Servers with the same port by index
 	for (size_t j = 0; j < servers.size(); j++)  // Looking in servers by Port if there is more than one
 	{
 		if (servers[j].get_port() == port)
@@ -257,10 +255,12 @@ std::string	Response::Dir_response(request &req, int i){
 					return (make_redirection(301, req.getUri() + "/"));
 				else if (location.get_location_index().empty()) // index File Not Specified
 				{
+					if (access(loc_i.second.c_str(), F_OK))
+						make_error_response(404, servers[i]);
 					if (location.get_autoindex()) // AutoIndex is on
 					{
 						// std::cout << "loc " << loc_i.second << std::endl;
-						AutoIndex autoindex(loc_i.second);
+						AutoIndex autoindex(loc_i.second, req.getUri());
 						std::vector<std::string> headers;
 						std::string body(autoindex.getHtml()), length;
 						std::stringstream ss;
@@ -279,9 +279,10 @@ std::string	Response::Dir_response(request &req, int i){
 						loc_i.second += "/";
 					std::string filename = loc_i.second + location.get_location_index();
 					std::ifstream file(filename);
-					std::cout << "file = " << filename << std::endl;
+					std::cout << "here = " << filename << std::endl;
 					if (file.is_open())
 					{
+						std::cout << "nice " << std::endl;
 						std::string extension;
 						size_t f = filename.find(".");
 						if (f != std::string::npos)
@@ -304,9 +305,11 @@ std::string	Response::Dir_response(request &req, int i){
 					}
 					else
 					{
+						if (access(loc_i.second.c_str(), F_OK))
+							return make_error_response(404, servers[i]);
 						if (location.get_autoindex())
 						{
-							AutoIndex autoindex(loc_i.second);
+							AutoIndex autoindex(loc_i.second, req.getUri());
 							std::vector<std::string> headers;
 							std::string body(autoindex.getHtml()), length;
 							std::stringstream ss;
@@ -346,7 +349,6 @@ std::string	Response::Dir_response(request &req, int i){
 					if (buf.st_mode & S_IFDIR)
 					{
 						DIR *dirp;
-						struct dirent *d;
 						if ((dirp = opendir(loc_i.second.c_str())) != NULL)
 						{
 							if (delete_dir(loc_i.second, dirp, "*") != 0)
@@ -373,8 +375,8 @@ std::string	Response::Dir_response(request &req, int i){
 		std::string uri = req.getUri();
 		std::string filename;
 
-		// if (uri[uri.size() - 1] != '/')
-		// 	return (make_redirection(301, uri + "/"));
+		if (uri[uri.size() - 1] != '/')
+			return (make_redirection(301, uri + "/"));
 		if (req.getMethod() == "POST" || req.getMethod() == "DELETE")
 			return make_error_response(403, servers[i]);
 		if (server_root[server_root.size() - 1] == '/')
@@ -414,7 +416,7 @@ std::string	Response::make_response(int status, std::vector<std::string> &header
 	std::string response("HTTP/1.1 ");
 
 	response += status_code(status);
-	for(int i = 0; i < headers.size(); i++) {
+	for(size_t i = 0; i < headers.size(); i++) {
 		response += headers[i] + "\r\n";
 	}
 	response += "\r\n" + body;
@@ -486,7 +488,7 @@ std::string		Response::make_error_response(int status, ServerConfig &server) {
 		// }
 	}
 	else {
-		filename = "../Response/errors/";
+		filename = "Response/errors/";
 		ss << status;
 		ss >> code;
 		filename += code + ".html";
@@ -495,7 +497,7 @@ std::string		Response::make_error_response(int status, ServerConfig &server) {
 	if (!file.is_open())
 	{
 		status = 404;
-		file.open("../Response/errors/404.html");
+		file.open("Response/errors/404.html");
 	}
 	body.append( (std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()) );
 	ss.clear();

@@ -13,7 +13,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
 	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
-	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
+	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE="), "WebServ/bamghoug"));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if ((it = headers.find("Cookie")) != headers.end())
 		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
@@ -67,7 +67,7 @@ std::string	Cgi_request::execute(){
 	args.push_back(cmd); // Need To Be replaced With CMD
 	args.push_back(meta.find("SCRIPT_FILENAME=")->second);
 	std::string query = meta.find("QUERY_STRING=")->second;
-	int i = 0;
+	size_t i;
 	while ((i = query.find("&")) != std::string::npos) {
 		args.push_back(std::string(query.begin(), query.begin() + i));
 		query.erase(query.begin(), query.begin() + i + 1);
@@ -77,13 +77,13 @@ std::string	Cgi_request::execute(){
 	
 	ss.clear();
 	const char *p[args.size() + 1];
-	for(int i = 0; i < args.size(); i++)
+	for(size_t i = 0; i < args.size(); i++)
 		p[i] = args[i].c_str();
 	p[args.size()] = NULL;
 
 	std::string tmp[meta.size() + 1];
 	std::map<std::string, std::string>::iterator it = meta.begin();
-	for(int i = 0; i < meta.size(); i++)
+	for(size_t i = 0; i < meta.size(); i++)
 	{
 		tmp[i] = it->first + it->second;
 		meta_vars[i] = tmp[i].c_str();
@@ -130,28 +130,13 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 	pipe(fds);
 	int child = fork();
 
-	// std::ifstream file(req.getFilename());
-	// std::string tmp;
-	// std::cout << "====== into file ==== " << std::endl;
-	// while(std::getline(file, tmp))
-	// {
-	// 	write(fds[1], tmp.c_str(), tmp.length());
-	// 	std::cout << tmp << std::endl;
-	// }
-	// std::cout << "====== out of file ==== " << std::endl;
-	
 	if (child == 0) //child Process
 	{
 		int input = open (req.getFilename().c_str(), O_RDONLY);
-		if (input != -1) {
+		if (input != -1)
 			dup2(input, 0);
-		}
 		else
 			close(fds[0]);
-		// int i = -1;
-		// while (cmd[++i])
-		// 	std::cout << "cmd = " << cmd[i] << std::endl;
-		
 		dup2(fds[1], 1);
 		if (execve(cmd[0], (char *const *)cmd, (char *const *) envp) == -1)
 			exit(1);
@@ -199,6 +184,7 @@ std::string	Cgi_request::find_location(std::string extension){
 
 std::string	Cgi_request::dir_execute(request &reques, std::string &script_filename, std::string extension, std::string locationName)
 {
+	req = reques;
 	headers = reques.getHeaders();
 	std::stringstream ss;
 	std::map<std::string, std::string>::iterator it;
@@ -211,7 +197,7 @@ std::string	Cgi_request::dir_execute(request &reques, std::string &script_filena
 	// 	locationName = it->second + locationName + "/";
 	meta.insert(std::make_pair(std::string("PATH_INFO="), locationName ));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), reques.getQuery()));
-	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE"), "WebServ/bamghoug"));
+	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE="), "WebServ/bamghoug"));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), reques.getMethod()));
 	if ((it = headers.find("Cookie")) != headers.end())
 		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
