@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+  <!-- <?php
+
+  function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+  }
+  
+  $name = $lname = $login = "";
+  
+  if ($_SERVER["REQUEST_METHOD"] == "POST")
+  {
+    $name = test_input($_POST["fname"]);
+    $email = test_input($_POST["login"]);
+  }
+?> -->
+
+<h2>Let's get to know you !!</h2>
+
+<form id="form" action="form.php" method="post">
+  <label for="fname">First name:</label><br>
+  <input type="text" id="fname" name="fname" value="John"><br>
+  <label for="lname">Last name:</label><br>
+  <input type="text" id="lname" name="lname" value="Doe"><br>
+  <label for="login">Login:</label><br>
+  <input type="text" id="login" name="login" value="your login"><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<!-- 
+<?php
+
+echo "<h2>Your Input:</h2>";
+echo $name;
+echo "<br>";
+echo $lname;
+echo "<br>";
+echo $login;
+
+?> -->
+<!--<p>If you click the "Submit" button, the form-data will be sent to a page called "/action_page.php".</p>-->
+
+</body>
+</html>

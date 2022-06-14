@@ -1,0 +1,53 @@
+server {
+  listen = 8080
+  host = 127.0.0.1
+  server_name = lol
+  root = /Users/bamghoug/Desktop/web3
+  index = index.html
+
+
+  location = [
+  name = /template
+  root = /Users/bamghoug/Desktop/web3/template
+  location_index = index.html
+  method = GET POST DELETE
+  autoindex = off
+  ]
+
+  location = [
+  name = /
+  root = /Users/bamghoug/Desktop/web3/
+  location_index = index.html
+  method = GET
+  autoindex = off
+  ]
+
+  location = [
+  name = /basic
+  root = /Users/bamghoug/Desktop/web3/basic-php-website
+  location_index = index.php
+  method = GET POST DELETE
+  autoindex = off
+  ]
+
+  location = [
+  name = /img
+  root = /Users/bamghoug/Desktop/web3/img
+  method = GET
+  ]
+
+  location = [
+  name = .php
+  root = /Volumes/WIFISLAX64-/.brew/opt/php@7.4/bin/php-cgi
+  ]
+
+  location = [
+  name = .perl
+  root = /usr/bin/perl
+  ]
+
+  location = [
+  name = .py
+  root = /usr/bin/python
+  ]
+}
