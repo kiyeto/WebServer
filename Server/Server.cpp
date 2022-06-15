@@ -45,11 +45,8 @@ Server::Server (std::vector<ServerConfig> &servers): servers(servers), pfds(), m
 
 int	Server::checkTheport(ServerConfig &server) {
 	for(size_t i = 0; i < ports.size(); i++){
-		if ((size_t)ports[i] == server.get_port())
-		{
-			if (hosts[i] == server.get_host())
-				return 1;
-		}
+		if ((size_t)ports[i] == server.get_port() && hosts[i] == server.get_host())
+			return 1;
 	}
 	ports.push_back(server.get_port());
 	hosts.push_back(server.get_host());
@@ -121,7 +118,7 @@ void	Server::run()
 			}
 			else if ((pfds[i].revents & POLLHUP) && (pfds[i].revents & POLLIN) && !new_cnx)
 			{
-				std::cout << "+++++++++++POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
+				// std::cout << "+++++++++++POLLHUP HANDELINGU " << pfds[i].fd << std::endl;
 				pfds[i].events = POLLIN;
 				pfds[i].revents = 0;
 				close(pfds[i].fd);
@@ -129,7 +126,7 @@ void	Server::run()
 			}
 			else if (pfds[i].revents == POLLOUT && !new_cnx)
 			{
-				std::cout << requests[pfds[i].fd].getQuery() << " " << requests[pfds[i].fd].getUri() << std::endl;
+				// std::cout << requests[pfds[i].fd].getQuery() << " " << requests[pfds[i].fd].getUri() << std::endl;
 				if (!responses[pfds[i].fd].is_complete())
 					response = responses[pfds[i].fd].build_response(requests[pfds[i].fd]);
 				else
@@ -151,7 +148,7 @@ void	Server::run()
 						close(pfds[i].fd);
 						delete_pfd(i);
 					}
-					std::cout << "Message Sent!!!!" << std::endl;
+					// std::cout << "Message Sent!!!!" << std::endl;
 					responses[pfds[i].fd] = Response(servers);
 				}
 				requests[(pfds[i].fd)].clear();

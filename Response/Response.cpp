@@ -46,14 +46,20 @@ Response	&Response::operator=(const Response& res){
 
 std::string &Response::build_response(request	&req) {
 	headers = req.getHeaders();
+	std::map<std::string, std::string>::iterator it;
 	int i, file_size;
+	if ((it = headers.find("Host")) == headers.end())
+	{
+		response = make_error_response(400, servers[0]);
+		headers.clear();
+		left = response.length();
+		Done = true;
+		return response;
+	}
 	i = select_server(req);
-
-	std::cout << "server id= " << i << std::endl;
 	std::ifstream in_file(req.getFilename(), std::ios::binary);
 	in_file.seekg(0, std::ios::end);
 	file_size = in_file.tellg();
-	// std::cout << "file Size = " << file_size << " " << servers[i].get_body_size() << std::endl;
 	if (req.getMethod() == "POST" && file_size != -1 && file_size > (int)servers[i].get_body_size())
 		response = make_error_response(413, servers[i]);
 	else if (req.getStatusCode())
@@ -95,7 +101,7 @@ int	Response::select_server(request &req){
 		ss >> port;
 		server_name.assign(Host.begin(), Host.begin() + i);
 	}
-
+	
 	std::vector<int> list_servers_p; // list of Servers with the same port by index
 	for (size_t j = 0; j < servers.size(); j++)  // Looking in servers by Port if there is more than one
 	{
@@ -177,7 +183,6 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	if (server_root[server_root.size() - 1] == '/')
 		server_root.erase(server_root.size() - 1, 1);
 	filename = server_root + req.getUri();
-	std::cout << "file = " << filename << std::endl;
 	file.open(filename.c_str());
 	if (file.is_open()) // Check the root of the Server + the path received
 	{
@@ -194,24 +199,13 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 std::string	Response::CGI_response(request &req, int i){
 	std::string respo;
 	std::pair<int, std::string> location = find_location(req.getUri(), i);
-	// std::pair<int, std::string> location = find_location(req.getExtension(), i);
-	// std::cout << "ROOT = " << servers[i].get_root() << std::endl;
 	std::string filename(servers[i].get_root() + req.getUri());
 
-	// std::cout << "CGI Filename = " << filename << std::endl;
 	if (location.first != -1)
 	{
 		Cgi_request cg(servers[i]);
 		return cg.dir_execute(req, location.second, req.getExtension(), servers[i].getLocation()[location.first].get_name());
 	}
-	// std::cout << " BODY = " << req.getFilename() << std::endl;
-	// std::ifstream file(req.getFilename());
-	// if (file.is_open())
-	// {
-	// 	std::string line;
-	// 	while(std::getline(file, line))
-	// 		std::cout << line << std::endl;
-	// }
 	Cgi_request cgi(req, servers[i]);
 	respo = cgi.execute();
 	return respo;
@@ -223,18 +217,10 @@ std::string	Response::Dir_response(request &req, int i){
 	LocationConfig location;
 	std::pair<int, std::string> loc_i;
 
-	// std::cout << "Dir Filename = " << req.getUri() << std::endl;
 	loc_i = find_location(req.getUri(), i);
-	// ser_root = servers[i].get_root();
-	// if (!ser_root.empty() && ser_root[ser_root.size() - 1] == '/')
-	// 	ser_root.erase(ser_root.end() - 1);
-
 	/* LOCATION FOUNDED */
 	if (loc_i.first != -1) {
 		location = servers[i].getLocation()[loc_i.first];
-		// loca_root = location.get_root();
-		// if (!loca_root.empty() && loca_root[loca_root.size() - 1] != '/')
-		// 	loca_root += "/";
 		if (!is_allowed(req.getMethod(), location)) // Check if The Method Allowed
 			return (make_error_response(405, servers[i]));
 		else if (location.get_redirect().size() == 2)
@@ -259,7 +245,6 @@ std::string	Response::Dir_response(request &req, int i){
 						make_error_response(404, servers[i]);
 					if (location.get_autoindex()) // AutoIndex is on
 					{
-						// std::cout << "loc " << loc_i.second << std::endl;
 						AutoIndex autoindex(loc_i.second, req.getUri());
 						std::vector<std::string> headers;
 						std::string body(autoindex.getHtml()), length;
@@ -279,10 +264,8 @@ std::string	Response::Dir_response(request &req, int i){
 						loc_i.second += "/";
 					std::string filename = loc_i.second + location.get_location_index();
 					std::ifstream file(filename);
-					std::cout << "here = " << filename << std::endl;
 					if (file.is_open())
 					{
-						std::cout << "nice " << std::endl;
 						std::string extension;
 						size_t f = filename.find(".");
 						if (f != std::string::npos)
@@ -290,7 +273,6 @@ std::string	Response::Dir_response(request &req, int i){
 						std::map<std::string, std::string>::iterator it = MIME_types.find(extension);
 						if (it == MIME_types.end()){ // if it's CGI
 							Cgi_request cgi(servers[i]);
-							// std::cout << "URI = " << req.g`etUri() << std::endl;
  							return cgi.dir_execute(req, filename, extension, location.get_name());
 						}
 						std::vector<std::string> headers;
@@ -392,9 +374,7 @@ std::string	Response::Dir_response(request &req, int i){
 			std::map<std::string, std::string>::iterator it = MIME_types.find(extension);
 			if (it == MIME_types.end()){ // if it's CGI
 				Cgi_request cgi(servers[i]);
-				// std::cout << "URI = " << req.getUri() << std::endl;
 				std::string name = uri + servers[i].get_index();
-				std::cout << "yeah its = " << filename << std::endl;
  				return cgi.dir_execute(req, filename, extension, server_root + uri);
 			}
 			std::vector<std::string> headers;
@@ -446,7 +426,6 @@ std::pair<int, std::string>		Response::find_location(std::string name, int i) {
 			{
 				name.erase(0,copy.length());
 				name.insert(0, locs[j].get_root());
-				// std::cout << "Location found = " << name << std::endl;
 				return std::make_pair(j, name);
 			}
 		}
@@ -546,8 +525,6 @@ int				Response::delete_dir(std::string dir, DIR *dirp, std::string star)
 					return -1;
 			}
 		}
-		else 
-			std::cout << "Stat file " << star << " " << d->d_name << std::endl;
 	}
 	return 0;
 }
