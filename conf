@@ -2,14 +2,21 @@ server {
   listen = 8080
   host = 127.0.0.1
   server_name = example.com
-  root = /Users/bamghoug/Desktop/web3/www
+  root = /Users/abenouda/Desktop/repo/www
   index = index.html
-
 
   location = [
   name = /img
-  root = /Users/bamghoug/Desktop/web3/img
-  method = GET
+  root = /Users/abenouda/Desktop/repo/img
+  method = GET POST DELETE
+  ]
+
+  location = [
+  name = /basic
+  root = /Users/abenouda/Desktop/repo/www/basic-php-website
+  location_index = index.php
+  method = GET DELETE POST
+  autoindex = on
   ]
 
   location = [
@@ -31,15 +38,22 @@ server {
 server {
   listen = 8080
   host = 127.0.0.1
-  server_name = lol
-  root = /Users/bamghoug/Desktop/web3/www
+  server_name = nothing.com
+  root = /Users/abenouda/Desktop/final/www
   index = index.html
-
 
   location = [
   name = /img
-  root = /Users/bamghoug/Desktop/web3/img
-  method = GET
+  root = /Users/abenouda/Desktop/final/img
+  method = GET POST DELETE
+  ]
+
+  location = [
+  name = /template
+  root = /Users/abenouda/Desktop/final/www/template
+  method = GET POST DELETE
+  upload = /
+  autoindex = on
   ]
 
   location = [
@@ -59,17 +73,24 @@ server {
 }
 
 server {
-  listen = 8080
+  listen = 9000
   host = 127.0.0.1
-  server_name = here
-  root = /Users/bamghoug/Desktop/web3/www
+  server_name = third.com
+  root = /Users/abenouda/Desktop/final/www
   index = index.html
 
+  location = [
+  name = /template
+  root = /Users/abenouda/Desktop/teamwork/www/template
+  method = GET POST DELETE
+  upload = /
+  autoindex = on
+  ]
 
   location = [
   name = /img
-  root = /Users/bamghoug/Desktop/web3/img
-  method = GET
+  root = /Users/abenouda/Desktop/final/img
+  method = GET POST DELETE
   ]
 
   location = [

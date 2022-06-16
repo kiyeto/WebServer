@@ -15,14 +15,15 @@ FLAGS= -Werror -Wextra -Wall
 all: $(NAME)
 
 $(NAME): $(SRC) Makefile
-	c++ -std=c++98  $(FLAGS) $(SRC) -o $(NAME)
+	@c++ -std=c++98  $(FLAGS) $(SRC) -o $(NAME)
 
+#bonus: $(Bonus_SRC) Makefile
+#	c++ -std=c++98  $(FLAGS) $(Bonus_SRC) -o webserv_bonus
+	
 re: fclean $(NAME)
 
 clean:
-	rm -rf $(NAME) $(WRONG)
+	rm -rf $(NAME)
 
 fclean: clean
 
-bonus: $(Bonus_SRC) Makefile
-	c++ -std=c++98  $(FLAGS) $(Bonus_SRC) -o webserv_bonus

@@ -10,15 +10,15 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	std::string port;
 	ss << server.get_port();
 	ss >> port;
-	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
+
 	meta.insert(std::make_pair(std::string("PATH_INFO="), std::string(req.getUri())));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), req.getQuery()));
 	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE="), "WebServ/bamghoug"));
 	meta.insert(std::make_pair(std::string("REQUEST_METHOD="), req.getMethod()));
 	if ((it = headers.find("Cookie")) != headers.end())
 		meta.insert(std::make_pair(std::string("HTTP_COOKIE="), it->second));
-	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri())); // it Was server.get_root() + req.getUri()
-	meta.insert(std::make_pair(std::string("SCRIPT_NAME="), server.get_root() + req.getUri())); // it Was server.get_root() + req.getUri()
+	meta.insert(std::make_pair(std::string("SCRIPT_FILENAME="), server.get_root() + req.getUri()));
+	meta.insert(std::make_pair(std::string("SCRIPT_NAME="), server.get_root() + req.getUri()));
 	meta.insert(std::make_pair(std::string("SERVER_NAME="), server.get_host()));
 	meta.insert(std::make_pair(std::string("SERVER_PORT="), port));
 	meta.insert(std::make_pair(std::string("SERVER_PROTOCOL="), std::string("HTTP/1.1")));
@@ -31,8 +31,7 @@ Cgi_request::Cgi_request(request &r, ServerConfig &server): req(r), server(serve
 	else
 		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string()));
 	extension = req.getExtension();
-	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
-	// meta.insert(std::make_pair(std::string(""), std::string()));
+
 
 }
 
@@ -97,7 +96,6 @@ std::string	Cgi_request::execute(){
 	{
 		start_line += it->second;
 		int len = response.length() - (response.find("\r\n\r\n") + 4);
-		std::cout << "LENGTH = " << len << std::endl;
 		std::string length;
 		ss << len;
 		ss >> length;
@@ -157,11 +155,6 @@ std::string Cgi_request::child_proce(const char **cmd, const char **envp){
 void	 Cgi_request::parse_cgiResponse(std::string respo) {
 	size_t i = 0, j = 0;
 
-	// if ((i = respo.find("\r\n\r\n")) != std::string::npos)
-	// {
-	// 	body = respo.begin().base() + i + 4;
-	// 	respo.erase(respo.begin() + i, respo.end());
-	// }
 	while ((i = respo.find("\r\n")) != std::string::npos)
 	{
 		std::string tmp(respo.begin(), respo.begin() + i + 2);
@@ -191,10 +184,7 @@ std::string	Cgi_request::dir_execute(request &reques, std::string &script_filena
 	std::string port;
 	ss << server.get_port();
 	ss >> port;
-	// meta.insert(std::make_pair(std::string("GATEWAY_INTERFACE="), std::string("CGI/1.1")));
-	// locationName.erase(0,1);
-	// if (it != headers.end())
-	// 	locationName = it->second + locationName + "/";
+
 	meta.insert(std::make_pair(std::string("PATH_INFO="), locationName ));
 	meta.insert(std::make_pair(std::string("QUERY_STRING="), reques.getQuery()));
 	meta.insert(std::make_pair(std::string("SERVER_SOFTWARE="), "WebServ/bamghoug"));
@@ -217,13 +207,6 @@ std::string	Cgi_request::dir_execute(request &reques, std::string &script_filena
 		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), it->second));
 	else
 		meta.insert(std::make_pair(std::string("CONTENT_TYPE="), std::string()));
-	// meta.insert(std::make_pair(std::string("REDIRECT_STATUS="), std::string( "200" )));
-	// meta.insert(std::make_pair(std::string(""), std::string()));
 	this->extension = extension;
-
-	// std::cout << "filename = " << script_filename << std::endl;
-	// std::cout << "PATH INFO = " << meta["PATH_INFO="] << std::endl;
-	// std::cout << "SCRIPT_NAME= " << meta["SCRIPT_NAME="] << std::endl;
-	// std::cout << "SCRIPT_FILENAME= " << meta["SCRIPT_FILENAME="] << std::endl;
 	return this->execute();
 }

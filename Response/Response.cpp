@@ -130,17 +130,6 @@ std::string	Response::MIME_response(request &req, int i, std::map<std::string, s
 	std::ifstream file(filename);
 	if (location.first != -1 && !is_allowed(req.getMethod(), servers[i].getLocation()[location.first])) // Check if The Method Allowed
 			return (make_error_response(405, servers[i]));
-	// else if (servers[i].getLocation()[location.first].get_redirect().size() == 2)
-	// {
-	// 	int redirect_code;
-	// 	std::string http_redi = servers[i].getLocation()[location.first].get_redirect()[1];
-	// 	if (http_redi.find("http://") == std::string::npos)
-	// 		http_redi.insert(0, "http://");
-	// 	std::stringstream ss;
-	// 	ss << servers[i].getLocation()[location.first].get_redirect()[0];
-	// 	ss >> redirect_code;
-	// 	return (make_redirection(redirect_code, http_redi));
-	// }
 	if (req.getMethod() == "POST")
 	{
 		if (location.first == -1) // Default Upload directory
@@ -204,6 +193,8 @@ std::string	Response::CGI_response(request &req, int i){
 	if (location.first != -1)
 	{
 		Cgi_request cg(servers[i]);
+		if (!is_allowed(req.getMethod(), servers[i].getLocation()[location.first]))
+			return make_error_response(403, servers[i]);
 		return cg.dir_execute(req, location.second, req.getExtension(), servers[i].getLocation()[location.first].get_name());
 	}
 	Cgi_request cgi(req, servers[i]);
